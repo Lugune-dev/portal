@@ -1,0 +1,5 @@
+- [x] Update swiper version in package.json to ^11.1.14
+- [x] Run npm install to install updated swiper
+- [x] Update Swiper imports in advertisements.ts (change SwiperCore to modules import and remove SwiperCore.use)
+- [x] Update Swiper imports in home.ts (change SwiperCore to modules import and remove SwiperCore.use)
+- [x] Run ng build to verify bundle generation succeeds

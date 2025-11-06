@@ -1,0 +1,114 @@
+<div class="dashboard-container">
+  <div class="sidebar">
+    <h3>Admin Portal</h3>
+    <button class="sidebar-btn" [class.active]="item.active" *ngFor="let item of sidebarItems" (click)="setActiveSidebar(item)" [routerLink]="item.route">
+      <i [class]="item.icon"></i> {{ item.label }}
+    </button>
+  </div>
+
+  <div class="main-content">
+    <div class="content-header">
+      <h2>Reports Management</h2>
+      <div class="auth-section">
+        <span class="nav-link user-greeting">Welcome, Admin</span>
+        <div class="user-avatar">A</div>
+        <a class="btn-signin read-more" (click)="logout()">Logout</a>
+      </div>
+    </div>
+
+    <div class="view-content">
+      <div class="reports-container">
+        <p>View and manage all submitted reports from employees</p>
+
+        <div class="reports-content">
+          <!-- Reports List -->
+          <div class="reports-section">
+            <h3>All Reports</h3>
+            <div class="reports-list">
+              <div class="report-item" *ngFor="let report of reports">
+                <div class="report-header">
+                  <div class="report-info">
+                    <h4 class="report-title">{{ report.title }}</h4>
+                    <div class="report-meta">
+                      <span class="report-type">{{ report.type }}</span>
+                      <span class="report-submitter">Submitted by: {{ report.submitter }}</span>
+                      <span class="report-date">{{ report.submittedDate }}</span>
+                    </div>
+                  </div>
+                  <div class="report-actions">
+                    <span class="report-status {{ 'status-' + report.status.toLowerCase() }}">{{ report.status }}</span>
+                    <div class="action-buttons">
+                      <button class="btn-view" (click)="viewReport(report)">View</button>
+                      <button class="btn-download" (click)="downloadAttachment(report)" *ngIf="report.attachment">Download</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="report-description">
+                  <p>{{ report.description }}</p>
+                </div>
+                <div class="report-attachment" *ngIf="report.attachment">
+                  <i class="fas fa-paperclip"></i>
+                  <span>{{ report.attachment.name }}</span>
+                  <span class="file-size">({{ (report.attachment.size / 1024 / 1024).toFixed(2) }} MB)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="empty-state" *ngIf="reports.length === 0">
+              <i class="fas fa-file-alt"></i>
+              <h4>No Reports Found</h4>
+              <p>No reports have been submitted yet.</p>
+            </div>
+          </div>
+
+          <!-- Report Details Modal -->
+          <div class="modal" *ngIf="selectedReport" (click)="closeModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+              <div class="modal-header">
+                <h3>Report Details</h3>
+                <button class="close-btn" (click)="closeModal()">&times;</button>
+              </div>
+              <div class="modal-body" *ngIf="selectedReport">
+                <div class="detail-row">
+                  <label>Title:</label>
+                  <span>{{ selectedReport.title }}</span>
+                </div>
+                <div class="detail-row">
+                  <label>Type:</label>
+                  <span>{{ selectedReport.type }}</span>
+                </div>
+                <div class="detail-row">
+                  <label>Submitter:</label>
+                  <span>{{ selectedReport.submitter }}</span>
+                </div>
+                <div class="detail-row">
+                  <label>Submitted Date:</label>
+                  <span>{{ selectedReport.submittedDate }}</span>
+                </div>
+                <div class="detail-row">
+                  <label>Status:</label>
+                  <span class="status-badge {{ 'status-' + selectedReport.status.toLowerCase() }}">{{ selectedReport.status }}</span>
+                </div>
+                <div class="detail-row">
+                  <label>Description:</label>
+                  <div class="description-text">{{ selectedReport.description }}</div>
+                </div>
+                <div class="detail-row" *ngIf="selectedReport.attachment">
+                  <label>Attachment:</label>
+                  <div class="attachment-info">
+                    <i class="fas fa-paperclip"></i>
+                    <span>{{ selectedReport.attachment.name }}</span>
+                    <button class="btn-download-small" (click)="downloadAttachment(selectedReport)">Download</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Sidebar -->
+
+</div>

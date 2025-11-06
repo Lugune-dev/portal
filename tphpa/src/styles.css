@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { margin: 0; padding: 0; overflow-x: hidden; }
+
+/* Responsive Design for Header - Always Fixed */
+.fixed-header {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 999 !important; /* Below sub-nav z-index 1000 */
+}
+
+@media (min-width: 769px) {
+  .fixed-header {
+    top: 40px !important; /* Below sub-nav height on desktop */
+  }
+}
+
+@media (max-width: 768px) and (min-width: 601px) {
+  .fixed-header {
+    top: 80px !important; /* Below taller sub-nav on tablet/mobile */
+  }
+}
+
+@media (max-width: 600px) {
+  .fixed-header {
+    top: 60px !important; /* Below adjusted sub-nav on extra small screens */
+  }
+}

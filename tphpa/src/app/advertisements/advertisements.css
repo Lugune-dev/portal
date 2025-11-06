@@ -1,0 +1,97 @@
+/* Custom styles for advertisements page */
+.line-clamp-3 {
+  line-clamp: 3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Owl Carousel Custom Styles */
+.owl-theme .owl-nav {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.owl-theme .owl-nav button {
+  background: #1f2937 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  margin: 0 5px !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.owl-theme .owl-nav button:hover {
+  background: #059669 !important;
+  transform: scale(1.1);
+}
+
+.owl-theme .owl-dots {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.owl-theme .owl-dots .owl-dot {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.owl-theme .owl-dots .owl-dot span {
+  width: 12px;
+  height: 12px;
+  background: #d1d5db;
+  border-radius: 50%;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.owl-theme .owl-dots .owl-dot.active span {
+  background: #059669;
+  transform: scale(1.2);
+}
+
+.owl-theme .owl-dots .owl-dot:hover span {
+  background: #059669;
+}
+
+/* Animation classes for carousel */
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.slideOutDown {
+  animation-name: slideOutDown;
+}
+
+.flipInX {
+  animation-name: flipInX;
+}
+
+@keyframes slideOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes flipInX {
+  0% {
+    opacity: 0;
+    transform: perspective(400px) rotateX(90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(400px) rotateX(0deg);
+  }
+}

@@ -1,0 +1,134 @@
+/* Director General Dashboard Styles */
+
+/* Custom scrollbar for sidebar */
+.w-72::-webkit-scrollbar {
+  width: 6px;
+}
+
+.w-72::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.w-72::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.w-72::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Enhanced hover effects for cards */
+.bg-white:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Priority badges */
+.border-red-300 {
+  border-color: #fca5a5;
+}
+
+.border-orange-300 {
+  border-color: #fdba74;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+/* Status badges */
+.text-green-600 {
+  color: #16a34a;
+}
+
+.bg-green-100 {
+  background-color: #dcfce7;
+}
+
+.text-red-600 {
+  color: #dc2626;
+}
+
+.bg-red-100 {
+  background-color: #fef2f2;
+}
+
+.text-yellow-600 {
+  color: #ca8a04;
+}
+
+.bg-yellow-100 {
+  background-color: #fefce8;
+}
+
+/* Gradient backgrounds for metrics */
+.linear-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.linear-gradient-info {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.linear-gradient-success {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.linear-gradient-warning {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.linear-gradient-secondary {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.linear-gradient-danger {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+/* Authority indicator */
+.bg-white\/10 {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.border-white\/20 {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+/* Table hover effects */
+tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Button hover effects */
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* Modal backdrop */
+.bg-black\/50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .w-72 {
+    width: 100%;
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .ml-72 {
+    margin-left: 0;
+  }
+
+  .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}

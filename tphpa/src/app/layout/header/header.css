@@ -1,0 +1,380 @@
+/* Custom CSS Variables */
+:root {
+    --primary-color: #1a56db;
+    --secondary-color: #0e2e71;
+    --accent-color: #ff6b35;
+    --light-color: #f8fafc;
+    --dark-color: #1e293b;
+    --gray-color: #64748b;
+    --success-color: #10b981;
+    --font-main: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--dark-color);
+    background-color: #f1f5f9;
+}
+
+/* ---------------------------------- */
+/* 1. TOP SUB-NAVIGATION BAR STYLES   */
+/* ---------------------------------- */
+.sub-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #198754; /* Green */
+    color: white;
+    padding: 0.5rem 3rem;
+    font-size: 0.85rem;
+    width: 100%;
+    min-height: 40px; /* Ensure minimum height */
+    box-sizing: border-box;
+    border-bottom: 2px solid #14532d;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    z-index: 1000; /* Highest Z-index to keep it on top */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.sub-nav-left, .sub-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 1rem;
+}
+
+.sub-nav-left a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.domain, .contact {
+    display: flex;
+    color: white;
+    font-weight: bold;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sub-nav-left .contact:last-child {
+    margin-left: 20px !important; 
+    font-weight: bold;
+}
+
+.divider {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.sub-nav-right button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-family: var(--font-main);
+}
+
+.sub-nav-right button.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.sub-nav-right button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------------------------------- */
+/* 2. MAIN HEADER AND NAVIGATION      */
+/* ---------------------------------- */
+header {
+    z-index: 999;
+    /* background: white; */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar {
+    /* Desktop Default: Space between logo and links container */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    top: 40px;
+    position: fixed;
+    margin: 0 auto;
+    background-color: #f4f4f4;
+}
+
+.banner-logo {
+    height: 60px;
+    width: auto;
+    border-radius: 8px;
+}
+
+/* Container for all navigation items on the right (Desktop view) */
+.nav-links-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto; 
+}
+
+/* Hamburger button (Hidden by default on Desktop) */
+.menu-toggle {
+    display: none; 
+    background: none;
+    border: none;
+    color: black;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.nav-link {
+    padding: 8px 15px;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: darkgreen;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 15px;
+    width: calc(100% - 30px);
+    height: 2px;
+    background: darkgreen;
+}
+
+/* Dropdown Styles */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 10;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.nav-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background: #f1f1f1;
+    color: darkgreen;
+    padding-left: 20px;
+}
+
+/* Auth/Sign-in Section */
+.auth-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+.btn-signin.read-more {
+    background-color: #198754;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    border: none;
+}
+
+.btn-signin.read-more:hover {
+    background-color: #14532d;
+}
+
+.user-greeting {
+    font-weight: 400;
+    color: #333;
+}
+
+/* ---------------------------------- */
+/* 3. RESPONSIVE DESIGN (MOBILE/TABLET) */
+/* ---------------------------------- */
+@media (max-width: 900px) {
+    /* Show the hamburger menu button */
+    .menu-toggle {
+        display: block;
+        /* Aligns the button to the right of the logo */
+        margin-left: auto;
+    }
+
+    /* Set the navbar to arrange items vertically for smaller screens */
+    .navbar {
+        flex-direction: row; /* Keep logo and toggle on one line */
+        flex-wrap: wrap;
+    }
+
+    /* Hide the entire navigation menu by default on small screens */
+    .nav-menu {
+        display: none;
+        width: 100%;
+        /* This container holds all the links (nav-links-container) */
+    }
+
+    /* When the menu is active (toggled), display it */
+    .nav-menu.active {
+        display: block;
+    }
+
+    /* Force the navigation links container to be full width and vertical */
+    .nav-links-container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    /* Make each nav link a full-width block item */
+    .nav-link {
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid #f1f1f1;
+        padding: 10px 15px;
+    }
+
+    /* Dropdowns should open inline below the link */
+    .nav-dropdown {
+        width: 100%;
+    }
+
+    .dropdown-content {
+        position: static; /* Drops down inside the menu */
+        box-shadow: none;
+        border-radius: 0;
+        min-width: 100%;
+        /* Ensure dropdowns are visible when the parent menu is active */
+    }
+
+    .dropdown-content a {
+        padding-left: 30px; /* Indent dropdown items */
+    }
+
+    /* Auth section should be full width and centered at the bottom of the menu */
+    .auth-section {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 0;
+        margin-left: 0;
+        border-top: 1px solid #f1f1f1;
+    }
+
+    /* Sub-nav adjustments */
+    .sub-nav-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        height: auto;
+    }
+
+    .sub-nav-left, .sub-nav-right {
+        padding: 0;
+        gap: 1rem;
+    }
+
+    .domain, .contact {
+        font-size: 0.8rem;
+    }
+
+    header {
+        /* Adjust sticky position for the now taller sub-nav */
+        top: 80px;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Extra small screens */
+    .sub-nav-container {
+        padding: 0.25rem;
+        gap: 0.25rem;
+    }
+
+    .sub-nav-left, .sub-nav-right {
+        gap: 0.5rem;
+    }
+
+    .domain, .contact {
+        font-size: 0.75rem;
+    }
+
+    .sub-nav-left .contact:last-child {
+        margin-left: 0 !important;
+    }
+
+    header {
+        top: 60px; /* Adjust for smaller sub-nav height */
+    }
+}
+
+.link-hover-underline {
+    position: relative;
+    text-decoration: none;
+}
+
+.link-hover-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    display: block;
+    margin-top: 11px;
+    right: 0; /* Start from the right */
+    background: currentColor; /* Matches the link color (primary/success/info) */
+    transition: width 0.3s ease;
+}
+
+.link-hover-underline:hover::after {
+    width: 100%;
+    left: 0; /* Expand to the left */
+    right: auto;
+}

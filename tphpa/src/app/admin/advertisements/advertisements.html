@@ -1,0 +1,146 @@
+<div class="dashboard-container">
+  <div class="sidebar">
+    <h3>Admin Portal</h3>
+    <button class="sidebar-btn" [class.active]="item.active" *ngFor="let item of sidebarItems" (click)="setActiveSidebar(item)" [routerLink]="item.route">
+      <i [class]="item.icon"></i> {{ item.label }}
+    </button>
+  </div>
+
+  <div class="main-content">
+    <div class="content-header">
+      <h2>Manage Advertisements 📢</h2>
+      <div class="auth-section">
+        <span class="nav-link user-greeting">Welcome, Admin</span>
+        <div class="user-avatar">A</div>
+        <a class="btn-signin read-more" (click)="logout()">Logout</a>
+      </div>
+    </div>
+
+    <div class="view-content">
+      <div class="ad-upload-container">
+        <button class="btn btn-primary mb-3" (click)="toggleForm()">
+          {{ showForm ? 'Cancel' : 'Add New Advertisement' }}
+        </button>
+
+        <!-- Upload Form -->
+        <div *ngIf="showForm" class="card mb-4">
+          <div class="card-header">
+            <h5>{{ editingAd ? 'Edit Advertisement' : 'Upload New Advertisement' }}</h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="adForm!" (ngSubmit)="onSubmit()">
+
+              <div class="form-group">
+                <label for="title">Title <span class="required">*</span></label>
+                <input id="title" type="text" formControlName="title" class="form-control"
+                       [ngClass]="{ 'is-invalid': f['title'].invalid && f['title'].touched }">
+                <div *ngIf="f['title'].invalid && f['title'].touched" class="invalid-feedback">
+                  Title is required and must be less than 255 characters.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" formControlName="description" class="form-control"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="imageFile">Image File {{ editingAd ? '(Optional)' : '*' }}</label>
+                <input id="imageFile" type="file" class="form-control" (change)="onFileChange($event)" accept="image/*">
+                <div *ngIf="!selectedFile && !editingAd && f['title'].touched" class="invalid-feedback d-block">
+                  Image file is required for new advertisements.
+                </div>
+                <small class="form-text text-muted">Supported formats: JPG, PNG, GIF</small>
+              </div>
+
+              <div class="form-group">
+                <label for="linkUrl">Link URL</label>
+                <input id="linkUrl" type="url" formControlName="linkUrl" class="form-control">
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input id="startDate" type="date" formControlName="startDate" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input id="endDate" type="date" formControlName="endDate" class="form-control">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-check">
+                <input id="isActive" type="checkbox" formControlName="isActive" class="form-check-input">
+                <label class="form-check-label" for="isActive">Is Active?</label>
+              </div>
+
+              <hr>
+
+              <button type="submit" [disabled]="adForm.invalid || loading || (!selectedFile && !editingAd)" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                {{ loading ? 'Saving...' : (editingAd ? 'Update Advertisement' : 'Create Advertisement') }}
+              </button>
+
+              <button type="button" class="btn btn-secondary ml-2" (click)="resetForm()">Reset</button>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+        <!-- Advertisements List -->
+        <div class="card">
+          <div class="card-header">
+            <h5>All Advertisements</h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="advertisements.length === 0" class="text-center text-muted">
+              No advertisements found. Create your first advertisement above.
+            </div>
+
+            <div class="row" *ngIf="advertisements.length > 0">
+              <div class="col-md-6 col-lg-4 mb-3" *ngFor="let ad of advertisements">
+                <div class="card h-100">
+                  <div class="card-img-top" style="height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                    <img *ngIf="ad.imageUrl" [src]="ad.imageUrl" alt="Ad Image" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
+                    <div *ngIf="!ad.imageUrl" class="text-muted">No Image</div>
+                  </div>
+                  <div class="card-body">
+                    <h6 class="card-title">{{ ad.title }}</h6>
+                    <p class="card-text text-truncate">{{ ad.description }}</p>
+                    <div class="mb-2">
+                      <small class="text-muted">
+                        <strong>Status:</strong> <span [class]="ad.isActive ? 'text-success' : 'text-danger'">
+                          {{ ad.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                      </small>
+                    </div>
+                    <div class="mb-2" *ngIf="ad.startDate || ad.endDate">
+                      <small class="text-muted">
+                        <strong>Dates:</strong> {{ ad.startDate || 'N/A' }} - {{ ad.endDate || 'N/A' }}
+                      </small>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button class="btn btn-sm btn-outline-primary mr-2" (click)="editAd(ad)">Edit</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteAd(ad.id!)">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Sidebar -->
+
+</div>

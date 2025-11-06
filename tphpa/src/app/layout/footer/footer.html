@@ -1,0 +1,106 @@
+<footer class="bg-primary-600 text-white">
+  <!-- Main Footer Content -->
+  <div class="py-10">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Column 1: About TPHPA -->
+        <div class="footer-col">
+          <img src="assets/images/logo.png" alt="TPHPA Logo" class="h-12 mb-4">
+          <p class="text-white/80 mb-4 leading-relaxed">
+            {{ currentLang === 'sw' ?
+              'Shirikisho la Wataalamu wa Afya ya Umma Tanzania linalojishughulisha na uboreshaji wa huduma za afya nchini.' :
+              'Tanzania Public Health Professionals Association dedicated to improving health services nationwide.' }}
+          </p>
+          <div class="flex gap-3">
+            <a href="#" aria-label="Facebook" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-orange-500 transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-orange-500 transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-orange-500 transition"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" aria-label="YouTube" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-orange-500 transition"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-col">
+          <h3 class="text-white mb-4 text-lg font-semibold relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-orange-500">
+            {{ currentLang === 'sw' ? 'Viungo vya Haraka' : 'Quick Links' }}
+          </h3>
+          <ul class="list-none p-0 m-0">
+            <li class="mb-2"><a routerLink="/about" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Kuhusu TPHPA' : 'About TPHPA' }}</a></li>
+            <li class="mb-2"><a routerLink="/membership" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Uanachama' : 'Membership' }}</a></li>
+            <li class="mb-2"><a routerLink="/training" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Mafunzo' : 'Training' }}</a></li>
+            <li class="mb-2"><a routerLink="/publications" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Machapisho' : 'Publications' }}</a></li>
+            <li class="mb-2"><a routerLink="/news" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Habari' : 'News' }}</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Services -->
+        <div class="footer-col">
+          <h3 class="text-white mb-4 text-lg font-semibold relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-orange-500">
+            {{ currentLang === 'sw' ? 'Huduma' : 'Services' }}
+          </h3>
+          <ul class="list-none p-0 m-0">
+            <li class="mb-2"><a routerLink="/reports" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Uwasilishaji wa Ripoti' : 'Report Submission' }}</a></li>
+            <li class="mb-2"><a routerLink="/advertisements" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Matangazo ya Kazi' : 'Job Advertisements' }}</a></li>
+            <li class="mb-2"><a routerLink="/imprest" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Maombi ya Kibarua' : 'Imprest Applications' }}</a></li>
+            <li class="mb-2"><a routerLink="/certification" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Udhibitisho' : 'Certification' }}</a></li>
+            <li class="mb-2"><a routerLink="/complaints" class="text-white/80 no-underline hover:text-white transition pl-1">{{ currentLang === 'sw' ? 'Malalamiko' : 'Complaints' }}</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Contact -->
+        <div class="footer-col">
+          <h3 class="text-white mb-4 text-lg font-semibold relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-orange-500">
+            {{ currentLang === 'sw' ? 'Mawasiliano' : 'Contact Us' }}
+          </h3>
+          <address class="not-italic text-white/80">
+            <p class="mb-3 flex items-start"><i class="fas fa-map-marker-alt mr-3 mt-1"></i>
+              {{ currentLang === 'sw' ?
+                'S.L.P 1234, Dar es Salaam, Tanzania' :
+                'P.O. Box 1234, Dar es Salaam, Tanzania' }}
+            </p>
+            <p class="mb-3 flex items-center"><i class="fas fa-phone-alt mr-3"></i> +255 22 123 4567</p>
+            <p class="mb-3 flex items-center"><i class="fas fa-envelope mr-3"></i> info@tphpa.go.tz</p>
+            <p class="mb-3 flex items-start"><i class="fas fa-clock mr-3 mt-1"></i>
+              {{ currentLang === 'sw' ?
+                'Jumatatu - Ijumaa: 08:00 - 17:00' :
+                'Monday - Friday: 8AM - 5PM' }}
+            </p>
+          </address>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Government Partners Strip -->
+  <div class="bg-primary-700 py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col items-center">
+        <h4 class="text-white mb-4 text-lg font-medium">{{ currentLang === 'sw' ? 'Washirika wa Serikali' : 'Government Partners' }}</h4>
+        <div class="flex flex-wrap justify-center gap-6">
+          <img src="assets/images/health.jpg" alt="Ministry of Health" class="h-10 opacity-80 hover:opacity-100 transition">
+          <img src="assets/images/nida.jpeg" alt="NIDA" class="h-10 opacity-80 hover:opacity-100 transition">
+          <img src="assets/images/tamisemi.jpg" alt="TAMISEMI" class="h-10 opacity-80 hover:opacity-100 transition">
+          <img src="assets/images/president-office-logo.png" alt="President's Office" class="h-10 opacity-80 hover:opacity-100 transition">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="bg-primary-800 py-4">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-2 md:mb-0">
+          &copy; {{ currentYear }} {{ currentLang === 'sw' ?
+            'Shirikisho la Wataalamu wa Afya ya Umma. Haki zote zimehifadhiwa.' :
+            'TPHPA Portal. All Rights Reserved.' }}
+        </div>
+        <div class="flex gap-6">
+          <a routerLink="/privacy" class="text-white/70 no-underline hover:text-white transition">{{ currentLang === 'sw' ? 'Sera ya Faragha' : 'Privacy Policy' }}</a>
+          <a routerLink="/terms" class="text-white/70 no-underline hover:text-white transition">{{ currentLang === 'sw' ? 'Masharti ya Matumizi' : 'Terms of Service' }}</a>
+          <a routerLink="/sitemap" class="text-white/70 no-underline hover:text-white transition">{{ currentLang === 'sw' ? 'Ramani ya Tovuti' : 'Sitemap' }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

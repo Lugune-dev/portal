@@ -1,0 +1,85 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-green-600 to-blue-700 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Publications & Resources</h1>
+        <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
+          Access official TPHPA documents, guidelines, reports, and research materials
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Search and Filter Section -->
+    <div class="mb-8">
+      <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div class="flex-1 max-w-md">
+          <input
+            type="text"
+            placeholder="Search publications..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+        </div>
+        <div class="flex gap-2">
+          <select class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            <option value="">All Types</option>
+            <option value="annual-report">Annual Reports</option>
+            <option value="guidelines">Guidelines</option>
+            <option value="manual">Manuals</option>
+            <option value="regulations">Regulations</option>
+            <option value="research">Research</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publications Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div *ngFor="let pub of publications" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-3 py-1 rounded-full text-sm font-medium {{ getTypeColor(pub.type) }}">
+              {{ pub.type }}
+            </span>
+            <span class="text-sm opacity-90">{{ pub.date | date:'MMM dd, yyyy' }}</span>
+          </div>
+          <h3 class="text-xl font-bold leading-tight">{{ pub.title }}</h3>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+          <p class="text-gray-600 mb-4 leading-relaxed">{{ pub.description }}</p>
+
+          <!-- Download Button -->
+          <a
+            href="{{ pub.downloadUrl }}"
+            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-700 text-white font-medium rounded-lg hover:from-green-700 hover:to-blue-800 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
+          >
+            <i class="fas fa-download mr-2"></i>
+            Download
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="text-center mt-12">
+      <button class="px-8 py-4 bg-gradient-to-r from-green-600 to-blue-700 text-white font-semibold rounded-lg hover:from-green-700 hover:to-blue-800 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl">
+        Load More Publications
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="bg-gray-800 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-gray-300">
+        For more information about TPHPA publications, contact our information center.
+      </p>
+    </div>
+  </div>
+</div>

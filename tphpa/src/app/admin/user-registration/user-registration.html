@@ -1,0 +1,93 @@
+<div class="dashboard-container">
+  <div class="sidebar">
+    <h3>Admin Portal</h3>
+    <button class="sidebar-btn" [class.active]="item.active" *ngFor="let item of sidebarItems" (click)="setActiveSidebar(item)" [routerLink]="item.route">
+      <i [class]="item.icon"></i> {{ item.label }}
+    </button>
+  </div>
+
+  <div class="main-content">
+    <div class="content-header">
+      <h2>Register New User</h2>
+      <div class="auth-section">
+        <span class="nav-link user-greeting">Welcome, Admin</span>
+        <div class="user-avatar">A</div>
+        <a class="btn-signin read-more" (click)="logout()">Logout</a>
+      </div>
+    </div>
+
+    <div class="view-content">
+      <div class="container mt-5">
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Full Name*</label>
+              <input type="text" id="name" formControlName="name" class="form-control" placeholder="Enter full name">
+              <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid" class="text-danger small">Name is required.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label">Email*</label>
+              <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter email address">
+              <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid" class="text-danger small">
+                <span *ngIf="userForm.get('email')?.errors?.['required']">Email is required.</span>
+                <span *ngIf="userForm.get('email')?.errors?.['email']">Invalid email format.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="password" class="form-label">Temporary Password*</label>
+              <input type="password" id="password" formControlName="password" class="form-control" placeholder="Enter temporary password">
+              <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid" class="text-danger small">
+                Password is required and must be at least 8 characters.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="role" class="form-label">Role*</label>
+              <select id="role" formControlName="role" class="form-select">
+                <option [ngValue]="null" disabled selected>Select a role</option>
+                <option *ngFor="let role of roles" [value]="role.value">{{ role.viewValue }}</option>
+              </select>
+              <div *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid" class="text-danger small">Role is required.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" id="title" formControlName="title" class="form-control" placeholder="e.g., Director, Manager, Staff">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="directorate" class="form-label">Directorate</label>
+              <input type="text" id="directorate" formControlName="directorate" class="form-control" placeholder="e.g., Corporate Services Directorate">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="unit" class="form-label">Unit</label>
+              <input type="text" id="unit" formControlName="unit" class="form-control" placeholder="e.g., Administration Section">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="reports_to_id" class="form-label">Reports To (Supervisor)</label>
+            <select id="reports_to_id" formControlName="reports_to_id" class="form-select">
+              <option [ngValue]="null" selected>Select a supervisor</option>
+              <option *ngFor="let user of reportsToUsers" [ngValue]="user.id">{{ user.name }}</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {{ loading ? 'Registering...' : 'Register User' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Sidebar -->
+
+</div>

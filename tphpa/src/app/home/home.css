@@ -1,0 +1,129 @@
+/* Custom animations and effects */
+.shining-text {
+  animation: shine 3s infinite;
+  background: linear-gradient(90deg, #fff, #a5d6a7, #fff);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes shine {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.gradient-overlay {
+  background: linear-gradient(135deg, rgba(25, 135, 84, 0.9) 0%, rgba(21, 115, 71, 0.8) 100%);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.news-card {
+  transition: all 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom animations */
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.7s ease-out;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Owl Carousel Custom Styles */
+::ng-deep .owl-carousel .owl-nav button.owl-prev,
+::ng-deep .owl-carousel .owl-nav button.owl-next {
+  background: rgba(25, 135, 84, 0.8) !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .owl-carousel .owl-nav button.owl-prev:hover,
+::ng-deep .owl-carousel .owl-nav button.owl-next:hover {
+  background: rgba(25, 135, 84, 1) !important;
+  transform: scale(1.1);
+}
+
+::ng-deep .owl-carousel .owl-dots .owl-dot span {
+  background: #cbd5e0 !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .owl-carousel .owl-dots .owl-dot.active span {
+  background: #198754 !important;
+  transform: scale(1.2);
+}
+
+/* Advertisement Carousel Specific Styles */
+.advertisement-carousel {
+  position: relative;
+}
+
+.advertisement-carousel .owl-stage {
+  display: flex;
+  align-items: stretch;
+}
+
+.advertisement-carousel .owl-item {
+  display: flex;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .shining-text {
+    font-size: 2.5rem !important;
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+
+  .news-card:hover {
+    transform: none;
+  }
+}
