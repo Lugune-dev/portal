@@ -1,5 +1,2 @@
-- [x] Update swiper version in package.json to ^11.1.14
-- [x] Run npm install to install updated swiper
-- [x] Update Swiper imports in advertisements.ts (change SwiperCore to modules import and remove SwiperCore.use)
-- [x] Update Swiper imports in home.ts (change SwiperCore to modules import and remove SwiperCore.use)
-- [x] Run ng build to verify bundle generation succeeds
+- [x] Remove the publicationResources dropdown from the header for non-authenticated users (desktop and mobile)
+- [ ] Test the header to ensure navigation still works

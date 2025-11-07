@@ -1,5 +1,28 @@
-import { CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth/auth';
 
 export const employeeGuardGuard: CanActivateFn = (route, state) => {
-  return true;
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  const isAuthenticated = authService.isAuthenticated();
+  const rawRole = authService.getRole();
+  const userRole = rawRole?.toLowerCase() ?? '';
+
+  // Debug logs
+  console.log('----------------------------------------------------');
+  console.log(`EMPLOYEE GUARD CHECK FOR: ${state.url}`);
+  console.log(`1. isAuthenticated: ${isAuthenticated}`);
+  console.log(`2. Raw Role from localStorage: "${rawRole}"`);
+  console.log(`3. Final Check Role: "${userRole}"`);
+  console.log('----------------------------------------------------');
+
+  if (isAuthenticated && userRole === 'employee') {
+    console.log('✅ EMPLOYEE GUARD: ACCESS GRANTED');
+    return true;
+  } else {
+    console.log('❌ EMPLOYEE GUARD: ACCESS DENIED. Redirecting to /login');
+    return router.createUrlTree(['/login']);
+  }
 };

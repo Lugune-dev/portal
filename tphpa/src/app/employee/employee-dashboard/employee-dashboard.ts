@@ -19,6 +19,7 @@ export interface FormInstance {
 // Import actual services
 import { AuthService } from '../../services/auth/auth';
 import { ReportService, Report } from '../../services/report.service';
+import { FormsService, FormSubmission } from '../../services/forms.service';
 // Required for Observables used in mock services
 import { Observable, of } from 'rxjs';
 // --- End of Placeholder Definitions ---
@@ -57,7 +58,8 @@ export class EmployeeDashboard implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private reportService: ReportService // Injected ReportService
+    private reportService: ReportService, // Injected ReportService
+    private formsService: FormsService
   ) {}
 
   ngOnInit(): void {
@@ -116,12 +118,58 @@ export class EmployeeDashboard implements OnInit {
   }
 
   loadMyForms(): void {
-    // Mock data for now
-    this.myForms = [
-      { id: 1, form_type_id: 1, form_status: 'APPROVED', created_at: new Date(Date.now() - 86400000).toISOString() },
-      { id: 2, form_type_id: 3, form_status: 'PENDING', created_at: new Date(Date.now() - 3600000).toISOString() },
-      { id: 3, form_type_id: 4, form_status: 'REJECTED', created_at: new Date(Date.now() - 7200000).toISOString() },
-    ];
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.formsService.getUserForms(userId).subscribe({
+        next: (response) => {
+          if (response.success) {
+            // Map the FormSubmission to FormInstance
+            this.myForms = response.data.map(form => ({
+              id: form.id,
+              form_type_id: this.getFormTypeId(form.form_type_code || form.form_type_name || ''),
+              form_status: this.mapActionTypeToStatus(form.action_type),
+              created_at: form.created_at
+            }));
+          } else {
+            console.error('Failed to load forms:', response);
+          }
+        },
+        error: (err) => {
+          console.error('Error loading user forms:', err);
+        }
+      });
+    }
+  }
+
+  private getFormTypeId(formTypeName: string): number {
+    const mappings: { [key: string]: number } = {
+      'RETIREMENT_IMPREST': 1,
+      'Retirement of Imprest': 1,
+      'SAFARI_IMPREST': 2,
+      'Safari Imprest': 2,
+      'SPECIAL_IMPREST': 3,
+      'Special Imprest': 3,
+      'CLAIM_FORM': 4,
+      'Claim Form': 4,
+      'OUTSTANDING_IMPREST': 5,
+      'Outstanding Imprest': 5,
+      'PETTY_CASH': 6,
+      'Petty Cash': 6
+    };
+    return mappings[formTypeName] || 0;
+  }
+
+  private mapActionTypeToStatus(actionType: string): 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUBMITTED' {
+    switch (actionType) {
+      case 'approve':
+        return 'APPROVED';
+      case 'reject':
+        return 'REJECTED';
+      case 'submit':
+        return 'PENDING';
+      default:
+        return 'PENDING';
+    }
   }
 
   getStatusCount(status: string): number {

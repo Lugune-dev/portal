@@ -31,15 +31,9 @@
       <ng-container *ngIf="!isAuthenticated">
         <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'home' | translate | async }}</a>
 
-        <div class="relative">
-          <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600 flex items-center gap-1" routerLinkActive="active">{{ 'publicationResources' | translate | async }} <i class="fas fa-chevron-down text-sm"></i></a>
-          <div class="absolute top-full left-0 bg-white min-w-48 shadow-lg z-10 rounded border hidden hover:block">
-            <a class="block px-4 py-2 no-underline text-gray-700 hover:bg-gray-50 hover:text-primary-600" [routerLink]="'/submit'" routerLinkActive="active">{{ 'submitReport' | translate | async }}</a>
-            <a class="block px-4 py-2 no-underline text-gray-700 hover:bg-gray-50 hover:text-primary-600" [routerLink]="'/resources'" routerLinkActive="active">{{ 'resources' | translate | async }}</a>
-            <a class="block px-4 py-2 no-underline text-gray-700 hover:bg-gray-50 hover:text-primary-600" [routerLink]="'/advertisements'" routerLinkActive="active">{{ 'newsUpdates' | translate | async }}</a>
-          </div>
-        </div>
 
+        
+        <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/resources'" routerLinkActive="active">{{ 'resources' | translate | async }}</a>
         <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/careers'" routerLinkActive="active">{{ 'careers' | translate | async }}</a>
         <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/about'" routerLinkActive="active">{{ 'about' | translate | async }}</a>
         <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/contact'" routerLinkActive="active">{{ 'contact' | translate | async }}</a>
@@ -58,10 +52,10 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-3 ml-4">
+        <div class="flex items-center gap-4 ml-4 mr-6">
           <span class="text-black font-normal">{{ 'welcome' | translate | async }}, {{ userName }}</span>
           <div class="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">{{ getUserInitials() }}</div>
-          <a class="bg-primary-600 text-white px-3 py-2 rounded-full font-semibold no-underline transition hover:bg-primary-700 cursor-pointer" (click)="logout()">{{ 'logout' | translate | async }}</a>
+          <a class="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold no-underline transition hover:bg-primary-700 cursor-pointer" (click)="logout()">{{ 'logout' | translate | async }}</a>
         </div>
       </ng-container>
     </div>
@@ -71,15 +65,9 @@
       <div class="flex flex-col">
         <ng-container *ngIf="!isAuthenticated">
           <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'home' | translate | async }}</a>
-          <div class="border-b border-gray-200">
-            <a class="px-4 py-3 no-underline text-black font-semibold flex items-center justify-between" routerLinkActive="active">{{ 'publicationResources' | translate | async }} <i class="fas fa-chevron-down"></i></a>
-            <div class="bg-gray-50">
-              <a class="block px-6 py-2 no-underline text-gray-700 hover:bg-gray-100" [routerLink]="'/submit'" routerLinkActive="active">{{ 'submitReport' | translate | async }}</a>
-              <a class="block px-6 py-2 no-underline text-gray-700 hover:bg-gray-100" [routerLink]="'/resources'" routerLinkActive="active">{{ 'resources' | translate | async }}</a>
-              <a class="block px-6 py-2 no-underline text-gray-700 hover:bg-gray-100" [routerLink]="'/advertisements'" routerLinkActive="active">{{ 'newsUpdates' | translate | async }}</a>
-            </div>
-          </div>
-          <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200" [routerLink]="'/careers'" routerLinkActive="active">{{ 'careers' | translate | async }}</a>
+
+          <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200" [routerLink]="'/resources'" routerLinkActive="active">{{ 'resources' | translate | async }}</a>
+           <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200" [routerLink]="'/careers'" routerLinkActive="active">{{ 'careers' | translate | async }}</a>
           <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200" [routerLink]="'/about'" routerLinkActive="active">{{ 'about' | translate | async }}</a>
           <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200" [routerLink]="'/contact'" routerLinkActive="active">{{ 'contact' | translate | async }}</a>
           <div class="px-4 py-3">
@@ -97,8 +85,8 @@
             </div>
           </div>
           <div class="px-4 py-3 flex flex-col items-center gap-2">
-            <span class="text-black font-normal">{{ 'welcome' | translate | async }}, {{ userName }}</span>
-            <div class="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold">{{ getUserInitials() }}</div>
+            <!-- <span class="text-black font-normal">{{ 'welcome' | translate | async }}, {{ userName }}</span>
+            <div class="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold">{{ getUserInitials() }}</div> -->
             <!-- <a class="bg-primary-600 text-white px-3 py-2 rounded-full font-semibold no-underline cursor-pointer" (click)="logout()">{{ 'logout' | translate | async }}</a> -->
           </div>
         </ng-container>

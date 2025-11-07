@@ -1,0 +1,148 @@
+<div class="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <!-- Sidebar -->
+  <div class="w-72 bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-8 shadow-xl fixed h-full left-0 top-0 overflow-y-auto z-50">
+    <h3 class="text-xl font-bold mb-8 text-center text-white drop-shadow-lg">Admin Portal</h3>
+    <a class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="item.active" *ngFor="let item of sidebarItems" (click)="setActiveSidebar(item)" [routerLink]="item.route">
+      <i [class]="item.icon" class="mr-4 text-xl w-5 text-center"></i> {{ item.label }}
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 ml-72 p-8 bg-gray-50 min-h-screen">
+    <!-- Content Header -->
+    <div class="flex justify-between items-center mb-8 pb-5 border-b-2 border-gray-200">
+      <h2 class="text-3xl font-semibold text-gray-800">User Management</h2>
+      <div class="flex items-center gap-8 px-6 py-4 mr-4 bg-white rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <span class="text-gray-700 font-semibold bg-gradient-to-r from-indigo-600 to-purple-700 bg-clip-text text-transparent">Welcome, Admin</span>
+        <div class="w-11 h-11 rounded-full bg-gradient-to-r from-indigo-600 to-purple-700 text-white flex items-center justify-center font-bold cursor-pointer transition-all duration-300 hover:scale-110 shadow-md border-2 border-white/30">A</div>
+        <a class="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-700 text-white border-none rounded-xl font-semibold cursor-pointer transition-all duration-300 hover:from-indigo-700 hover:to-purple-800 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative" (click)="logout()">
+          <span class="relative z-10">Logout</span>
+          <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-700 hover:translate-x-full"></span>
+        </a>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-semibold text-gray-800">All Users</h3>
+        <button class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-700 text-white border-none rounded-xl font-semibold cursor-pointer transition-all duration-300 hover:from-indigo-700 hover:to-purple-800 hover:shadow-lg hover:-translate-y-0.5" [routerLink]="'/admin/user-registration'">Register New User</button>
+      </div>
+
+      <div *ngIf="loading" class="text-center py-8">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+        <span class="sr-only">Loading...</span>
+      </div>
+
+      <div *ngIf="!loading" class="overflow-x-auto">
+        <table class="w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+              <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
+              <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let user of users" class="hover:bg-gray-50">
+              <td class="px-2 py-4 text-sm font-medium text-gray-900">{{ user.UserID }}</td>
+              <td class="px-2 py-4 text-sm text-gray-500">{{ user.FirstName }} {{ user.LastName }}</td>
+              <td class="px-2 py-4 text-sm text-gray-500">{{ user.Email }}</td>
+              <td class="px-2 py-4">
+                <span [class]="getRoleBadgeClass(user.UserRoleID)" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                  {{ getRoleName(user.UserRoleID) }}
+                </span>
+              </td>
+              <td class="px-2 py-4 text-sm text-gray-500">{{ user.UnitName || 'N/A' }}</td>
+              <td class="px-2 py-4 text-sm font-medium">
+                <button class="text-indigo-600 hover:text-indigo-900 mr-1" (click)="openEditModal(user)">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="text-red-600 hover:text-red-900" (click)="deleteUser(user)">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loading && users.length === 0" class="text-center py-12">
+        <i class="fas fa-users text-6xl text-gray-400 mb-4"></i>
+        <h4 class="text-xl font-semibold text-gray-600 mb-2">No Users Found</h4>
+        <p class="text-gray-500">No users have been registered yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div *ngIf="showEditModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" (click)="closeEditModal()">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" (click)="$event.stopPropagation()">
+      <div class="mt-3">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Edit User</h3>
+        <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">First Name*</label>
+            <input
+              type="text"
+              formControlName="firstName"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter first name">
+            <div *ngIf="editForm.get('firstName')?.touched && editForm.get('firstName')?.invalid" class="text-red-500 text-sm mt-1">First name is required.</div>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Last Name*</label>
+            <input
+              type="text"
+              formControlName="lastName"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter last name">
+            <div *ngIf="editForm.get('lastName')?.touched && editForm.get('lastName')?.invalid" class="text-red-500 text-sm mt-1">Last name is required.</div>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Email*</label>
+            <input
+              type="email"
+              formControlName="email"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter email address">
+            <div *ngIf="editForm.get('email')?.touched && editForm.get('email')?.invalid" class="text-red-500 text-sm mt-1">
+              <span *ngIf="editForm.get('email')?.errors?.['required']">Email is required.</span>
+              <span *ngIf="editForm.get('email')?.errors?.['email']">Invalid email format.</span>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Role*</label>
+            <select
+              formControlName="userRoleID"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+              <option [ngValue]="null" disabled>Select a role</option>
+              <option *ngFor="let role of roles" [value]="role.value">{{ role.viewValue }}</option>
+            </select>
+            <div *ngIf="editForm.get('userRoleID')?.touched && editForm.get('userRoleID')?.invalid" class="text-red-500 text-sm mt-1">Role is required.</div>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Organization Unit ID</label>
+            <input
+              type="number"
+              formControlName="orgUnitID"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter unit ID">
+          </div>
+          <div class="flex justify-end space-x-2">
+            <button
+              type="button"
+              (click)="closeEditModal()"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">Cancel</button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              [disabled]="editForm.invalid">Update User</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

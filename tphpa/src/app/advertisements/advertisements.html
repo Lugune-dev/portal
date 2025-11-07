@@ -30,11 +30,22 @@
         </button>
       </div>
 
-      <!-- Advertisements Swiper -->
-      <div *ngIf="!adsLoading && !adsError && activeAds.length > 0" class="max-w-7xl mx-auto">
-          <!-- Advertisements (fallback carousel) -->
-      <div #adsCarousel class="flex overflow-x-auto -mx-2 py-4" style="scroll-behavior: smooth;">
-            <div *ngFor="let ad of activeAds" class="px-2 flex-shrink-0 w-80">
+      <!-- Advertisements (Swiper) -->
+  <div *ngIf="!adsLoading && !adsError && activeAds.length > 0" id="ads-page-wrapper" class="max-w-7xl mx-auto">
+        
+        <swiper
+          [modules]="swiperConfig.modules"
+          [slidesPerView]="1"
+          [spaceBetween]="20"
+          [loop]="true"
+          [autoplay]="{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }"
+          navigation
+          pagination
+          class="mySwiper"
+          aria-label="Advertisements carousel"
+        >
+          <ng-template swiperSlide *ngFor="let ad of activeAds">
+            <div class="px-2">
               <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="relative h-48 overflow-hidden">
                   <img
@@ -46,16 +57,23 @@
                   <div class="absolute top-4 left-4 bg-primary-500 text-white text-sm font-bold px-3 py-1 rounded-full">New</div>
                 </div>
                 <div class="p-6">
-                  <h3 class="text-xl font-bold text-gray-800 mb-2">{{ ad.title }}</h3>
+                  <h3 class="text-xl font-bold text-gray-800 mb-2 truncate">{{ ad.title }}</h3>
                   <p class="text-gray-600 mb-4 line-clamp-3">{{ ad.description }}</p>
-                  <div class="flex justify-between items-center">
+                  <div class="flex items-center justify-between">
                     <span class="text-sm text-gray-500"><i class="far fa-calendar mr-1"></i> {{ ad.endDate | date:'mediumDate' }}</span>
-                    <a [href]="ad.linkUrl" target="_blank" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">Read More <i class="ml-1 fas fa-arrow-right"></i></a>
+                    <div class="flex items-center gap-3">
+                      <a [href]="ad.linkUrl" target="_blank" class="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-3 py-2 rounded-full font-medium transition-colors duration-200">
+                        Read More
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M12.293 5.293a1 1 0 011.414 1.414L10.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4z"/></svg>
+                      </a>
+                      <a [href]="ad.linkUrl" target="_blank" class="text-primary-600 hover:text-primary-800 text-sm font-semibold">Details</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </ng-template>
+        </swiper>
       </div>
 
       <!-- Empty State -->

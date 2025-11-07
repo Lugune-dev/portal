@@ -1,0 +1,12 @@
+.settings-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.settings-container h1 {
+  color: #333;
+}
+
+.settings-container p {
+  color: #666;
+}

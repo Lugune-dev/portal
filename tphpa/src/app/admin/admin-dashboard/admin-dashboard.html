@@ -35,6 +35,12 @@
               <div class="flex-1">
                 <h3 class="text-3xl font-bold text-gray-800 mb-1">{{ card.value }}</h3>
                 <p class="text-gray-600 font-medium">{{ card.title }}</p>
+                <div class="mt-2" *ngIf="card.progress">
+                  <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-700 h-2 rounded-full" [style.width.%]="card.progress"></div>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">{{ card.progress }}% of target</p>
+                </div>
               </div>
             </div>
           </div>
@@ -69,15 +75,32 @@
               <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                 <tr>
                   <th class="px-6 py-4 text-left font-semibold text-gray-800 text-sm uppercase tracking-wider">Activity</th>
-                  <th class="px-6 py-4 text-left font-semibold text-gray-800 text-sm uppercase tracking-wider">Date</th>
+                  <th class="px-6 py-4 text-left font-semibold text-gray-800 text-sm uppercase tracking-wider">Category</th>
+                  <th class="px-6 py-4 text-left font-semibold text-gray-800 text-sm uppercase tracking-wider">Date & Time</th>
                   <th class="px-6 py-4 text-left font-semibold text-gray-800 text-sm uppercase tracking-wider">User</th>
                   <th class="px-6 py-4 text-left font-semibold text-gray-800 text-sm uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
                 <tr *ngFor="let activity of filteredActivities" class="hover:bg-gray-50 transition-colors duration-200">
-                  <td class="px-6 py-4 text-gray-700">{{ activity.activity }}</td>
-                  <td class="px-6 py-4 text-gray-700">{{ activity.date }}</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3 text-white text-xs" [style.background]="getCategoryColor(activity.category)">
+                        <i [class]="getCategoryIcon(activity.category)"></i>
+                      </div>
+                      <div>
+                        <div class="text-gray-700 font-medium">{{ activity.activity }}</div>
+                        <div class="text-xs text-gray-500" *ngIf="activity.details">{{ activity.details }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium {{ getCategoryClass(activity.category) }}">{{ activity.category }}</span>
+                  </td>
+                  <td class="px-6 py-4 text-gray-700">
+                    <div class="text-sm">{{ activity.date }}</div>
+                    <div class="text-xs text-gray-500">{{ activity.time }}</div>
+                  </td>
                   <td class="px-6 py-4 text-gray-700">{{ activity.user }}</td>
                   <td class="px-6 py-4">
                     <span class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide {{ getStatusClass(activity.status) }}">{{ activity.status }}</span>

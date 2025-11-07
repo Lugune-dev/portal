@@ -25,7 +25,8 @@ export class AdvertisementsComponent implements OnInit {
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', active: false, route: '/admin/dashboard' },
     { icon: 'fas fa-bullhorn', label: 'Advertisements', active: true, route: '/admin/advertisements' },
     { icon: 'fas fa-users', label: 'User List', active: false, route: '/admin/user-registration' },
-    { icon: 'fas fa-chart-bar', label: 'Reports', active: false, route: '/admin/reports' }
+    { icon: 'fas fa-chart-bar', label: 'Reports', active: false, route: '/admin/reports' },
+    { icon: 'fas fa-cog', label: 'Settings', active: false, route: '/admin/settings' }
   ];
 
   constructor(

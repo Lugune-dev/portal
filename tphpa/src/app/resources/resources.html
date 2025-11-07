@@ -1,0 +1,106 @@
+<br><br><br><br><br><div class="min-h-screen bg-gray-50">
+  <!-- Header Section -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">TPHPA Resources Center</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Comprehensive collection of training materials, guides, and tools for plant health professionals in Tanzania
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Category Filter -->
+    <div class="mb-8">
+      <div class="flex flex-col md:flex-row gap-4 items-center justify-center">
+        <div class="flex items-center gap-2">
+          <label for="category-select" class="text-sm font-medium text-gray-700">Filter by Type:</label>
+          <select
+            id="category-select"
+            [(ngModel)]="selectedCategory"
+            (change)="filterResources()"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+          >
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-8">
+      <div class="max-w-md mx-auto">
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="filterResources()"
+            placeholder="Search resources..."
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+          <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources List -->
+    <div class="space-y-4">
+      <div *ngFor="let resource of filteredResources" class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 rounded-lg {{ getTypeBgColor(resource.type) }}">
+                  <i class="{{ getTypeIcon(resource.type) }} text-white"></i>
+                </div>
+                <div>
+                  <span class="inline-block px-2 py-1 text-xs font-medium rounded {{ getTypeColor(resource.type) }}">
+                    {{ resource.type }}
+                  </span>
+                  <span class="text-sm text-gray-500 ml-2">{{ resource.date | date:'MMM dd, yyyy' }}</span>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ resource.title }}</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">{{ resource.description }}</p>
+            </div>
+            <div class="ml-4">
+              <a
+                href="{{ resource.downloadUrl }}"
+                class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 transition-colors duration-200"
+              >
+                <i class="fas fa-download mr-2"></i>
+                Download
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="filteredResources.length === 0" class="text-center py-12">
+      <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No resources found</h3>
+      <p class="text-gray-500">Try adjusting your search or category filter</p>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mt-8" *ngIf="filteredResources.length > 0">
+      <button class="px-6 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-50 transition-colors duration-200">
+        Load More Resources
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="bg-gray-800 text-white py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-sm text-gray-300">
+        Tanzania Plant Health and Pesticides Authority (TPHPA) - Resources Center
+      </p>
+    </div>
+  </div>
+</div>

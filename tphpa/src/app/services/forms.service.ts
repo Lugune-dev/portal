@@ -38,4 +38,8 @@ export class FormsService {
   rejectForm(formId: number, comments: string, rejectorId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/forms/reject/${formId}`, { rejectorId, comments });
   }
+
+  getUserForms(userId: number): Observable<{ success: boolean; data: FormSubmission[] }> {
+    return this.http.get<{ success: boolean; data: FormSubmission[] }>(`${this.apiUrl}/forms/user/${userId}`);
+  }
 }

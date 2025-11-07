@@ -269,8 +269,8 @@
                         </div>
                         <div class="mb-6">
                             <p class="text-gray-700 font-semibold mb-3">Form Data:</p>
-                            <div class="bg-gray-50 p-4 rounded-lg text-gray-600 text-sm overflow-x-auto max-h-64 border border-gray-200">
-                                <pre class="whitespace-pre-wrap">{{ selectedForm.form_data | json }}</pre>
+                            <div class="bg-gray-50 p-4 rounded-lg text-gray-600 text-sm overflow-x-auto max-h-64 border border-gray-200 max-w-full" style="max-width: calc(100vw - 400px);">
+                                <pre class="whitespace-pre-wrap break-words word-break-all">{{ selectedForm.form_data | json }}</pre>
                             </div>
                         </div>
                         <div class="mb-6">

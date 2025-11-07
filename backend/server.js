@@ -652,12 +652,20 @@ app.post('/api/forms/reject/:formId', async (req, res) => {
 app.get('/api/forms/user/:userId', async (req, res) => {
   const { userId } = req.params;
   try {
+    // Get the latest submission for each form instance submitted by the user
     const query = `
       SELECT fs.submission_id AS id, fs.instance_id, fs.action_type, fs.action_by, fs.comments, fs.form_data, fs.created_at,
              COALESCE(ft.form_type_name, fs.form_type, 'Unknown') AS form_type_name, ft.form_type_code
       FROM form_submissions fs
       LEFT JOIN form_types ft ON fs.form_type = ft.form_type_code
-      WHERE fs.action_by = ?
+      INNER JOIN (
+        SELECT instance_id, MAX(created_at) as latest_created_at
+        FROM form_submissions
+        WHERE instance_id IN (
+          SELECT instance_id FROM form_submissions WHERE action_type = 'submit' AND action_by = ?
+        )
+        GROUP BY instance_id
+      ) latest ON fs.instance_id = latest.instance_id AND fs.created_at = latest.latest_created_at
       ORDER BY fs.created_at DESC
     `;
     const [forms] = await db.query(query, [userId]);
@@ -704,6 +712,311 @@ app.get('/api/organization-units', async (req, res) => {
     res.json({ success: true, data: results });
   } catch (err) {
     console.error('Error fetching organization units:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// ---------------------------------------------------
+// --- USERS CRUD ROUTES ---
+// ---------------------------------------------------
+app.get('/api/users', async (req, res) => {
+  try {
+    const query = 'SELECT u.UserID, u.Email, u.FirstName, u.LastName, u.UserRoleID, u.OrgUnitID, ou.UnitName FROM Users u LEFT JOIN OrganizationUnits ou ON u.OrgUnitID = ou.OrgUnitID ORDER BY u.FirstName';
+    const [results] = await db.query(query);
+    res.json({ success: true, data: results });
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.post('/api/users', async (req, res) => {
+  const { email, firstName, lastName, password, userRoleID, orgUnitID } = req.body;
+  if (!email || !firstName || !lastName || !password) {
+    return res.status(400).json({ success: false, message: 'Required fields: email, firstName, lastName, password' });
+  }
+  const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+  const employeeID = 'EMP-' + Date.now();
+  try {
+    const query = 'INSERT INTO Users (Email, FirstName, LastName, EmployeeID, PasswordHash, UserRoleID, OrgUnitID) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const [result] = await db.query(query, [email, firstName, lastName, employeeID, hashedPassword, userRoleID || 1, orgUnitID || null]);
+    res.status(201).json({ success: true, message: 'User created', userId: result.insertId });
+  } catch (err) {
+    console.error('Error creating user:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.put('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { email, firstName, lastName, password, userRoleID, orgUnitID } = req.body;
+  try {
+    let query = 'UPDATE Users SET Email = ?, FirstName = ?, LastName = ?, UserRoleID = ?, OrgUnitID = ? WHERE UserID = ?';
+    let params = [email, firstName, lastName, userRoleID, orgUnitID, id];
+    if (password) {
+      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+      query = 'UPDATE Users SET Email = ?, FirstName = ?, LastName = ?, PasswordHash = ?, UserRoleID = ?, OrgUnitID = ? WHERE UserID = ?';
+      params = [email, firstName, lastName, hashedPassword, userRoleID, orgUnitID, id];
+    }
+    const [result] = await db.query(query, params);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'User updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('Error updating user:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const query = 'DELETE FROM Users WHERE UserID = ?';
+    const [result] = await db.query(query, [id]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'User deleted' });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// ---------------------------------------------------
+// --- ADVERTISEMENTS UPDATE AND DELETE ---
+// ---------------------------------------------------
+app.put('/api/advertisements/:id', upload.single('image'), async (req, res) => {
+  const { id } = req.params;
+  const { title, description, linkUrl, startDate, endDate, isActive } = req.body;
+
+  // Handle image update if provided
+  let updateFields = { title, description, linkUrl, startDate, endDate, isActive: isActive === '1' ? 1 : 0 };
+  let query = 'UPDATE advertisements SET title = ?, description = ?, linkUrl = ?, startDate = ?, endDate = ?, isActive = ? WHERE id = ?';
+  let params = [title, description, linkUrl, startDate, endDate, updateFields.isActive, id];
+
+  // If a new image is uploaded, update the imageUrl
+  if (req.file) {
+    updateFields.imageUrl = req.file.filename;
+    query = 'UPDATE advertisements SET title = ?, description = ?, linkUrl = ?, startDate = ?, endDate = ?, isActive = ?, imageUrl = ? WHERE id = ?';
+    params = [title, description, linkUrl, startDate, endDate, updateFields.isActive, req.file.filename, id];
+  }
+
+  try {
+    const [result] = await db.query(query, params);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Advertisement updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'Advertisement not found' });
+    }
+  } catch (err) {
+    console.error('Error updating advertisement:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.delete('/api/advertisements/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const query = 'DELETE FROM advertisements WHERE id = ?';
+    const [result] = await db.query(query, [id]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Advertisement deleted' });
+    } else {
+      res.status(404).json({ success: false, message: 'Advertisement not found' });
+    }
+  } catch (err) {
+    console.error('Error deleting advertisement:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// ---------------------------------------------------
+// --- REPORTS LIST, UPDATE, DELETE ---
+// ---------------------------------------------------
+app.get('/api/reports', async (req, res) => {
+  try {
+    const query = 'SELECT id, title, submitter_name, submitter_unit_id, type, submitted_date, status, comments FROM reports ORDER BY submitted_date DESC';
+    const [results] = await db.query(query);
+    res.json({ success: true, data: results });
+  } catch (err) {
+    console.error('Error fetching reports:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.get('/api/reports/admin', async (req, res) => {
+  try {
+    const query = 'SELECT id, title, submitter_name, submitter_unit_id, type, submitted_date, status, comments FROM reports ORDER BY submitted_date DESC';
+    const [results] = await db.query(query);
+    res.json(results);
+  } catch (err) {
+    console.error('Error fetching admin reports:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.put('/api/reports/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, status, comments } = req.body;
+  try {
+    const query = 'UPDATE reports SET title = ?, status = ?, comments = ? WHERE id = ?';
+    const [result] = await db.query(query, [title, status, comments, id]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Report updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'Report not found' });
+    }
+  } catch (err) {
+    console.error('Error updating report:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.delete('/api/reports/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const query = 'DELETE FROM reports WHERE id = ?';
+    const [result] = await db.query(query, [id]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Report deleted' });
+    } else {
+      res.status(404).json({ success: false, message: 'Report not found' });
+    }
+  } catch (err) {
+    console.error('Error deleting report:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// ---------------------------------------------------
+// --- FORMS LIST, UPDATE, DELETE ---
+// ---------------------------------------------------
+app.get('/api/forms', async (req, res) => {
+  try {
+    const query = `
+      SELECT fs.submission_id AS id, fs.instance_id, fs.action_type, fs.action_by, fs.comments, fs.form_data, fs.created_at,
+             u.FirstName, u.LastName, COALESCE(ft.form_type_name, fs.form_type, 'Unknown') AS form_type_name
+      FROM form_submissions fs
+      LEFT JOIN Users u ON fs.action_by = u.UserID
+      LEFT JOIN form_types ft ON fs.form_type = ft.form_type_code
+      ORDER BY fs.created_at DESC
+    `;
+    const [results] = await db.query(query);
+    res.json({ success: true, data: results });
+  } catch (err) {
+    console.error('Error fetching forms:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.put('/api/forms/:id', async (req, res) => {
+  const { id } = req.params;
+  const { action_type, comments } = req.body;
+  try {
+    const query = 'UPDATE form_submissions SET action_type = ?, comments = ? WHERE submission_id = ?';
+    const [result] = await db.query(query, [action_type, comments, id]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Form updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'Form not found' });
+    }
+  } catch (err) {
+    console.error('Error updating form:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+app.delete('/api/forms/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const query = 'DELETE FROM form_submissions WHERE submission_id = ?';
+    const [result] = await db.query(query, [id]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Form deleted' });
+    } else {
+      res.status(404).json({ success: false, message: 'Form not found' });
+    }
+  } catch (err) {
+    console.error('Error deleting form:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// ---------------------------------------------------
+// --- ADMIN REGISTER USER ENDPOINT ---
+// ---------------------------------------------------
+app.post('/api/admin/register-user', async (req, res) => {
+  const { name, email, password, title, directorate, unit, role, reports_to_id } = req.body;
+
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ success: false, message: 'Required fields: name, email, password, role' });
+  }
+
+  try {
+    // Split name into first and last name
+    const nameParts = name.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    // Map role string to UserRoleID (assuming 1=admin, 2=director, 3=manager, 4=user)
+    let userRoleID = 4; // default to user
+    switch (role.toLowerCase()) {
+      case 'admin':
+        userRoleID = 1;
+        break;
+      case 'director':
+        userRoleID = 2;
+        break;
+      case 'manager':
+        userRoleID = 3;
+        break;
+      case 'user':
+        userRoleID = 4;
+        break;
+    }
+
+    // Hash the password
+    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+    // Find OrgUnitID based on directorate/unit if provided, default to 100 (Director General Office) if not found
+    let orgUnitID = 100; // Default OrgUnitID
+    if (directorate || unit) {
+      const unitQuery = 'SELECT OrgUnitID FROM OrganizationUnits WHERE UnitName = ? LIMIT 1';
+      const [unitRows] = await db.query(unitQuery, [unit || directorate]);
+      if (unitRows.length > 0) {
+        orgUnitID = unitRows[0].OrgUnitID;
+      }
+    }
+
+    const employeeID = 'EMP-' + Date.now();
+    const query = 'INSERT INTO Users (Email, FirstName, LastName, EmployeeID, PasswordHash, UserRoleID, OrgUnitID) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const [result] = await db.query(query, [email, firstName, lastName, employeeID, hashedPassword, userRoleID, orgUnitID]);
+
+    res.status(201).json({ success: true, message: 'User registered successfully', userId: result.insertId });
+  } catch (err) {
+    console.error('Error registering user:', err);
+    if (err.code === 'ER_DUP_ENTRY') {
+      res.status(409).json({ success: false, message: 'Email already exists' });
+    } else {
+      res.status(500).json({ success: false, message: 'Server error' });
+    }
+  }
+});
+
+// ---------------------------------------------------
+// --- ADMIN REPORTS-TO USERS ENDPOINT ---
+// ---------------------------------------------------
+app.get('/api/admin/reports-to', async (req, res) => {
+  try {
+    const query = 'SELECT UserID as id, CONCAT(FirstName, " ", LastName) as name FROM Users ORDER BY FirstName';
+    const [results] = await db.query(query);
+    res.json(results);
+  } catch (err) {
+    console.error('Error fetching reports-to users:', err);
     res.status(500).json({ success: false, error: 'Server error' });
   }
 });

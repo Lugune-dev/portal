@@ -50,4 +50,8 @@ export class ReportService {
   getUserReports(userId: number): Observable<Report[]> {
     return this.http.get<Report[]>(`${this.apiUrl}/reports/user/${userId}`);
   }
+
+  getAllReports(): Observable<Report[]> {
+    return this.http.get<Report[]>(`${this.apiUrl}/reports/admin`);
+  }
 }

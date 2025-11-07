@@ -201,8 +201,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
           console.log('Active ads loaded:', this.activeAds.length);
           this.adsLoading = false;
-          // start auto-scroll once ads are rendered
-          setTimeout(() => this.startAdsAutoScroll(), 150);
         },
         error: (err) => {
           console.error('Failed to fetch ads:', err);

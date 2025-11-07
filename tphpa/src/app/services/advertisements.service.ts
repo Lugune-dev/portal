@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Advertisement } from './advertisement.model';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +42,9 @@ export class AdvertisementService {
   }
 
   getAllAdvertisements(): Observable<Advertisement[]> {
-    return this.http.get<Advertisement[]>(`${this.baseUrl}/advertisements`);
+    return this.http.get<{ success: boolean; data: Advertisement[] }>(`${this.baseUrl}/advertisements`).pipe(
+      map(response => response.data)
+    );
   }
 
   updateAdvertisement(id: number, adData: Advertisement, imageFile?: File): Observable<any> {

@@ -125,6 +125,21 @@ export class CareersComponent {
     return type === 'Full-time' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800';
   }
 
+  applicationSteps = [
+    {
+      title: 'Professional Training',
+      description: 'Access comprehensive training programs in plant health, pesticides management, and agricultural science'
+    },
+    {
+      title: 'Career Development',
+      description: 'Participate in mentorship programs and continuous professional development opportunities'
+    },
+    {
+      title: 'Advancement Opportunities',
+      description: 'Grow your career through performance-based promotions and specialized certifications'
+    }
+  ];
+
   applyForJob(jobId: number): void {
     // Navigate to application form or open modal
     console.log('Applying for job:', jobId);

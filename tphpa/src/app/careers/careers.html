@@ -1,21 +1,38 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-  <!-- Hero Section -->
-  <div class="bg-gradient-to-r from-green-600 to-green-800 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gray-50">
+  <!-- Header Section -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Careers at TPHPA</h1>
-        <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
-          Join Tanzania Plant Health and Pesticides Authority (TPHPA) - Protecting Tanzania's plant health and agricultural future through excellence in plant quarantine, pest management, and regulatory services
+        <div class="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 mb-6">
+          <i class="fas fa-seedling mr-2"></i>
+          <span class="text-sm font-medium">Join Our Mission</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          Build Your Career in
+          <span class="block text-green-600">Plant Health</span>
+        </h1>
+        <p class="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
+          Discover rewarding career opportunities in plant health, pesticides management, and agricultural science. Join TPHPA in protecting Tanzania's agricultural heritage through professional development and innovation.
         </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button class="px-8 py-4 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <i class="fas fa-graduation-cap mr-2"></i>
+            Career Paths
+          </button>
+          <button class="px-8 py-4 border-2 border-green-600 text-green-600 font-semibold rounded-xl hover:bg-green-50 transition-all duration-300">
+            <i class="fas fa-book mr-2"></i>
+            Training Programs
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Why Join Us Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Career Development Section -->
     <div class="mb-16">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Join TPHPA?</h2>
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Career Development Opportunities</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div *ngFor="let benefit of benefits" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
           <div class="flex items-center mb-4">
@@ -29,49 +46,42 @@
       </div>
     </div>
 
-    <!-- Job Openings Section -->
+    <!-- Career Paths Section -->
     <div class="mb-16">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Current Job Openings</h2>
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Career Paths at TPHPA</h2>
 
-      <div class="space-y-6">
-        <div *ngFor="let job of jobOpenings" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-          <!-- Job Header -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div *ngFor="let job of jobOpenings.slice(0, 4)" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+          <!-- Career Header -->
           <div class="bg-gradient-to-r from-green-500 to-green-700 text-white p-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="flex items-center justify-between">
               <div>
-                <h3 class="text-2xl font-bold mb-2">{{ job.title }}</h3>
-                <div class="flex flex-wrap gap-4 text-sm opacity-90">
-                  <span><i class="fas fa-building mr-1"></i>{{ job.department }}</span>
-                  <span><i class="fas fa-map-marker-alt mr-1"></i>{{ job.location }}</span>
-                  <span class="px-3 py-1 rounded-full {{ getTypeColor(job.type) }}">{{ job.type }}</span>
-                </div>
+                <h3 class="text-xl font-bold mb-1">{{ job.title }}</h3>
+                <p class="text-sm opacity-90">{{ job.department }}</p>
               </div>
-              <div class="mt-4 md:mt-0 text-right">
-                <p class="text-sm opacity-90">Application Deadline</p>
-                <p class="font-semibold">{{ job.deadline | date:'MMM dd, yyyy' }}</p>
+              <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-graduation-cap text-white text-lg"></i>
               </div>
             </div>
           </div>
 
-          <!-- Job Details -->
+          <!-- Career Details -->
           <div class="p-6">
             <p class="text-gray-700 mb-4 leading-relaxed">{{ job.description }}</p>
 
-            <div class="mb-6">
-              <h4 class="text-lg font-semibold text-gray-800 mb-3">Requirements:</h4>
-              <ul class="list-disc list-inside space-y-1 text-gray-600">
-                <li *ngFor="let req of job.requirements">{{ req }}</li>
+            <div class="mb-4">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">Key Requirements:</h4>
+              <ul class="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                <li *ngFor="let req of job.requirements.slice(0, 2)">{{ req }}</li>
+                <li *ngIf="job.requirements.length > 2" class="text-green-600">And more...</li>
               </ul>
             </div>
 
-            <!-- Apply Button -->
+            <!-- Learn More Button -->
             <div class="flex justify-end">
-              <button
-                (click)="applyForJob(job.id)"
-                class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-800 text-white font-semibold rounded-lg hover:from-green-700 hover:to-green-900 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
-              >
-                <i class="fas fa-paper-plane mr-2"></i>
-                Apply Now
+              <button class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all duration-300">
+                <i class="fas fa-info-circle mr-2"></i>
+                Learn More
               </button>
             </div>
           </div>
@@ -79,60 +89,36 @@
       </div>
     </div>
 
-    <!-- Application Process Section -->
-    <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Application Process</h2>
+    <!-- Professional Development Section -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-16 border border-gray-100">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Professional Development</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div class="text-center">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div *ngFor="let step of applicationSteps; let i = index" class="text-center">
           <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-white font-bold text-xl">1</span>
+            <span class="text-xl font-bold text-white">{{ i + 1 }}</span>
           </div>
-          <h3 class="text-lg font-semibold text-gray-800 mb-2">Submit Application</h3>
-          <p class="text-gray-600">Complete the online application form with your details and qualifications</p>
-        </div>
-
-        <div class="text-center">
-          <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-white font-bold text-xl">2</span>
-          </div>
-          <h3 class="text-lg font-semibold text-gray-800 mb-2">Initial Screening</h3>
-          <p class="text-gray-600">Our HR team reviews applications and shortlists qualified candidates</p>
-        </div>
-
-        <div class="text-center">
-          <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-white font-bold text-xl">3</span>
-          </div>
-          <h3 class="text-lg font-semibold text-gray-800 mb-2">Interview & Assessment</h3>
-          <p class="text-gray-600">Selected candidates undergo interviews and technical assessments</p>
-        </div>
-
-        <div class="text-center">
-          <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-white font-bold text-xl">4</span>
-          </div>
-          <h3 class="text-lg font-semibold text-gray-800 mb-2">Final Selection</h3>
-          <p class="text-gray-600">Successful candidates receive job offers and join our team</p>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ step.title }}</h3>
+          <p class="text-gray-600">{{ step.description }}</p>
         </div>
       </div>
     </div>
 
     <!-- Contact Section -->
-    <div class="mt-16 text-center">
-      <div class="bg-gradient-to-r from-green-600 to-green-800 text-white rounded-xl p-8">
-        <h2 class="text-2xl font-bold mb-4">Have Questions?</h2>
-        <p class="text-lg opacity-90 mb-6">
-          Contact our Human Resources department for more information about career opportunities at Tanzania Plant Health and Pesticides Authority (TPHPA).
+    <div class="text-center">
+      <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Start Your Career Journey</h2>
+        <p class="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+          Ready to advance your career in plant health and agricultural science? Connect with our HR team to learn about professional development opportunities and career paths at TPHPA.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="mailto:hr@tphpa.go.tz" class="inline-flex items-center px-6 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+          <a href="mailto:careers@tphpa.go.tz" class="inline-flex items-center px-8 py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl">
             <i class="fas fa-envelope mr-2"></i>
-            hr@tphpa.go.tz
+            Contact HR
           </a>
-          <a href="tel:+255 22 221 1111" class="inline-flex items-center px-6 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+          <a href="tel:+255 22 245 0761" class="inline-flex items-center px-8 py-4 border-2 border-green-600 text-green-600 font-semibold rounded-lg hover:bg-green-600 hover:text-white transition-all duration-300">
             <i class="fas fa-phone mr-2"></i>
-            +255 22 221 1111
+            Call Us
           </a>
         </div>
       </div>
