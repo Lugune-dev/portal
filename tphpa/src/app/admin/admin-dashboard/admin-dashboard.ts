@@ -53,7 +53,8 @@ export class AdminDashboardComponent implements OnInit {
   sidebarItems: SidebarItem[] = [
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', active: true, route: '/admin/dashboard' },
     { icon: 'fas fa-bullhorn', label: 'Advertisements', active: false, route: '/admin/advertisements' },
-    { icon: 'fas fa-users', label: 'User List', active: false, route: '/admin/user-registration' },
+    { icon: 'fas fa-users', label: 'User List', active: false, route: '/admin/user-list' },
+    { icon: 'fas fa-user-plus', label: 'Register User', active: false, route: '/admin/user-registration' },
     { icon: 'fas fa-chart-bar', label: 'Reports', active: false, route: '/admin/reports' },
     { icon: 'fas fa-cog', label: 'Settings', active: false, route: '/admin/settings' }
   ];
@@ -96,16 +97,7 @@ export class AdminDashboardComponent implements OnInit {
     }
   ];
 
-  recentActivities: RecentActivity[] = [
-    { activity: 'User Registration', date: 'Oct 23, 2024', user: 'John Doe', status: 'Completed', category: 'User Management', time: '14:30', details: 'New employee account created' },
-    { activity: 'Ad Campaign Created', date: 'Oct 22, 2024', user: 'Jane Smith', status: 'Active', category: 'Advertising', time: '09:15', details: 'Summer promotion campaign launched' },
-    { activity: 'Report Generated', date: 'Oct 21, 2024', user: 'Admin User', status: 'Completed', category: 'Reports', time: '16:45', details: 'Monthly performance report' },
-    { activity: 'User Permissions Updated', date: 'Oct 20, 2024', user: 'System', status: 'Completed', category: 'Security', time: '11:20', details: 'Manager role permissions modified' },
-    { activity: 'Ad Review Pending', date: 'Oct 19, 2024', user: 'Mike Johnson', status: 'Pending', category: 'Advertising', time: '13:10', details: 'Awaiting approval for new banner' },
-    { activity: 'Form Submission', date: 'Oct 18, 2024', user: 'Sarah Wilson', status: 'Completed', category: 'Forms', time: '10:30', details: 'Leave request form submitted' },
-    { activity: 'System Backup', date: 'Oct 17, 2024', user: 'System', status: 'Completed', category: 'Maintenance', time: '02:00', details: 'Automated daily backup completed' },
-    { activity: 'User Login', date: 'Oct 16, 2024', user: 'David Brown', status: 'Completed', category: 'Security', time: '08:45', details: 'Successful authentication' }
-  ];
+  recentActivities: RecentActivity[] = [];
 
   filteredActivities: RecentActivity[] = [...this.recentActivities];
 
@@ -113,6 +105,8 @@ export class AdminDashboardComponent implements OnInit {
   invoiceCount = 12;
 
   ngOnInit(): void {
+    // Subscribe to auth state to load data when user is authenticated
+    // For admin, we can assume it's always authenticated or handle differently
     this.loadOverviewData();
     this.loadRecentActivities();
   }
@@ -152,13 +146,37 @@ export class AdminDashboardComponent implements OnInit {
     // Fetch recent reports as activities
     this.http.get('/api/reports').subscribe((res: any) => {
       if (res.success) {
-        this.recentActivities = res.data.slice(0, 5).map((report: any) => ({
+        const reportActivities = res.data.slice(0, 3).map((report: any) => ({
           activity: report.title,
           date: new Date(report.submitted_date).toLocaleDateString(),
           user: report.submitter_name,
-          status: report.status
+          status: report.status,
+          category: 'Reports',
+          time: new Date(report.submitted_date).toLocaleTimeString(),
+          details: report.comments || 'Report submitted'
         }));
-        this.filteredActivities = [...this.recentActivities];
+
+        // Fetch recent form submissions
+        this.http.get('/api/forms').subscribe((formsRes: any) => {
+          if (formsRes.success) {
+            const formActivities = formsRes.data.slice(0, 2).map((form: any) => ({
+              activity: 'Application Submitted',
+              date: new Date(form.created_at).toLocaleDateString(),
+              user: form.FirstName + ' ' + form.LastName,
+              status: 'Completed',
+              category: 'Forms',
+              time: new Date(form.created_at).toLocaleTimeString(),
+              details: `${form.form_type_name || 'Form'} submitted`
+            }));
+
+            // Combine and sort activities by date
+            this.recentActivities = [...reportActivities, ...formActivities]
+              .sort((a, b) => new Date(b.date + ' ' + b.time).getTime() - new Date(a.date + ' ' + a.time).getTime())
+              .slice(0, 5);
+
+            this.filteredActivities = [...this.recentActivities];
+          }
+        });
       }
     });
   }
@@ -175,10 +193,7 @@ export class AdminDashboardComponent implements OnInit {
     );
   }
 
-  setActiveSidebar(item: SidebarItem): void {
-    this.sidebarItems.forEach(i => i.active = false);
-    item.active = true;
-  }
+
 
   getStatusClass(status: string): string {
     switch (status.toLowerCase()) {

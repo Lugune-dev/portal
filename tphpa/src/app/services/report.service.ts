@@ -30,9 +30,35 @@ export class ReportService {
 
   getSubordinateWorkload(managerUnitId: number): Observable<any[]> {
     // Replace with real API call
-    return this.http.get<any[]>(`${this.apiUrl}/reports/subordinate-workload/${managerUnitId}`);
-    // Mock data
-    // return of([]);
+    // return this.http.get<any[]>(`${this.apiUrl}/reports/subordinate-workload/${managerUnitId}`);
+    // Mock data for demonstration
+    const mockData = [
+      {
+        name: 'John Doe',
+        totalReports: 15,
+        pending: 3,
+        approved: 12
+      },
+      {
+        name: 'Jane Smith',
+        totalReports: 22,
+        pending: 5,
+        approved: 17
+      },
+      {
+        name: 'Bob Johnson',
+        totalReports: 8,
+        pending: 1,
+        approved: 7
+      },
+      {
+        name: 'Alice Brown',
+        totalReports: 18,
+        pending: 4,
+        approved: 14
+      }
+    ];
+    return of(mockData);
   }
 
   submitReport(formData: FormData): Observable<any> {
@@ -53,5 +79,43 @@ export class ReportService {
 
   getAllReports(): Observable<Report[]> {
     return this.http.get<Report[]>(`${this.apiUrl}/reports/admin`);
+  }
+
+  deleteReport(reportId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/reports/admin/${reportId}`);
+  }
+
+  // Director Dashboard Methods
+  getDirectorQueue(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/reports/director-queue`);
+  }
+
+  getDirectorMetrics(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/reports/director-metrics`);
+  }
+
+  directorApproveReport(reportId: number, comment: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reports/director-approve`, { reportId, comment });
+  }
+
+  directorRejectReport(reportId: number, comment: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reports/director-reject`, { reportId, comment });
+  }
+
+  // Director General Dashboard Methods
+  getDGCriticalItems(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/reports/dg-critical-items`);
+  }
+
+  getDGMetrics(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/reports/dg-metrics`);
+  }
+
+  dgApproveItem(itemId: number, comment: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reports/dg-approve`, { itemId, comment });
+  }
+
+  dgRejectItem(itemId: number, comment: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reports/dg-reject`, { itemId, comment });
   }
 }

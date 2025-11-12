@@ -28,6 +28,10 @@ INSERT INTO form_fields (section_id, field_name, field_label, field_type, field_
 -- Documents section (section_id=3)
 (3, 'documents', 'Upload Documents', 'file', 1, 0, NULL, 'Upload retirement documents', NULL, NULL);
 
+INSERT INTO form_fields (section_id, field_name, field_label, field_type, field_order, is_required, signature_type) VALUES
+(3, 'director_signature', 'Director Signature', 'signature', 2, 1, 'external'),
+(3, 'dg_signature', 'Director General Signature', 'signature', 3, 1, 'external');
+
 -- For SAFARI_IMPREST (id=2)
 INSERT INTO form_sections (form_type_id, section_name, section_order, is_repeatable, max_repeats) VALUES
 (2, 'Trip Details', 1, 0, NULL),

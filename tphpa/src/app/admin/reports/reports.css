@@ -313,7 +313,7 @@
   gap: 8px;
 }
 
-.btn-view, .btn-download {
+.btn-view, .btn-download, .btn-delete {
   padding: 6px 12px;
   border: none;
   border-radius: 6px;
@@ -339,6 +339,15 @@
 
 .btn-download:hover {
   background: #1e7e34;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background: #c82333;
 }
 
 .report-description {

@@ -18,6 +18,6 @@ export class OrganizationService {
   constructor(private http: HttpClient) { }
 
   getOrganizationUnits(): Observable<{ success: boolean; data: OrganizationUnit[] }> {
-    return this.http.get<{ success: boolean; data: OrganizationUnit[] }>(`${this.apiUrl}/organization/units`);
+    return this.http.get<{ success: boolean; data: OrganizationUnit[] }>(`${this.apiUrl}/organization-units`);
   }
 }

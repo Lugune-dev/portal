@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { CommonModule, NgIf, AsyncPipe } from '@angular/common';
+import { Router, RouterModule, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth/auth';
 import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
@@ -9,12 +9,13 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, NgIf, AsyncPipe, RouterModule, RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   isMenuOpen: boolean = false;
+  reportsMenuOpen: boolean = false;
   isAuthenticated: boolean = false;
   private authSubscription: Subscription = new Subscription();
 
@@ -54,6 +55,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    if (!this.isMenuOpen) {
+      this.reportsMenuOpen = false;
+    }
+  }
+
+  toggleReportsMenu(): void {
+    this.reportsMenuOpen = !this.reportsMenuOpen;
   }
 
   getUserInitials(): string {

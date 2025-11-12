@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Observable, of } from 'rxjs';
 
-// --- Placeholder Service and Interface Definitions ---
+// --- Interface Definitions ---
 
 export interface CriticalItem {
   id: number;
@@ -27,92 +26,17 @@ export interface OrgWideMetric {
   trend: string;
 }
 
-// Mock services reflecting the DG's absolute authority and organization-wide oversight
-class AuthService {
-    getUserName(): string | null { return 'Dr. Amina Hassan'; }
-    getUserId(): number { return 1; }
-    getUserRoleName(): string | null { return 'Director General'; }
-    getFullName(): string | null { return 'Dr. Amina Hassan'; }
-
-    logout(): void { console.log('Director General logged out.'); }
-}
-
-class ReportService {
-    // DG has access to ALL critical items across the organization, regardless of prior approvals
-    getCriticalItemsForAbsoluteApproval(): Observable<CriticalItem[]> {
-        console.log(`Fetching all critical items for DG absolute approval.`);
-        return of([
-            {
-                id: 1001,
-                title: 'National Budget Allocation Review',
-                submitterName: 'Finance Director',
-                submitterUnit: 'Finance & Audit',
-                managerName: 'Jane Doe',
-                type: 'BUDGET',
-                submittedDate: '2025-10-25',
-                status: 'CRITICAL_PENDING',
-                priority: 'CRITICAL',
-                details: 'Comprehensive review of national budget allocations requiring DG approval.'
-            },
-            {
-                id: 1002,
-                title: 'Emergency Infrastructure Project',
-                submitterName: 'Infrastructure Head',
-                submitterUnit: 'Infrastructure',
-                type: 'INFRASTRUCTURE',
-                submittedDate: '2025-10-26',
-                status: 'CRITICAL_PENDING',
-                priority: 'HIGH',
-                details: 'High-priority emergency infrastructure project bypassing standard approvals.'
-            },
-            {
-                id: 1003,
-                title: 'Policy Reform Initiative',
-                submitterName: 'Policy Advisor',
-                submitterUnit: 'Policy & Planning',
-                managerName: 'John Smith',
-                type: 'POLICY',
-                submittedDate: '2025-10-24',
-                status: 'ABSOLUTE_APPROVED',
-                priority: 'CRITICAL',
-                details: 'Major policy reform requiring absolute DG authority.'
-            },
-        ]);
-    }
-
-    getOrganizationWideMetrics(): Observable<OrgWideMetric[]> {
-        return of([
-            { title: 'Total Organization Budget (Annual)', value: 'KSh 2.5B', icon: 'fas fa-money-bill-wave', color: 'primary', trend: '+5.2%' },
-            { title: 'Active Directorates', value: 12, icon: 'fas fa-building', color: 'info', trend: 'Stable' },
-            { title: 'Critical Items Processed (QTD)', value: 89, icon: 'fas fa-exclamation-triangle', color: 'warning', trend: '+12%' },
-            { title: 'Overall Performance Score', value: '94.7%', icon: 'fas fa-trophy', color: 'success', trend: '+2.1%' },
-            { title: 'Staff Headcount', value: 1547, icon: 'fas fa-users', color: 'secondary', trend: '+3.5%' },
-            { title: 'Compliance Rate', value: '98.2%', icon: 'fas fa-shield-alt', color: 'danger', trend: '+0.8%' },
-        ]);
-    }
-
-    absoluteApproveItem(itemId: number, comment: string): Observable<any> {
-        console.log(`Item ${itemId} granted absolute approval by DG. Comment: ${comment}`);
-        return of({ success: true });
-    }
-
-    absoluteRejectItem(itemId: number, comment: string): Observable<any> {
-        console.log(`Item ${itemId} absolutely rejected by DG. Comment: ${comment}`);
-        return of({ success: true });
-    }
-}
-// --- End of Placeholder Definitions ---
+// Import actual services
+import { AuthService } from '../../services/auth/auth';
+import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-director-general-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './director-general-dashboard.html',
-  styleUrls: ['./director-general-dashboard.css'],
-  providers: [
-      { provide: AuthService, useClass: AuthService },
-      { provide: ReportService, useClass: ReportService }
-  ]
+  styleUrls: ['./director-general-dashboard.css']
+  // No providers needed since services are provided in root
 })
 export class DirectorGeneralDashboardComponent implements OnInit {
   activeView: string = 'oversight';
@@ -179,12 +103,12 @@ export class DirectorGeneralDashboardComponent implements OnInit {
 
   loadDashboardData(): void {
     // 1. Load all critical items requiring DG's absolute approval
-    this.reportService.getCriticalItemsForAbsoluteApproval().subscribe(items => {
+    this.reportService.getDGCriticalItems().subscribe((items: any) => {
         this.criticalItems = items;
     });
 
     // 2. Load organization-wide aggregated metrics
-    this.reportService.getOrganizationWideMetrics().subscribe(metrics => {
+    this.reportService.getDGMetrics().subscribe((metrics: any) => {
         this.metrics = metrics;
     });
   }
@@ -201,30 +125,38 @@ export class DirectorGeneralDashboardComponent implements OnInit {
     if (!this.selectedItem) return;
 
     const itemId = this.selectedItem.id;
-    let serviceCall: Observable<any>;
 
     if (action === 'approve') {
-        serviceCall = this.reportService.absoluteApproveItem(itemId, this.approvalComment);
+        this.reportService.dgApproveItem(itemId, this.approvalComment).subscribe({
+            next: () => {
+                alert(`Item ${itemId} successfully ${action}d with absolute authority.`);
+                this.selectedItem = null; // Close form
+                this.loadDashboardData(); // Refresh data
+                this.setActiveView('oversight');
+            },
+            error: (err: any) => {
+                console.error(`${action} failed:`, err);
+                alert(`Failed to process absolute ${action}.`);
+            }
+        });
     } else {
         if (!this.approvalComment || this.approvalComment.length < 10) {
             alert('Absolute rejection requires a detailed and substantial rationale.');
             return;
         }
-        serviceCall = this.reportService.absoluteRejectItem(itemId, this.approvalComment);
+        this.reportService.dgRejectItem(itemId, this.approvalComment).subscribe({
+            next: () => {
+                alert(`Item ${itemId} successfully ${action}d with absolute authority.`);
+                this.selectedItem = null; // Close form
+                this.loadDashboardData(); // Refresh data
+                this.setActiveView('oversight');
+            },
+            error: (err: any) => {
+                console.error(`${action} failed:`, err);
+                alert(`Failed to process absolute ${action}.`);
+            }
+        });
     }
-
-    serviceCall.subscribe({
-        next: () => {
-            alert(`Item ${itemId} successfully ${action}d with absolute authority.`);
-            this.selectedItem = null; // Close form
-            this.loadDashboardData(); // Refresh data
-            this.setActiveView('oversight');
-        },
-        error: (err) => {
-            console.error(`${action} failed:`, err);
-            alert(`Failed to process absolute ${action}.`);
-        }
-    });
   }
 
   getPriorityClass(priority: string): string {

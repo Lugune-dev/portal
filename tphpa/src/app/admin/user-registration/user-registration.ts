@@ -27,9 +27,11 @@ export class UserRegistrationComponent implements OnInit {
   userForm: FormGroup;
   roles: UserRole[] = [
     { value: 'admin', viewValue: 'Admin' },
+    { value: 'director_general', viewValue: 'Director General' },
     { value: 'director', viewValue: 'Director' },
     { value: 'manager', viewValue: 'Manager' },
-    { value: 'user', viewValue: 'User' }
+    { value: 'staff_officer', viewValue: 'Staff Officer' },
+    { value: 'support_officer', viewValue: 'Support Officer' }
   ];
   reportsToUsers: ReportsTo[] = [];
   errorMessage: string | null = null;

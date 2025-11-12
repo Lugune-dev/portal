@@ -1,95 +1,90 @@
-<div class="min-h-screen bg-gray-50 py-8 px-4">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
   <div class="max-w-4xl mx-auto">
     <!-- Navigation -->
-    <div class="flex justify-between items-center mb-6" *ngIf="showBack || showSwitcher">
+    <div class="flex justify-between items-center mb-8" *ngIf="showBack || showSwitcher">
       <button *ngIf="showBack" (click)="backToFormsList()"
-              class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-        Back to Forms
+              class="flex items-center px-6 py-3 bg-white text-gray-700 border border-gray-300 rounded-xl font-medium hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+        <i class="fas fa-arrow-left mr-3"></i> Back to Forms
       </button>
 
-      <div *ngIf="showSwitcher" class="flex items-center gap-3">
-        <span class="text-sm font-medium text-gray-700">Switch Form:</span>
-        <select (change)="navigateToForm($event)" [value]="formTypeCode"
-                class="px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-          <option value="RETIREMENT_IMPREST">Retirement of Imprest</option>
-          <option value="SAFARI_IMPREST">Safari Imprest</option>
-          <option value="SPECIAL_IMPREST">Special Imprest</option>
-          <option value="CLAIM_FORM">Claim Form</option>
-          <option value="OUTSTANDING_IMPREST">Outstanding Imprest</option>
-          <option value="PETTY_CASH">Petty Cash Voucher</option>
-        </select>
-      </div>
+      <select *ngIf="showSwitcher" (change)="navigateToForm($event)"
+              class="px-6 py-3 bg-white border border-gray-300 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:shadow-lg">
+        <option value="">Switch Form Type</option>
+        <!-- Add form options here if needed -->
+      </select>
     </div>
 
     <!-- Loading State -->
-    <div *ngIf="isLoading" class="bg-white rounded-lg shadow-sm p-8 text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-      <p class="text-gray-600">Loading {{ formTypeCode }} form...</p>
+    <div *ngIf="isLoading" class="bg-white rounded-2xl shadow-xl p-12 text-center border border-gray-100">
+      <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-emerald-500 mx-auto mb-6"></div>
+      <p class="text-gray-600 text-lg font-medium">Loading {{ formTypeCode }} form...</p>
+      <p class="text-gray-500 text-sm mt-2">Please wait while we prepare your form</p>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-6">
-      <div class="flex items-center mb-4">
-        <svg class="w-6 h-6 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-2xl p-8 shadow-lg">
+      <div class="flex items-center mb-6">
+        <svg class="w-8 h-8 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
         </svg>
-        <h3 class="text-lg font-semibold text-red-800">
+        <h3 class="text-xl font-semibold text-red-800">
           <span *ngIf="connectionError; else errorTitle">Connection Error</span>
           <ng-template #errorTitle>Error Loading Form</ng-template>
         </h3>
       </div>
-      <pre class="bg-red-100 p-3 rounded text-sm text-red-700 mb-4 whitespace-pre-wrap">{{ error }}</pre>
+      <pre class="bg-red-100 p-4 rounded-xl text-sm text-red-700 mb-6 whitespace-pre-wrap border border-red-200">{{ error }}</pre>
 
-      <div class="flex gap-3">
+      <div class="flex gap-4">
         <button (click)="retryConnection()"
-                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-          Retry Connection
+                class="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 font-medium flex items-center">
+          <i class="fas fa-redo mr-2"></i> Retry Connection
         </button>
         <button (click)="backToFormsList()"
-                class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-          Back to Forms
+                class="px-6 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 font-medium flex items-center">
+          <i class="fas fa-arrow-left mr-2"></i> Back to Forms
         </button>
       </div>
     </div>
 
     <!-- Form -->
     <form *ngIf="!isLoading && !error && dynamicForm && formConfig" [formGroup]="dynamicForm"
-          class="bg-white rounded-lg shadow-sm overflow-hidden">
+          class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
       <!-- Form Header -->
-      <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4">
+      <div class="bg-gradient-to-br from-emerald-600 to-teal-700 px-8 py-6">
         <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-bold text-white">{{ formConfig.form_type_name }}</h2>
-          <span class="px-3 py-1 bg-white/20 text-white text-sm font-medium rounded-full">{{ formTypeCode }}</span>
+          <h2 class="text-3xl font-bold text-white">{{ formConfig.form_type_name }}</h2>
+          <span class="px-4 py-2 bg-white/20 text-white text-sm font-medium rounded-full backdrop-blur-sm border border-white/30">{{ formTypeCode }}</span>
         </div>
       </div>
 
       <!-- Form Sections -->
-      <div class="p-6 space-y-8">
-        <div *ngFor="let section of formConfig.sections; trackBy: trackBySectionId" class="space-y-6">
+      <div class="p-8 space-y-10">
+        <div *ngFor="let section of formConfig.sections; trackBy: trackBySectionId" class="space-y-8">
           <!-- Section Header -->
-          <div class="border-b border-gray-200 pb-3">
-            <h3 class="text-xl font-semibold text-gray-800">{{ section.section_name }}</h3>
+          <div class="border-b-2 border-gray-200 pb-4">
+            <h3 class="text-2xl font-semibold text-gray-800 flex items-center">
+              <i class="fas fa-folder-open mr-3 text-emerald-600"></i>
+              {{ section.section_name }}
+            </h3>
           </div>
 
           <!-- Section Fields -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div *ngFor="let field of section.fields; trackBy: trackByFieldId" class="space-y-2">
-              <label [for]="field.field_name" class="block text-sm font-medium text-gray-700">
-                {{ field.field_label }}
-                <span *ngIf="field.is_required" class="text-red-500">*</span>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div *ngFor="let field of section.fields; trackBy: trackByFieldId" class="space-y-3">
+                <label [for]="field.field_name" class="block text-sm font-semibold text-gray-700 flex items-center">
+                <!-- For external signature fields (Director-level approvals) show a read-only 'Approval' label to reflect external workflow -->
+                {{ getApprovalLabel(field) }}
+                <span *ngIf="field.is_required" class="text-red-500 ml-1">*</span>
               </label>
 
               <!-- Text Input -->
-              <input *ngIf="field.field_type === 'text' || field.field_type === 'readonly'"
+              <input *ngIf="(field.field_type === 'text' || field.field_type === 'readonly') && field.field_name !== 'department' && field.field_name !== 'section'"
                      [id]="field.field_name"
                      [formControlName]="field.field_name"
                      type="text"
                      [placeholder]="field.placeholder_text || ''"
                      [readonly]="field.field_type === 'readonly'"
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 disabled:cursor-not-allowed">
+                     class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:bg-gray-100 disabled:cursor-not-allowed transition-all duration-300 hover:border-gray-400 text-gray-900 placeholder-gray-500">
 
               <!-- Number Input -->
               <input *ngIf="field.field_type === 'number'"
@@ -97,7 +92,7 @@
                      [formControlName]="field.field_name"
                      type="number"
                      [placeholder]="field.placeholder_text || ''"
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                     class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 text-gray-900 placeholder-gray-500">
 
               <!-- Date Input -->
               <input *ngIf="field.field_type === 'date'"
@@ -105,44 +100,104 @@
                      [formControlName]="field.field_name"
                      type="date"
                      [placeholder]="field.placeholder_text || ''"
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                     class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 text-gray-900">
 
               <!-- Textarea -->
               <textarea *ngIf="field.field_type === 'textarea'"
                         [id]="field.field_name"
                         [formControlName]="field.field_name"
                         [placeholder]="field.placeholder_text || ''"
-                        rows="4"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-vertical">
+                        rows="5"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-vertical transition-all duration-300 hover:border-gray-400 text-gray-900 placeholder-gray-500">
               </textarea>
 
               <!-- Select -->
-              <select *ngIf="field.field_type === 'select'"
+              <select *ngIf="field.field_type === 'select' || field.field_name === 'department' || field.field_name === 'section'"
                       [id]="field.field_name"
                       [formControlName]="field.field_name"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
-                <option value="">Select {{ field.field_label }}</option>
-                <ng-container *ngIf="field.field_name === 'department'">
-                  <option *ngFor="let unit of organizationUnits" [value]="unit.OrgUnitID">{{ unit.UnitName }}</option>
-                </ng-container>
-                <ng-container *ngIf="field.field_name !== 'department'">
-                  <option *ngFor="let option of field.options || []" [value]="option.value">{{ option.label }}</option>
-                </ng-container>
+                      class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white transition-all duration-300 hover:border-gray-400 text-gray-900">
+                <option value="">Section {{ field.field_label }}</option>
+                <option *ngFor="let unit of (field.field_name === 'department' || field.field_name === 'section' ? organizationUnits : [])" [value]="unit.OrgUnitID">{{ unit.UnitName }}</option>
+                <option *ngFor="let option of (field.field_name !== 'department' && field.field_name !== 'section' ? field.options || [] : [])" [value]="option.value">{{ option.label }}</option>
               </select>
+
+              <!-- Signature Field -->
+              <div *ngIf="field.field_type === 'signature'" class="space-y-3">
+                <!-- External Signature (Director/DG) - Read-only audit trail -->
+                <div *ngIf="isExternalField(field)" class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                      <div class="font-medium text-gray-900">{{ getSignatureDisplayValue(dynamicForm.get(field.field_name)?.value, field.field_name) }}</div>
+                      <div *ngIf="getSignatureTimestamp(dynamicForm.get(field.field_name)?.value)" class="text-sm text-gray-600 mt-1">
+                        Approved: {{ getSignatureTimestamp(dynamicForm.get(field.field_name)?.value) }}
+                      </div>
+                      <div *ngIf="!dynamicForm.get(field.field_name)?.value && !(fieldApprovalMeta && fieldApprovalMeta[field.field_name] && fieldApprovalMeta[field.field_name].status === 'pending')" class="text-sm text-gray-500 mt-1 italic">
+                        Pending external approval
+                      </div>
+                      <div *ngIf="fieldApprovalMeta && fieldApprovalMeta[field.field_name] && fieldApprovalMeta[field.field_name].status === 'pending'" class="text-sm text-yellow-600 mt-1 flex items-center gap-2">
+                        <i class="fas fa-clock animate-spin"></i>
+                        Approval requested • {{ fieldApprovalMeta[field.field_name].created_at | date:'short' }}
+                      </div>
+                    </div>
+                    <div class="ml-4 flex items-center gap-2">
+                      <button *ngIf="!dynamicForm.get(field.field_name)?.value && !(fieldApprovalMeta && fieldApprovalMeta[field.field_name] && fieldApprovalMeta[field.field_name].status === 'pending')"
+                              type="button"
+                              (click)="$event.preventDefault(); $event.stopPropagation(); requestApprovalForField(field.field_name)"
+                              class="px-3 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all duration-200 text-sm font-medium flex items-center">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Request approval
+                      </button>
+
+                      <i class="fas fa-check-circle text-green-600 text-xl" *ngIf="dynamicForm.get(field.field_name)?.value"></i>
+                      <i class="fas fa-clock text-yellow-600 text-xl" *ngIf="!dynamicForm.get(field.field_name)?.value && !(fieldApprovalMeta && fieldApprovalMeta[field.field_name] && fieldApprovalMeta[field.field_name].status === 'pending')"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dashboard Signature (Head of Project/Section) - Interactive -->
+                <!-- Treat any non-external signature as dashboard (fallback when signature_type is missing) -->
+                <div *ngIf="!isExternalField(field)" class="space-y-3">
+                  <div *ngIf="!dynamicForm.get(field.field_name)?.value" class="flex items-center space-x-3">
+                    <button type="button"
+                            [disabled]="!canSign"
+                            (click)="$event.preventDefault(); $event.stopPropagation(); debugField(field); onSign(field.field_name)"
+                            [attr.aria-disabled]="!canSign"
+                            title="{{ canSign ? ('Sign ' + field.field_label) : 'Signing unavailable' }}"
+                            class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all duration-300 hover:shadow-lg text-sm font-medium flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60 disabled:cursor-not-allowed">
+                      <i class="fas fa-signature mr-2"></i>
+                      Sign {{ field.field_label }}
+                    </button>
+                  </div>
+
+                  <div *ngIf="dynamicForm.get(field.field_name)?.value || signedFields[field.field_name]" class="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                    <div class="flex items-center justify-between">
+                      <div class="flex-1">
+                        <div class="font-medium text-emerald-900">{{ getSignatureDisplayValue(dynamicForm.get(field.field_name)?.value) }}</div>
+                        <div class="text-sm text-emerald-700 mt-1">
+                          Signed: {{ getSignatureTimestamp(dynamicForm.get(field.field_name)?.value) }}
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Form Actions -->
-      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+      <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 flex justify-end gap-4 border-t border-gray-200">
         <button type="button" (click)="backToFormsList()"
-                class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium">
-          Cancel
+                class="px-8 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 font-semibold flex items-center">
+          <i class="fas fa-times mr-2"></i> Cancel
         </button>
         <button type="button" (click)="onSubmit()"
-                class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium">
-          Submit {{ formConfig.form_type_name }}
+                class="px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-xl hover:from-emerald-700 hover:to-teal-800 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 font-semibold flex items-center">
+          <i class="fas fa-paper-plane mr-2"></i> Submit {{ formConfig.form_type_name }}
         </button>
       </div>
     </form>

@@ -63,6 +63,19 @@ export class ReportsComponent implements OnInit {
     console.log('Download attachment not available for report:', report.id);
   }
 
+  deleteReport(report: any): void {
+    if (confirm('Are you sure you want to delete this report?')) {
+      this.reportService.deleteReport(report.id).subscribe({
+        next: () => {
+          this.loadReports();
+        },
+        error: (error) => {
+          console.error('Error deleting report:', error);
+        }
+      });
+    }
+  }
+
   setActiveSidebar(item: any): void {
     this.sidebarItems.forEach(i => i.active = false);
     item.active = true;

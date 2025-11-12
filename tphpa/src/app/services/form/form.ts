@@ -31,6 +31,7 @@ export interface FormField {
   placeholder_text?: string;
   options?: any[];
   validation_rules?: any;
+  signature_type?: 'dashboard' | 'external'; // For signature fields: dashboard allows signing in form, external shows audit trail
 }
 
 export interface FormInstance {

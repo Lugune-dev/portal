@@ -52,6 +52,10 @@ export class AuthService {
           localStorage.setItem('user_id', response.user?.UserID?.toString());
           const fullName = `${response.user?.FirstName || ''} ${response.user?.LastName || ''}`.trim();
           localStorage.setItem('user_name', fullName || response.user?.Email);
+          // Store user email explicitly for matching approver identity
+          if (response.user && response.user.Email) {
+            localStorage.setItem('user_email', response.user.Email);
+          }
           localStorage.setItem('first_name', response.user?.FirstName || '');
           localStorage.setItem('last_name', response.user?.LastName || '');
           localStorage.setItem('org_unit_id', response.user?.OrgUnitID?.toString());
@@ -125,6 +129,11 @@ export class AuthService {
       }
     }
     return userName; // fallback to email if parsing fails
+  }
+
+  getUserEmail(): string | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
+    return localStorage.getItem('user_email');
   }
 
   // Existing methods

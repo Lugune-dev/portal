@@ -1,5 +1,5 @@
 <div class="dashboard-container">
-  <div class="sidebar">
+  <div class="w-72 bg-gradient-to-br from-purple-600 to-pink-700 text-white p-8 shadow-xl fixed h-full left-0 top-0 overflow-y-auto z-50">
     <h3>Admin Portal</h3>
     <button class="sidebar-btn" [class.active]="item.active" *ngFor="let item of sidebarItems" (click)="setActiveSidebar(item)" [routerLink]="item.route">
       <i [class]="item.icon"></i> {{ item.label }}
@@ -10,9 +10,9 @@
     <div class="content-header">
       <h2>Reports Management</h2>
       <div class="auth-section">
-        <span class="nav-link user-greeting">Welcome, Admin</span>
-        <div class="user-avatar">A</div>
-        <a class="btn-signin read-more" (click)="logout()">Logout</a>
+        <span class="text-gray-700 font-semibold bg-gradient-to-r from-purple-600 to-pink-700 bg-clip-text text-transparent">Welcome, Admin</span>
+        <div class="w-11 h-11 rounded-full bg-gradient-to-r from-purple-600 to-pink-700 text-white flex items-center justify-center font-bold cursor-pointer transition-all duration-300 hover:scale-110 shadow-md border-2 border-white/30">A</div>
+        <a class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-700 text-white border-none rounded-xl font-semibold cursor-pointer transition-all duration-300 hover:from-purple-700 hover:to-pink-800 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative" (click)="logout()">Logout</a>
       </div>
     </div>
 
@@ -40,6 +40,7 @@
                     <div class="action-buttons">
                       <button class="btn-view" (click)="viewReport(report)">View</button>
                       <button class="btn-download" (click)="downloadAttachment(report)" *ngIf="report.attachment">Download</button>
+                      <button class="btn-delete" (click)="deleteReport(report)">Delete</button>
                     </div>
                   </div>
                 </div>

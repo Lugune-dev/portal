@@ -63,9 +63,25 @@ export class EmployeeDashboard implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadMyForms();
-    this.loadReports();
     this.initializeReportForm();
+
+    // Load data immediately if already authenticated
+    if (this.authService.isAuthenticated() && this.authService.getUserId()) {
+      this.loadMyForms();
+      this.loadReports();
+    }
+
+    // Subscribe to auth state changes to load data when user logs in
+    this.authService.authState$.subscribe(isAuthenticated => {
+      if (isAuthenticated && this.authService.getUserId()) {
+        this.loadMyForms();
+        this.loadReports();
+      } else {
+        // Clear data when not authenticated or user data not available
+        this.myForms = [];
+        this.reports = [];
+      }
+    });
   }
 
   // --- Auth & Navigation Methods ---
@@ -89,14 +105,7 @@ export class EmployeeDashboard implements OnInit {
     return (first + last).toUpperCase().slice(0, 2);
   }
 
-  setActiveView(view: string): void {
-    this.activeView = view;
-    // Ensure we are viewing dashboard content on initialization
-    if (view === 'dashboard') {
-        this.loadMyForms();
-        this.loadReports();
-    }
-  }
+
 
   getViewTitle(): string {
     const titles: { [key: string]: string } = {
@@ -253,7 +262,7 @@ export class EmployeeDashboard implements OnInit {
         this.reportForm.reset();
         this.reportForm.patchValue({ type: 'GENERAL' });
         this.selectedFile = null;
-        this.setActiveView('view-report');
+        this.activeView = 'view-report';
       },
       error: (err) => {
         console.error('Report submission failed:', err);

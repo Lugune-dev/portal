@@ -1,17 +1,17 @@
 <div class="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
     <!-- Sidebar -->
-    <div class="w-72 bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-8 shadow-xl fixed h-full left-0 top-0 overflow-y-auto z-50">
+    <div class="w-72 bg-gradient-to-br from-purple-600 to-pink-700 text-white p-8 shadow-xl fixed h-full left-0 top-0 overflow-y-auto z-50">
         <h3 class="text-xl font-bold mb-8 text-center text-white drop-shadow-lg">Manager Portal</h3>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'dashboard'" (click)="setActiveView('dashboard')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'dashboard'" (click)="activeView = 'dashboard'">
             <i class="fas fa-tachometer-alt mr-4 text-xl w-5 text-center"></i> Dashboard
         </button>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'queue'" (click)="setActiveView('queue')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'queue'" (click)="activeView = 'queue'">
             <i class="fas fa-clipboard-list mr-4 text-xl w-5 text-center"></i> Approval Queue
         </button>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'workload'" (click)="setActiveView('workload')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'workload'" (click)="activeView = 'workload'">
             <i class="fas fa-users-cog mr-4 text-xl w-5 text-center"></i> Staff Workload
         </button>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'forms'" (click)="setActiveView('forms')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'forms'" (click)="activeView = 'forms'">
             <i class="fas fa-file-alt mr-4 text-xl w-5 text-center"></i> Form Approvals
         </button>
     </div>
@@ -22,9 +22,9 @@
         <div class="flex justify-between items-center mb-8 pb-5 border-b-2 border-gray-200">
             <h2 class="text-3xl font-semibold text-gray-800">{{ getViewTitle() }}</h2>
             <div class="flex items-center gap-4 px-6 py-4 bg-white rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                <span class="text-gray-700 font-semibold bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">Welcome, {{ userName }}</span>
-                <div class="w-11 h-11 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 text-white flex items-center justify-center font-bold cursor-pointer transition-all duration-300 hover:scale-110 shadow-md border-2 border-white/30">{{ getUserInitials() }}</div>
-                <a class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 text-white border-none rounded-xl font-semibold cursor-pointer transition-all duration-300 hover:from-emerald-700 hover:to-teal-800 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative" (click)="logout()">
+                <span class="text-gray-700 font-semibold bg-gradient-to-r from-purple-600 to-pink-700 bg-clip-text text-transparent">Welcome, {{ userName }}</span>
+                <div class="w-11 h-11 rounded-full bg-gradient-to-r from-purple-600 to-pink-700 text-white flex items-center justify-center font-bold cursor-pointer transition-all duration-300 hover:scale-110 shadow-md border-2 border-white/30">{{ getUserInitials() }}</div>
+                <a class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-700 text-white border-none rounded-xl font-semibold cursor-pointer transition-all duration-300 hover:from-purple-700 hover:to-pink-800 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative" (click)="logout()">
                     <span class="relative z-10">Logout</span>
                     <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-700 hover:translate-x-full"></span>
                 </a>
@@ -37,7 +37,7 @@
                 <h3 class="text-2xl font-semibold text-gray-800 mb-6">Section Overview: {{ userUnitName }}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
 
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer" (click)="setActiveView('queue')">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer" (click)="activeView = 'queue'">
                         <div class="flex items-center">
                             <div class="w-16 h-16 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center mr-6 text-white text-2xl">
                                 <i class="fas fa-bell"></i>
@@ -96,7 +96,7 @@
                                         <td class="px-6 py-4 text-gray-700">{{ report.title }}</td>
                                         <td class="px-6 py-4 text-gray-700">{{ report.submitter_name }}</td>
                                         <td class="px-6 py-4 text-gray-700">{{ report.submitted_date | date: 'shortDate' }}</td>
-                                        <td class="px-6 py-4"><button class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200" (click)="openApprovalModal(report)">Review</button></td>
+                                        <td class="px-6 py-4"><button class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-700 text-white border-none rounded-xl font-semibold cursor-pointer transition-all duration-300 hover:from-purple-700 hover:to-pink-800 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative" (click)="openApprovalModal(report)">Review</button></td>
                                     </tr>
                                     <tr *ngIf="managerQueue.length === 0">
                                         <td colspan="5" class="px-6 py-8 text-center text-gray-500">🎉 No reports currently require your immediate approval.</td>
@@ -131,7 +131,7 @@
                                         <td class="px-6 py-4 text-gray-700">{{ form.form_type_name }}</td>
                                         <td class="px-6 py-4 text-gray-700">{{ form.FirstName }} {{ form.LastName }}</td>
                                         <td class="px-6 py-4 text-gray-700">{{ form.created_at | date: 'shortDate' }}</td>
-                                        <td class="px-6 py-4"><button class="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors duration-200" (click)="openFormApprovalModal(form)">Review</button></td>
+                                        <td class="px-6 py-4"><button class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-700 text-white border-none rounded-xl font-semibold cursor-pointer transition-all duration-300 hover:from-purple-700 hover:to-pink-800 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative" (click)="openFormApprovalModal(form)">Review</button></td>
                                     </tr>
                                     <tr *ngIf="subordinateForms.length === 0">
                                         <td colspan="6" class="px-6 py-8 text-center text-gray-500">🎉 No forms currently require your approval.</td>
@@ -208,7 +208,7 @@
 
             <div *ngIf="activeView === 'workload'">
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-cyan-600 to-cyan-800 text-white px-6 py-4">
+                    <div class="bg-gradient-to-r from-purple-500 to-pink-600 text-white px-6 py-4">
                         <i class="fas fa-chart-bar mr-3"></i> Subordinate Workload Breakdown
                     </div>
                     <div class="p-6">

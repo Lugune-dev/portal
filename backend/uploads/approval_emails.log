@@ -1,0 +1,5 @@
+2025-11-12T08:41:43.534Z APPROVAL_EMAIL -> to=elias.msuya@tphpa.go.tz subject=Approval requested: director_signature body=An approval has been requested for field director_signature by user 10.
+
+Open the link to review and approve: http://localhost:3001/approvals/verify?token=f27273377cac0c5f275db71eecb0b4993518c450b9282ffaf3eba529491450d9
+
+This link expires at 2025-11-13T08:41:43.220Z

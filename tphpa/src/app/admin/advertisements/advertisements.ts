@@ -24,7 +24,8 @@ export class AdvertisementsComponent implements OnInit {
   sidebarItems: any[] = [
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', active: false, route: '/admin/dashboard' },
     { icon: 'fas fa-bullhorn', label: 'Advertisements', active: true, route: '/admin/advertisements' },
-    { icon: 'fas fa-users', label: 'User List', active: false, route: '/admin/user-registration' },
+    { icon: 'fas fa-users', label: 'User List', active: false, route: '/admin/user-list' },
+    { icon: 'fas fa-user-plus', label: 'Register User', active: false, route: '/admin/user-registration' },
     { icon: 'fas fa-chart-bar', label: 'Reports', active: false, route: '/admin/reports' },
     { icon: 'fas fa-cog', label: 'Settings', active: false, route: '/admin/settings' }
   ];

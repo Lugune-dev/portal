@@ -8,8 +8,8 @@ import { LanguageService } from '../services/language.service';
 import { AuthService } from '../services/auth/auth';
 import { FormsService, FormSubmission } from '../services/forms.service';
 
-// Swiper imports (use element API or later adapter; avoid importing missing Angular adapter)
-import { Navigation, Pagination, Autoplay, A11y } from 'swiper';
+// Slick Carousel imports
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 interface Advertisement {
   id: number;
@@ -35,6 +35,7 @@ interface Stats {
     CommonModule,
     HttpClientModule,
     RouterModule,
+    SlickCarouselModule,
   ],
   schemas: [NO_ERRORS_SCHEMA],
   providers: [DatePipe],
@@ -44,7 +45,7 @@ interface Stats {
 export class Home implements OnInit, AfterViewInit, OnDestroy {
   // Carousel Configuration
   currentSlide = 0;
-  slides = [0, 1, 2];
+  slides = [0, 1, 2, 3, 4, 5];
   private carouselInterval: any;
 
   // Stats Data
@@ -54,34 +55,43 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     satisfactionRate: 98
   };
 
-  // Swiper Configuration
-  swiperConfig = {
-    modules: [Navigation, Pagination, Autoplay, A11y],
-    slidesPerView: 1,
-    spaceBetween: 20,
-    navigation: true,
-    pagination: { clickable: true },
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true,
-    },
-    loop: true,
-    breakpoints: {
-      640: {
-        slidesPerView: 2,
-        spaceBetween: 20,
+  // Slick Carousel Configuration
+  slickConfig = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    dots: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    infinite: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+        }
       },
-      768: {
-        slidesPerView: 3,
-        spaceBetween: 30,
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        }
       },
-      1024: {
-        slidesPerView: 4,
-        spaceBetween: 30,
-      },
-    },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        }
+      }
+    ]
   };
+
+  // Featured Advertisement
+  featuredAd: Advertisement | null = null;
 
   adsLoading = true;
   adsError = false;

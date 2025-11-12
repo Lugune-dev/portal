@@ -33,7 +33,22 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    // Load data immediately if already authenticated
+    if (this.authService.isAuthenticated() && this.authService.getUserId()) {
+      this.loadDashboardData();
+    }
+
+    // Subscribe to auth state changes to load data when user logs in
+    this.authService.authState$.subscribe(isAuthenticated => {
+      if (isAuthenticated && this.authService.getUserId()) {
+        this.loadDashboardData();
+      } else {
+        // Clear data when not authenticated or user data not available
+        this.managerQueue = [];
+        this.subordinateWorkload = [];
+        this.subordinateForms = [];
+      }
+    });
   }
 
   get userName(): string | null {
@@ -59,9 +74,7 @@ export class DashboardComponent implements OnInit {
     return (first + last).toUpperCase().slice(0, 2);
   }
 
-  setActiveView(view: string): void {
-    this.activeView = view;
-  }
+
 
   getViewTitle(): string {
     const titles: { [key: string]: string } = {
@@ -113,7 +126,7 @@ export class DashboardComponent implements OnInit {
       this.approvalComment = '';
       // In a real app, you'd show a modal here
       console.log('Opening approval form for report:', report.id);
-      this.setActiveView('queue');
+      this.activeView = 'queue';
   }
 
   openFormApprovalModal(form: FormSubmission): void {
@@ -121,7 +134,7 @@ export class DashboardComponent implements OnInit {
       this.selectedReport = null;
       this.approvalComment = '';
       console.log('Opening approval form for form:', form.id);
-      this.setActiveView('forms');
+      this.activeView = 'forms';
   }
 
   processApproval(action: 'approve' | 'reject'): void {
@@ -154,7 +167,7 @@ export class DashboardComponent implements OnInit {
             alert(`Report ${reportId} successfully ${action}d.`);
             this.selectedReport = null; // Close modal/form
             this.loadDashboardData(); // Refresh data
-            this.setActiveView('dashboard');
+            this.activeView = 'dashboard';
         },
         error: (err) => {
             console.error(`${action} failed:`, err);
@@ -190,7 +203,7 @@ export class DashboardComponent implements OnInit {
             alert(`Form ${formId} successfully ${action}d.`);
             this.selectedForm = null; // Close modal/form
             this.loadDashboardData(); // Refresh data
-            this.setActiveView('dashboard');
+            this.activeView = 'dashboard';
         },
         error: (err) => {
             console.error(`${action} failed:`, err);

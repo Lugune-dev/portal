@@ -1,28 +1,25 @@
+<br><br>
 <div class="min-h-screen bg-gray-50">
   <!-- Header Section -->
-  <div class="bg-white border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="bg-gradient-to-br from-green-50 via-white to-green-50 border-b border-green-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <div class="text-center">
-        <div class="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 mb-6">
-          <i class="fas fa-leaf mr-2"></i>
-          <span class="text-sm font-medium">About TPHPA</span>
+        <div class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white mb-8 shadow-lg">
+          <i class="fas fa-leaf mr-3 text-lg"></i>
+          
+          <span class="text-sm font-semibold tracking-wide uppercase">About TPHPA</span>
         </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-8 leading-tight">
           Protecting Tanzania's
-          <span class="block text-green-600">Plant Health Heritage</span>
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-700 drop-shadow-sm">
+            Plant Health Heritage
+          </span>
         </h1>
-        <p class="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
+        <p class="text-xl lg:text-2xl text-gray-700 max-w-5xl mx-auto leading-relaxed mb-10 font-medium">
           Tanzania Plant Health and Pesticides Authority - Your trusted partner in safeguarding agricultural excellence, ensuring food security, and promoting sustainable farming practices across our nation
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button class="px-8 py-4 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
-            <i class="fas fa-eye mr-2"></i>
-            Our Vision & Mission
-          </button>
-          <button class="px-8 py-4 border-2 border-green-600 text-green-600 font-semibold rounded-xl hover:bg-green-50 transition-all duration-300">
-            <i class="fas fa-history mr-2"></i>
-            Our History
-          </button>
+        <div class="flex justify-center">
+          <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-green-600 rounded-full"></div>
         </div>
       </div>
     </div>
@@ -38,21 +35,21 @@
         <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
           <div class="flex items-center mb-6">
             <div class="w-14 h-14 bg-gradient-to-r from-green-500 to-green-700 rounded-lg flex items-center justify-center mr-4">
-              <i class="{{ mission.icon }} text-white text-xl"></i>
+              <i class="fas fa-bullseye text-white text-xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800">{{ mission.title }}</h3>
+            <h3 class="text-2xl font-bold text-gray-800">Our Mission</h3>
           </div>
-          <p class="text-gray-600 leading-relaxed">{{ mission.description }}</p>
+          <p class="text-gray-600 leading-relaxed">To safeguard and enhance plant health across Tanzania, ensure responsible pesticide usage, and foster food security through sustainable agricultural practices that benefit our nation and communities.</p>
         </div>
 
         <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
           <div class="flex items-center mb-6">
             <div class="w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg flex items-center justify-center mr-4">
-              <i class="{{ vision.icon }} text-white text-xl"></i>
+              <i class="fas fa-eye text-white text-xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800">{{ vision.title }}</h3>
+            <h3 class="text-2xl font-bold text-gray-800">Our Vision</h3>
           </div>
-          <p class="text-gray-600 leading-relaxed">{{ vision.description }}</p>
+          <p class="text-gray-600 leading-relaxed">A Tanzania where plant health is optimally protected, pesticides are safely used, and agriculture contributes significantly to national development and prosperity.</p>
         </div>
       </div>
     </div>
@@ -61,77 +58,59 @@
     <div class="mb-16">
       <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Our Core Values</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div *ngFor="let value of values" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-700 rounded-lg flex items-center justify-center mr-4">
-              <i class="{{ value.icon }} text-white text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-800">{{ value.title }}</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 text-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-shield-alt text-white text-xl"></i>
           </div>
-          <p class="text-gray-600 leading-relaxed">{{ value.description }}</p>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Integrity</h3>
+          <p class="text-gray-600 leading-relaxed">We uphold the highest standards of honesty, transparency, and ethical conduct in all our operations and interactions.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 text-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-users text-white text-xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Collaboration</h3>
+          <p class="text-gray-600 leading-relaxed">We actively partner with stakeholders, farmers, and communities to achieve shared goals for agricultural excellence.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 text-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-lightbulb text-white text-xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Innovation</h3>
+          <p class="text-gray-600 leading-relaxed">We embrace cutting-edge technologies and innovative approaches to continuously improve plant health protection.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 text-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-leaf text-white text-xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Sustainability</h3>
+          <p class="text-gray-600 leading-relaxed">We champion environmentally responsible practices that ensure long-term agricultural sustainability for future generations.</p>
         </div>
       </div>
     </div>
 
-    <!-- History Timeline -->
-    <div class="mb-16">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Our Journey</h2>
-
-      <div class="relative">
-        <!-- Timeline line -->
-        <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-400 to-green-600"></div>
-
-        <div class="space-y-8">
-          <div *ngFor="let event of history; let i = index" class="relative flex items-start">
-            <!-- Timeline dot -->
-            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-r from-green-500 to-green-700 rounded-full flex items-center justify-center shadow-lg z-10">
-              <span class="text-white font-bold text-sm">{{ event.year }}</span>
-            </div>
-
-            <!-- Content card -->
-            <div class="ml-8 bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex-1 hover:shadow-xl transition-shadow duration-300">
-              <div class="flex items-start justify-between mb-4">
-                <h3 class="text-xl font-semibold text-gray-800">{{ event.title }}</h3>
-                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">{{ event.year }}</span>
-              </div>
-              <p class="text-gray-600 leading-relaxed">{{ event.description }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Leadership -->
-    <div class="mb-16">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Leadership Team</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div *ngFor="let leader of leadership" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
-          <div class="h-48 bg-gradient-to-r from-green-500 to-green-700 flex items-center justify-center">
-            <i class="fas fa-user-tie text-white text-5xl"></i>
-          </div>
-          <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ leader.name }}</h3>
-            <p class="text-green-600 font-medium mb-4 text-sm">{{ leader.position }}</p>
-            <p class="text-gray-600 text-sm leading-relaxed">{{ leader.bio }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Statistics -->
+    <!-- What We Do -->
     <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">TPHPA by Numbers</h2>
-      <p class="text-gray-600 text-lg text-center mb-12">Our impact in protecting Tanzania's agricultural future</p>
-
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-        <div *ngFor="let stat of statistics" class="text-center">
-          <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="{{ stat.icon }} text-white text-xl"></i>
-          </div>
-          <div class="text-3xl font-bold text-gray-800 mb-2">{{ stat.number }}</div>
-          <div class="text-gray-600 text-sm font-medium">{{ stat.label }}</div>
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">What We Do</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="text-center">
+          <i class="fas fa-seedling text-4xl text-green-600 mb-4"></i>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Plant Quarantine</h3>
+          <p class="text-gray-600">Preventing the introduction and spread of harmful plant pests and diseases that threaten our agricultural sector.</p>
+        </div>
+        <div class="text-center">
+          <i class="fas fa-flask text-4xl text-green-600 mb-4"></i>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Pesticide Regulation</h3>
+          <p class="text-gray-600">Ensuring safe, effective, and responsible use of pesticides to protect both crops and the environment.</p>
+        </div>
+        <div class="text-center">
+          <i class="fas fa-chart-line text-4xl text-green-600 mb-4"></i>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Quality Assurance</h3>
+          <p class="text-gray-600">Maintaining rigorous standards for plant health and agricultural products to guarantee quality and safety.</p>
         </div>
       </div>
     </div>

@@ -356,6 +356,108 @@ header {
     }
 }
 
+/* Mobile Menu Styles */
+@media (max-width: 768px) {
+    .fixed-header {
+        position: fixed;
+        top: 40px;
+        left: 0;
+        right: 0;
+        z-index: 999;
+    }
+
+    /* Overlay for mobile menu */
+    .bg-black.bg-opacity-50 {
+        backdrop-filter: blur(2px);
+    }
+
+    /* Slide-in animation for mobile menu */
+    .transform.transition-transform.duration-300 {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .translate-x-full {
+        transform: translateX(100%);
+    }
+
+    .translate-x-0 {
+        transform: translateX(0);
+    }
+
+    /* Mobile menu container */
+    .absolute.top-0.right-0.w-80.max-w-full.h-full.bg-white.shadow-lg {
+        width: 80vw;
+        max-width: 320px;
+    }
+
+    /* Menu header */
+    .flex.justify-between.items-center.p-4.border-b.border-gray-200 {
+        padding: 1rem;
+    }
+
+    /* Menu content */
+    .flex.flex-col.overflow-y-auto.h-full.pb-20 {
+        padding-bottom: 5rem;
+    }
+
+    /* Menu items */
+    .px-4.py-3.no-underline.text-black.font-semibold.border-b.border-gray-200 {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+
+    .hover\\:bg-gray-50:hover {
+        background-color: #f9fafb;
+    }
+
+    /* Reports submenu */
+    .bg-gray-50.overflow-hidden.transition-all.duration-300 {
+        background-color: #f9fafb;
+        transition: max-height 0.3s ease-in-out;
+    }
+
+    .max-h-0 {
+        max-height: 0;
+    }
+
+    .max-h-96 {
+        max-height: 24rem;
+    }
+
+    /* Rotate chevron icon */
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+
+    .transition-transform {
+        transition: transform 0.3s ease;
+    }
+
+    /* User info section */
+    .px-4.py-3.flex.flex-col.items-center.gap-2 {
+        padding: 0.75rem 1rem;
+        margin-top: auto;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    /* User avatar */
+    .w-8.h-8.bg-primary-600.text-white.rounded-full.flex.items-center.justify-center.font-semibold {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.875rem;
+    }
+
+    /* Logout button */
+    .bg-primary-600.text-white.px-3.py-2.rounded-full.font-semibold.no-underline.cursor-pointer {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .hover\\:bg-primary-700:hover {
+        background-color: #2563eb;
+    }
+}
+
 .link-hover-underline {
     position: relative;
     text-decoration: none;

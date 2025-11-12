@@ -113,6 +113,20 @@
   display: flex;
 }
 
+/* Carousel Animation */
+@keyframes scroll-right-to-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-right-to-left {
+  animation: scroll-right-to-left 30s linear infinite;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .shining-text {

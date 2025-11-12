@@ -6,6 +6,7 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./home/home').then(m => m.Home) },
   { path: 'home', redirectTo: '', pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./features/auth/login/login').then(m => m.LoginComponent) },
+  { path: 'approvals/verify', loadComponent: () => import('./approvals/approvals-verify.component').then(m => m.ApprovalsVerifyComponent) },
   { path: 'forgot-password', loadComponent: () => import('./features/auth/forgot-password/forgot-password').then(m => m.ForgotPasswordComponent) },
   { path: 'forms/:formType', loadComponent: () => import('./dynamic-forms/dynamic-forms').then(m => m.DynamicFormComponent) },
   { path: 'employee/dashboard', loadComponent: () => import('./employee/employee-dashboard/employee-dashboard').then(m => m.EmployeeDashboard), canActivate: [() => import('./guards/employee-guard-guard').then(m => m.employeeGuardGuard)] },

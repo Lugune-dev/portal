@@ -1,0 +1,300 @@
+Defining forgot-password route
+✅ Server running at http://localhost:3001
+✅ approvals table ensured
+ℹ️ Adding missing column notified_at to table approvals
+➡️ Received request: GET /api/approvals/1
+✅ approvals table columns checked/updated
+➡️ Received request: GET /api/approvals/1
+➡️ Received request: GET /api/approvals/verify?token=f27273377cac0c5f275db71eecb0b4993518c450b9282ffaf3eba529491450d9
+➡️ Received request: GET /api/approvals/verify?token=f27273377cac0c5f275db71eecb0b4993518c450b9282ffaf3eba529491450d9
+➡️ Received request: GET /api/forms/user/10
+➡️ Received request: GET /api/reports/user/10
+➡️ Received request: GET /api/reports/director-queue
+➡️ Received request: GET /api/reports/director-metrics
+Error fetching director queue: Error: Unknown column 'r.approved_by' in 'on clause'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1229:32
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '      SELECT r.id, r.title, r.submitter_name, r.submitter_unit_id, r.type, r.submitted_date, r.status, r.comments,\n' +
+    '             ou.UnitName as submitter_unit_name, u.FirstName as manager_first_name, u.LastName as manager_last_name\n' +
+    '      FROM reports r\n' +
+    '      LEFT JOIN OrganizationUnits ou ON r.submitter_unit_id = ou.OrgUnitID\n' +
+    '      LEFT JOIN Users u ON r.approved_by = u.UserID\n' +
+    "      WHERE r.status = 'SENT_TO_DIRECTOR'\n" +
+    '      ORDER BY r.submitted_date DESC\n' +
+    '    ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'r.approved_by' in 'on clause'"
+}
+Error fetching director metrics: Error: Unknown column 'final_approved_date' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1276:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '        SELECT AVG(DATEDIFF(final_approved_date, submitted_date)) as avg_days\n' +
+    '        FROM reports\n' +
+    "        WHERE status = 'FINAL_APPROVED' AND final_approved_date IS NOT NULL\n" +
+    '      ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'final_approved_date' in 'field list'"
+}
+➡️ Received request: GET /api/reports/dg-critical-items
+Error fetching DG critical items: Error: Unknown column 'r.amount' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1372:30
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '      SELECT r.id, r.title, r.submitter_name, r.submitter_unit_id, r.type, r.submitted_date, r.status, r.comments, r.amount,\n' +
+    '             ou.UnitName as submitter_unit_name,\n' +
+    '             CASE\n' +
+    "               WHEN r.amount > 1000000 THEN 'CRITICAL'\n" +
+    "               WHEN r.type IN ('POLICY', 'BUDGET') THEN 'HIGH'\n" +
+    "               ELSE 'HIGH'\n" +
+    '             END as priority\n' +
+    '      FROM reports r\n' +
+    '      LEFT JOIN OrganizationUnits ou ON r.submitter_unit_id = ou.OrgUnitID\n' +
+    "      WHERE r.status = 'CRITICAL_PENDING'\n" +
+    '      ORDER BY\n' +
+    '        CASE\n' +
+    '          WHEN r.amount > 1000000 THEN 1\n' +
+    "          WHEN r.type IN ('POLICY', 'BUDGET') THEN 2\n" +
+    '          ELSE 3\n' +
+    '        END,\n' +
+    '        r.submitted_date DESC\n' +
+    '    ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'r.amount' in 'field list'"
+}
+➡️ Received request: GET /api/reports/dg-metrics
+Error fetching DG metrics: Error: Unknown column 'amount' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1406:31
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: "SELECT COALESCE(SUM(amount), 2500000000) as total FROM reports WHERE type = 'FINANCE' AND YEAR(submitted_date) = YEAR(CURDATE())",
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'"
+}
+➡️ Received request: GET /api/forms/user/10
+➡️ Received request: GET /api/reports/user/10
+➡️ Received request: GET /api/reports/dg-critical-items
+Error fetching DG critical items: Error: Unknown column 'r.amount' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1372:30
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '      SELECT r.id, r.title, r.submitter_name, r.submitter_unit_id, r.type, r.submitted_date, r.status, r.comments, r.amount,\n' +
+    '             ou.UnitName as submitter_unit_name,\n' +
+    '             CASE\n' +
+    "               WHEN r.amount > 1000000 THEN 'CRITICAL'\n" +
+    "               WHEN r.type IN ('POLICY', 'BUDGET') THEN 'HIGH'\n" +
+    "               ELSE 'HIGH'\n" +
+    '             END as priority\n' +
+    '      FROM reports r\n' +
+    '      LEFT JOIN OrganizationUnits ou ON r.submitter_unit_id = ou.OrgUnitID\n' +
+    "      WHERE r.status = 'CRITICAL_PENDING'\n" +
+    '      ORDER BY\n' +
+    '        CASE\n' +
+    '          WHEN r.amount > 1000000 THEN 1\n' +
+    "          WHEN r.type IN ('POLICY', 'BUDGET') THEN 2\n" +
+    '          ELSE 3\n' +
+    '        END,\n' +
+    '        r.submitted_date DESC\n' +
+    '    ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'r.amount' in 'field list'"
+}
+➡️ Received request: GET /api/reports/dg-metrics
+Error fetching DG metrics: Error: Unknown column 'amount' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1406:31
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: "SELECT COALESCE(SUM(amount), 2500000000) as total FROM reports WHERE type = 'FINANCE' AND YEAR(submitted_date) = YEAR(CURDATE())",
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'"
+}
+➡️ Received request: GET /api/reports/director-queue
+Error fetching director queue: Error: Unknown column 'r.approved_by' in 'on clause'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1229:32
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '      SELECT r.id, r.title, r.submitter_name, r.submitter_unit_id, r.type, r.submitted_date, r.status, r.comments,\n' +
+    '             ou.UnitName as submitter_unit_name, u.FirstName as manager_first_name, u.LastName as manager_last_name\n' +
+    '      FROM reports r\n' +
+    '      LEFT JOIN OrganizationUnits ou ON r.submitter_unit_id = ou.OrgUnitID\n' +
+    '      LEFT JOIN Users u ON r.approved_by = u.UserID\n' +
+    "      WHERE r.status = 'SENT_TO_DIRECTOR'\n" +
+    '      ORDER BY r.submitted_date DESC\n' +
+    '    ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'r.approved_by' in 'on clause'"
+}
+➡️ Received request: GET /api/reports/director-metrics
+Error fetching director metrics: Error: Unknown column 'final_approved_date' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1276:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '        SELECT AVG(DATEDIFF(final_approved_date, submitted_date)) as avg_days\n' +
+    '        FROM reports\n' +
+    "        WHERE status = 'FINAL_APPROVED' AND final_approved_date IS NOT NULL\n" +
+    '      ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'final_approved_date' in 'field list'"
+}
+➡️ Received request: GET /api/forms/user/10
+➡️ Received request: GET /api/reports/user/10
+➡️ Received request: GET /api/reports/dg-critical-items
+Error fetching DG critical items: Error: Unknown column 'r.amount' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1372:30
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '      SELECT r.id, r.title, r.submitter_name, r.submitter_unit_id, r.type, r.submitted_date, r.status, r.comments, r.amount,\n' +
+    '             ou.UnitName as submitter_unit_name,\n' +
+    '             CASE\n' +
+    "               WHEN r.amount > 1000000 THEN 'CRITICAL'\n" +
+    "               WHEN r.type IN ('POLICY', 'BUDGET') THEN 'HIGH'\n" +
+    "               ELSE 'HIGH'\n" +
+    '             END as priority\n' +
+    '      FROM reports r\n' +
+    '      LEFT JOIN OrganizationUnits ou ON r.submitter_unit_id = ou.OrgUnitID\n' +
+    "      WHERE r.status = 'CRITICAL_PENDING'\n" +
+    '      ORDER BY\n' +
+    '        CASE\n' +
+    '          WHEN r.amount > 1000000 THEN 1\n' +
+    "          WHEN r.type IN ('POLICY', 'BUDGET') THEN 2\n" +
+    '          ELSE 3\n' +
+    '        END,\n' +
+    '        r.submitted_date DESC\n' +
+    '    ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'r.amount' in 'field list'"
+}
+➡️ Received request: GET /api/reports/dg-metrics
+Error fetching DG metrics: Error: Unknown column 'amount' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1406:31
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: "SELECT COALESCE(SUM(amount), 2500000000) as total FROM reports WHERE type = 'FINANCE' AND YEAR(submitted_date) = YEAR(CURDATE())",
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'"
+}
+➡️ Received request: GET /api/reports/director-queue
+Error fetching director queue: Error: Unknown column 'r.approved_by' in 'on clause'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1229:32
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/home/sheddy/portal/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/sheddy/portal/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/home/sheddy/portal/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/sheddy/portal/backend/node_modules/router/lib/layer.js:152:17)
+    at /home/sheddy/portal/backend/node_modules/router/index.js:295:15
+    at processParams (/home/sheddy/portal/backend/node_modules/router/index.js:582:12)
+    at next (/home/sheddy/portal/backend/node_modules/router/index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '      SELECT r.id, r.title, r.submitter_name, r.submitter_unit_id, r.type, r.submitted_date, r.status, r.comments,\n' +
+    '             ou.UnitName as submitter_unit_name, u.FirstName as manager_first_name, u.LastName as manager_last_name\n' +
+    '      FROM reports r\n' +
+    '      LEFT JOIN OrganizationUnits ou ON r.submitter_unit_id = ou.OrgUnitID\n' +
+    '      LEFT JOIN Users u ON r.approved_by = u.UserID\n' +
+    "      WHERE r.status = 'SENT_TO_DIRECTOR'\n" +
+    '      ORDER BY r.submitted_date DESC\n' +
+    '    ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'r.approved_by' in 'on clause'"
+}
+➡️ Received request: GET /api/reports/director-metrics
+Error fetching director metrics: Error: Unknown column 'final_approved_date' in 'field list'
+    at PromiseConnection.query (/home/sheddy/portal/backend/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at /home/sheddy/portal/backend/server.js:1276:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: '\n' +
+    '        SELECT AVG(DATEDIFF(final_approved_date, submitted_date)) as avg_days\n' +
+    '        FROM reports\n' +
+    "        WHERE status = 'FINAL_APPROVED' AND final_approved_date IS NOT NULL\n" +
+    '      ',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'final_approved_date' in 'field list'"
+}

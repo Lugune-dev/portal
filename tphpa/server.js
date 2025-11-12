@@ -52,12 +52,12 @@ res.json({ status: 'ok' });
 });
 
 // --- LOGIN ROUTE ---
-// --- LOGIN ROUTE (Modified for debug) ---
+// --- LOGIN ROUTE (Fixed table and column names) ---
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const query = 'SELECT * FROM users WHERE email = ?';
+        const query = 'SELECT UserID, Email, FirstName, LastName, PasswordHash, UserRoleID, OrgUnitID FROM Users WHERE Email = ?';
         const [rows] = await db.query(query, [email]);
         const user = rows[0];
 
@@ -66,14 +66,14 @@ app.post('/api/login', async (req, res) => {
         }
         const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
 
-        if (user.password_hash === hashedPassword) {
-            delete user.password_hash;
-            
+        if (user.PasswordHash === hashedPassword) {
+            delete user.PasswordHash;
+
             // 🔑 CRITICAL DEBUG LOG: Print the exact user object being sent
-            console.log(`✅ Login successful for ${user.email}. User object sent:`, {
-                id: user.id,
-                email: user.email,
-                role: user.role // <-- Check this value carefully in your server logs
+            console.log(`✅ Login successful for ${user.Email}. User object sent:`, {
+                UserID: user.UserID,
+                Email: user.Email,
+                UserRoleID: user.UserRoleID
             });
 
             return res.status(200).json({ message: 'Login successful', user: user });
