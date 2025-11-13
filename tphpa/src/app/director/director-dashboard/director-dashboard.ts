@@ -13,7 +13,7 @@ export interface FinalApprovalReport {
   managerName: string; // The manager who reviewed it
   type: string;
   submittedDate: string;
-  status: 'SENT_TO_DIRECTOR' | 'FINAL_APPROVED' | 'DIRECTOR_REJECTED';
+  status: 'SENT_TO_DIRECTOR' | 'FINAL_APPROVED' | 'DIRECTOR_REJECTED' | 'APPROVED';
 }
 
 export interface Metric {
@@ -27,11 +27,12 @@ export interface Metric {
 // Import actual services
 import { AuthService } from '../../services/auth/auth';
 import { ReportService } from '../../services/report.service';
+import { ChangePasswordComponent } from '../../features/auth/change-password/change-password';
 
 @Component({
   selector: 'app-director-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ChangePasswordComponent],
   templateUrl: './director-dashboard.html',
   styleUrls: ['./director-dashboard.css']
   // No providers needed since services are provided in root

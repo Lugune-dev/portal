@@ -801,10 +801,10 @@ app.get('/api/reports/subordinate-workload/:managerUnitId', async (req, res) => 
 app.post('/api/reports/approve', async (req, res) => {
   const { reportId, comment } = req.body;
   try {
-    const query = `UPDATE reports SET status = 'APPROVED', comments = ? WHERE id = ?`;
+    const query = `UPDATE reports SET status = 'SENT_TO_DIRECTOR', comments = ? WHERE id = ?`;
     const [result] = await db.query(query, [comment, reportId]);
     if (result.affectedRows > 0) {
-      res.json({ success: true, message: 'Report approved' });
+      res.json({ success: true, message: 'Report sent to director for final approval' });
     } else {
       res.status(404).json({ success: false, message: 'Report not found' });
     }
@@ -1314,10 +1314,10 @@ app.get('/api/reports/director-metrics', async (req, res) => {
 app.post('/api/reports/director-approve', async (req, res) => {
   const { reportId, comment } = req.body;
   try {
-    const query = `UPDATE reports SET status = 'FINAL_APPROVED', comments = CONCAT(COALESCE(comments, ''), ' | Director: ', ?), final_approved_date = NOW() WHERE id = ?`;
+    const query = `UPDATE reports SET status = 'APPROVED', comments = CONCAT(COALESCE(comments, ''), ' | Director: ', ?), final_approved_date = NOW() WHERE id = ?`;
     const [result] = await db.query(query, [comment, reportId]);
     if (result.affectedRows > 0) {
-      res.json({ success: true, message: 'Report given final approval' });
+      res.json({ success: true, message: 'Report approved' });
     } else {
       res.status(404).json({ success: false, message: 'Report not found' });
     }

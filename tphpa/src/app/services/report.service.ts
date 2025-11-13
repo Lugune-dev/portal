@@ -29,36 +29,8 @@ export class ReportService {
   }
 
   getSubordinateWorkload(managerUnitId: number): Observable<any[]> {
-    // Replace with real API call
-    // return this.http.get<any[]>(`${this.apiUrl}/reports/subordinate-workload/${managerUnitId}`);
-    // Mock data for demonstration
-    const mockData = [
-      {
-        name: 'John Doe',
-        totalReports: 15,
-        pending: 3,
-        approved: 12
-      },
-      {
-        name: 'Jane Smith',
-        totalReports: 22,
-        pending: 5,
-        approved: 17
-      },
-      {
-        name: 'Bob Johnson',
-        totalReports: 8,
-        pending: 1,
-        approved: 7
-      },
-      {
-        name: 'Alice Brown',
-        totalReports: 18,
-        pending: 4,
-        approved: 14
-      }
-    ];
-    return of(mockData);
+    // Real API call to fetch subordinate workload data from the database
+    return this.http.get<any[]>(`${this.apiUrl}/reports/subordinate-workload/${managerUnitId}`);
   }
 
   submitReport(formData: FormData): Observable<any> {

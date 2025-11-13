@@ -14,7 +14,7 @@ export interface Report {
   managerName: string;
   type: string;
   submittedDate: string;
-  status: 'PENDING' | 'MANAGER_APPROVED' | 'DIRECTOR_APPROVED' | 'REJECTED';
+  status: 'PENDING' | 'MANAGER_APPROVED' | 'DIRECTOR_APPROVED' | 'APPROVED' | 'REJECTED';
   details?: string; // Optional detailed description
 }
 

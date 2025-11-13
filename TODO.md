@@ -1,25 +1,13 @@
-# TODO: Implement Secure External Approval Process for Forms
+# TODO: Add 'APPROVED' Status to Report Workflow
 
-## Completed Tasks
-- [x] Add signature field_type to FormField interface
-- [x] Update dynamic forms component to handle signature fields
-- [x] Implement dashboard signing for Head of Project/Section
-- [x] Implement read-only audit trail display for Director/DG signatures
+## Steps to Complete
 
-## Pending Tasks
-- [ ] Backend API endpoints for signature approval workflow
-- [ ] Email notification system for external approvals
-- [ ] External approval portal/dashboard for Director and DG
-- [ ] Form configuration to include signature fields with proper signature_type
-- [ ] Audit trail logging for all signature actions
-- [ ] Integration with user hierarchy for approval routing
-- [ ] Security measures for external approval links (token-based authentication)
-- [ ] Testing of signature workflow end-to-end
+1. **Update Report Service Interface** - Add 'APPROVED' to the status union type in `tphpa/src/app/services/report.service.ts`. ✅ COMPLETED
 
-## Implementation Notes
-- Signature fields support two types:
-  - `dashboard`: Interactive signing within the form (Head of Project/Section)
-  - `external`: Read-only audit trail showing approval details (Director/DG)
-- Signature data is stored as JSON with: signed_by, signed_by_name, signed_at, signature_type
-- External approvals should be handled via secure email links or dedicated portal
-- All signature actions should be logged for audit purposes
+2. **Update Director General Dashboard** - Add 'APPROVED' to the status type in `tphpa/src/app/director/director-general-dashboard/director-reports-dashboard.ts`. ✅ COMPLETED
+
+3. **Update Director Dashboard** - Add 'APPROVED' to the FinalApprovalReport status in `tphpa/src/app/director/director-dashboard/director-dashboard.ts`. ✅ COMPLETED
+
+4. **Update Backend Logic** - Modify or add backend endpoint in `backend/server.js` to handle setting report status to 'APPROVED'. ✅ COMPLETED
+
+5. **Test Workflow** - Verify that the approval workflow correctly sets and displays the 'APPROVED' status. ✅ COMPLETED

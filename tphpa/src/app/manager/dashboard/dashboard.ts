@@ -6,11 +6,20 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth/auth';
 import { ReportService, Report } from '../../services/report.service';
 import { FormsService, FormSubmission } from '../../services/forms.service';
+import { ChangePasswordComponent } from '../../features/auth/change-password/change-password';
+
+enum ActiveView {
+  Dashboard = 'dashboard',
+  Queue = 'queue',
+  Workload = 'workload',
+  Forms = 'forms',
+  ChangePassword = 'change-password'
+}
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ChangePasswordComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -82,6 +91,7 @@ export class DashboardComponent implements OnInit {
       'queue': 'Approval Queue',
       'workload': 'Staff Workload Tracker',
       'forms': 'Form Approvals',
+      'change-password': 'Change Password',
     };
     return titles[this.activeView] || 'Manager Portal';
   }
@@ -210,5 +220,9 @@ export class DashboardComponent implements OnInit {
             alert(`Failed to process ${action}.`);
         }
     });
+  }
+
+  setActiveView(view: string): void {
+    this.activeView = view;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -26,11 +26,13 @@ import { Observable, of } from 'rxjs';
 
 // Import the actual DynamicFormComponent
 import { DynamicFormComponent } from '../../dynamic-forms/dynamic-forms';
+// Import the ChangePasswordComponent
+import { ChangePasswordComponent } from '../../features/auth/change-password/change-password';
 
 @Component({
   selector: 'app-employee-dashboard',
   standalone: true, // Make it standalone
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, DynamicFormComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, DynamicFormComponent, ChangePasswordComponent],
   templateUrl: './employee-dashboard.html',
   styleUrls: ['./employee-dashboard.css'], // Note: This uses styleUrls
   // No providers needed since services are provided in root
@@ -38,6 +40,7 @@ import { DynamicFormComponent } from '../../dynamic-forms/dynamic-forms';
 export class EmployeeDashboard implements OnInit {
   activeView: string = 'dashboard'; // Set default view to dashboard
   selectedFormType: string = '';
+  sidebarOpen: boolean = false;
   
   // List of available forms/applications
   availableForms: { code: string; name: string }[] = [
@@ -314,5 +317,10 @@ export class EmployeeDashboard implements OnInit {
       'SUBMITTED': 'submitted'
     };
     return statusClasses[status] || 'submitted';
+  }
+
+  setActiveView(view: string): void {
+    this.activeView = view;
+    this.sidebarOpen = false;
   }
 }

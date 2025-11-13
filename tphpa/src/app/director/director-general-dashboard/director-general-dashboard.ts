@@ -29,11 +29,12 @@ export interface OrgWideMetric {
 // Import actual services
 import { AuthService } from '../../services/auth/auth';
 import { ReportService } from '../../services/report.service';
+import { ChangePasswordComponent } from '../../features/auth/change-password/change-password';
 
 @Component({
   selector: 'app-director-general-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ChangePasswordComponent],
   templateUrl: './director-general-dashboard.html',
   styleUrls: ['./director-general-dashboard.css']
   // No providers needed since services are provided in root
