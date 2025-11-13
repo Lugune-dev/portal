@@ -33,10 +33,11 @@ filename: (req, file, cb) => {
 const upload = multer({ storage });
 
 const db = mysql.createConnection({
- host: 'localhost',
-user: 'sheddy',
- password: '**Lugun7',
- database: 'tphpa'
+ host: process.env.DB_HOST, // Replaces 'localhost' with 'interchange.proxy.rlwy.net'
+ user: process.env.DB_USER, // Replaces 'sheddy' with 'root'
+ password: process.env.DB_PASSWORD, // Uses the strong Railway password
+ database: process.env.DB_NAME, // Replaces 'tphpa' with 'railway'
+ port: parseInt(process.env.DB_PORT, 10), // CRUCIAL: Uses port 54879 and converts it to a number
 }).promise();
 
 db.connect((err) => {
