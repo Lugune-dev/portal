@@ -120,7 +120,7 @@ export class AdminDashboardComponent implements OnInit {
     });
 
     // Fetch active ads
-    this.http.get('https://portal-api-z927.onrender.com/').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/advertisements').subscribe((res: any) => {
       if (res.success) {
         const activeAds = res.data.filter((ad: any) => ad.isActive).length;
         this.overviewCards[1].value = activeAds.toString();

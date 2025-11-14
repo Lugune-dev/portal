@@ -121,7 +121,7 @@ export class Advertisements implements OnInit, AfterViewInit, OnDestroy {
     this.adsLoading = true;
     this.adsError = false;
 
-    this.http.get<{ success: boolean; data: Advertisement[] }>('/api/advertisements')
+    this.http.get<{ success: boolean; data: Advertisement[] }>('https://portal-api-z927.onrender.com/api/advertisements')
       .subscribe({
         next: (res) => {
           // debug: inspect server payload
