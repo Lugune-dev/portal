@@ -1627,7 +1627,7 @@ app.get('/api/admin/reports-to', async (req, res) => {
 // 🚀 CRITICAL FIX: STATIC FILE SERVER ENABLED AND ACTIVE
 app.use('/uploads', express.static(uploadDir));
 
-const port = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 console.log(`✅ Server running at http://localhost:${PORT}`);
 });
