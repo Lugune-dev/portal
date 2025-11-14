@@ -140,8 +140,8 @@ db.query(approvalsTableSql).then(() => {
   }
 })();
 
-app.get('/api/health', (req, res) => {
-res.json({ status: 'ok' });
+app.get('/', (req, res) => {
+    res.status(200).send('API is running successfully!');
 });
 
 // -----------------------
