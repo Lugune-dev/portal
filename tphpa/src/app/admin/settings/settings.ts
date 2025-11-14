@@ -156,7 +156,7 @@ export class SettingsComponent implements OnInit {
 
   saveAd(): void {
     if (this.editingAd) {
-      this.http.put(`/api/advertisements/${this.editingAd.id}`, this.editingAd).subscribe(() => {
+      this.http.put(`https://portal-api-z927.onrender.com/api/advertsements/api/advertisements/${this.editingAd.id}`, this.editingAd).subscribe(() => {
         this.loadAdvertisements();
         this.editingAd = null;
       });
@@ -165,7 +165,7 @@ export class SettingsComponent implements OnInit {
 
   deleteAd(adId: number): void {
     if (confirm('Are you sure you want to delete this advertisement?')) {
-      this.http.delete(`/api/advertisements/${adId}`).subscribe(() => {
+      this.http.delete(`https://portal-api-z927.onrender.com/api/advertsements/api/advertisements/${adId}`).subscribe(() => {
         this.loadAdvertisements();
       });
     }
