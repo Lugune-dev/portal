@@ -12,20 +12,23 @@
       "architect": {
         "build": {
           "builder": "@angular/build:application",
-            "options": {
-              "browser": "src/main.ts",
-              "tsConfig": "tsconfig.app.json",
-              "assets": [
-                "src/favicon.ico",
-                "src/assets"
-              ],
-              "styles": [
-                 "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                "src/styles.css",
-                "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
-              ],
-              "allowedCommonJsDependencies": ["sweetalert2"]
-            },
+          "options": {
+            "outputPath": "dist/portal",
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "src/styles.css"
+            ],
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ]
+          },
           "configurations": {
             "production": {
               "budgets": [
@@ -40,7 +43,9 @@
                   "maximumError": "20kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": true,
+              "sourceMap": false
             },
             "development": {
               "optimization": false,
@@ -50,6 +55,7 @@
           },
           "defaultConfiguration": "production"
         },
+
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
@@ -61,11 +67,13 @@
               "proxyConfig": "proxy.conf.json"
             }
           },
-          "defaultConfiguration": "development" 
+          "defaultConfiguration": "development"
         },
+
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
         },
+
         "test": {
           "builder": "@angular/build:karma",
           "options": {
@@ -84,6 +92,7 @@
       }
     }
   },
+
   "cli": {
     "analytics": "ab24434e-6f9c-4024-a8ac-cce98a1e1215"
   }
