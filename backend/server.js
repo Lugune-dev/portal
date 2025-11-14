@@ -6,6 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto'); // 🔒 Used for password hashing
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const app = express();
 app.use(cors());
