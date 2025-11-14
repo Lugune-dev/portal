@@ -7,8 +7,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:portal": "node dist/portal/server/server.mjs"
+    "test": "ng test"
+    
   },
   "prettier": {
     "printWidth": 100,
@@ -30,18 +30,11 @@
     "@angular/core": "^20.2.0",
     "@angular/forms": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
-    "@angular/platform-server": "^20.2.0",
     "@angular/router": "^20.2.0",
-    "@angular/ssr": "^20.2.2",
     "@fortawesome/fontawesome-free": "^7.0.1",
     "@types/jwt-decode": "^2.2.1",
-    "body-parser": "^2.2.0",
     "bootstrap": "^5.3.8",
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
     "jwt-decode": "^4.0.0",
-    "multer": "^2.0.2",
-    "mysql2": "^3.14.5",
     "ngx-slick-carousel": "^20.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.23.0",
