@@ -1,6 +1,6 @@
 <!-- Sub Navigation Bar -->
 
-<div class="sub-nav-container">
+<div class="sub-nav-container bg-gradient-to-r from-primary-700 to-primary-800 text-white">
   <div class="sub-nav-left">
     <a href="https://www.linkedin.com/in/tphpa-news-a33863271/" target="_blank" aria-label="Linkedin"><i class="fab fa-linkedin"></i></a>
     <a href="https://www.youtube.com/@tphpahabaritv82/" target="_blank" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
@@ -18,7 +18,7 @@
 
 <!-- Main Header -->
 <header class="fixed-header bg-white shadow-lg z-40" style="width: 100%">
-  <nav class="flex justify-between items-center px-4 py-0 max-w-7xl mx-auto">
+  <nav class="flex justify-between items-center px-4 py-2 max-w-7xl mx-auto">
     <a [routerLink]="'/'" class="flex items-center no-underline">
       <img src="assets/images/logo.png" alt="TPHPA Logo" class="h-12 w-auto">
     </a>
@@ -77,7 +77,7 @@
             <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200 hover:bg-gray-50" [routerLink]="'/about'" routerLinkActive="active" (click)="toggleMenu()">{{ 'about' | translate | async }}</a>
             <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200 hover:bg-gray-50" [routerLink]="'/contact'" routerLinkActive="active" (click)="toggleMenu()">{{ 'contact' | translate | async }}</a>
             <div class="px-4 py-3">
-              <a class="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold no-underline block text-center hover:bg-primary-700" [routerLink]="'/login'" (click)="toggleMenu()">{{ 'signIn' | translate | async }}</a>
+              <a class="sign-in-btn bg-primary-600 text-white px-4 py-2 rounded-full font-semibold no-underline block text-center hover:bg-primary-700" [routerLink]="'/login'" (click)="toggleMenu()">{{ 'signIn' | translate | async }}</a>
             </div>
           </ng-container>
 

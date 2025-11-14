@@ -1,106 +1,170 @@
-<br><br><br><br><br><div class="min-h-screen bg-gray-50">
+<!-- Hero Section with Gradient Background -->
+ <br><br>
+<div class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-green-100">
   <!-- Header Section -->
-  <div class="bg-white border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-gradient-to-r from-primary-700 to-primary-800 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="text-center">
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">TPHPA Resources Center</h1>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-          Comprehensive collection of training materials, guides, and tools for plant health professionals in Tanzania
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-full mb-4">
+          <i class="fas fa-book-open text-2xl"></i>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent">
+          TPHPA Resources Center
+        </h1>
+        <p class="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
+          Discover comprehensive training materials, expert guides, and cutting-edge tools designed for plant health professionals across Tanzania
         </p>
       </div>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Category Filter -->
-    <div class="mb-8">
-      <div class="flex flex-col md:flex-row gap-4 items-center justify-center">
-        <div class="flex items-center gap-2">
-          <label for="category-select" class="text-sm font-medium text-gray-700">Filter by Type:</label>
-          <select
-            id="category-select"
-            [(ngModel)]="selectedCategory"
-            (change)="filterResources()"
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Advanced Filter and Search Section -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 border border-gray-100">
+      <div class="flex flex-col lg:flex-row gap-6 items-center justify-between">
+        <!-- Category Chips -->
+        <div class="flex flex-wrap gap-3">
+          <button
+            *ngFor="let category of categories"
+            (click)="selectCategory(category)"
+            class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105"
+            [class]="selectedCategory === category ? 'bg-green-600 text-white shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
           >
-            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-          </select>
+            {{ category }}
+          </button>
         </div>
-      </div>
-    </div>
 
-    <!-- Search Bar -->
-    <div class="mb-8">
-      <div class="max-w-md mx-auto">
-        <div class="relative">
-          <input
-            type="text"
-            [(ngModel)]="searchTerm"
-            (input)="filterResources()"
-            placeholder="Search resources..."
-            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          >
-          <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- Resources List -->
-    <div class="space-y-4">
-      <div *ngFor="let resource of filteredResources" class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-        <div class="p-6">
-          <div class="flex items-start justify-between">
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 rounded-lg {{ getTypeBgColor(resource.type) }}">
-                  <i class="{{ getTypeIcon(resource.type) }} text-white"></i>
-                </div>
-                <div>
-                  <span class="inline-block px-2 py-1 text-xs font-medium rounded {{ getTypeColor(resource.type) }}">
-                    {{ resource.type }}
-                  </span>
-                  <span class="text-sm text-gray-500 ml-2">{{ resource.date | date:'MMM dd, yyyy' }}</span>
-                </div>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ resource.title }}</h3>
-              <p class="text-gray-600 text-sm leading-relaxed">{{ resource.description }}</p>
-            </div>
-            <div class="ml-4">
-              <a
-                href="{{ resource.downloadUrl }}"
-                class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 transition-colors duration-200"
-              >
-                <i class="fas fa-download mr-2"></i>
-                Download
-              </a>
-            </div>
+        <!-- Enhanced Search Bar -->
+        <div class="w-full lg:w-96">
+          <div class="relative">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              (input)="filterResources()"
+              placeholder="Search resources, guides, manuals..."
+              class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-500 focus:border-transparent bg-gray-50 hover:bg-white transition-all duration-300 text-gray-700 placeholder-gray-400"
+            >
+            <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- No Results -->
-    <div *ngIf="filteredResources.length === 0" class="text-center py-12">
-      <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">No resources found</h3>
-      <p class="text-gray-500">Try adjusting your search or category filter</p>
+    <!-- Resources Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div
+        *ngFor="let resource of filteredResources; trackBy: trackByResource"
+        class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 overflow-hidden"
+      >
+        <!-- Card Header with Icon -->
+        <div class="p-6 bg-gradient-to-r {{ getTypeGradient(resource.type) }}">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 rounded-xl bg-white bg-opacity-20 backdrop-blur-sm">
+              <i class="{{ getTypeIcon(resource.type) }} text-2xl text-white"></i>
+            </div>
+            <span class="px-3 py-1 text-xs font-semibold rounded-full {{ getTypeColor(resource.type) }} bg-white bg-opacity-90">
+              {{ resource.type }}
+            </span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-green-50 transition-colors duration-300">
+            {{ resource.title }}
+          </h3>
+          <p class="text-green-100 text-sm leading-relaxed">
+            {{ resource.description | slice:0:100 }}...
+          </p>
+        </div>
+
+        <!-- Card Body -->
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-calendar-alt mr-2 text-green-500"></i>
+              {{ resource.date | date:'MMM dd, yyyy' }}
+            </span>
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-file-alt mr-2 text-yellow-500"></i>
+              PDF
+            </span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3">
+            <button
+              class="flex-1 bg-green-900 text-white py-3 px-4 rounded-xl hover:bg-green-900 transition-all duration-300 transform hover:scale-105 flex items-center justify-center font-medium"
+            >
+              <i class="fas fa-download mr-2"></i>
+              Download
+            </button>
+            <button
+              class="bg-gray-100 text-gray-700 py-3 px-4 rounded-xl hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
+              title="Preview"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Load More -->
-    <div class="text-center mt-8" *ngIf="filteredResources.length > 0">
-      <button class="px-6 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-50 transition-colors duration-200">
+    <!-- No Results with Animation -->
+    <div *ngIf="filteredResources.length === 0" class="text-center py-20">
+      <div class="animate-bounce mb-6">
+        <i class="fas fa-search text-6xl text-gray-300"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 mb-4">No resources found</h3>
+      <p class="text-gray-500 text-lg mb-6">Try adjusting your search terms or category filters</p>
+      <button
+        (click)="clearFilters()"
+        class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition-all duration-300 transform hover:scale-105 font-medium"
+      >
+        Clear Filters
+      </button>
+    </div>
+
+    <!-- Load More with Loading State -->
+    <div class="text-center mt-12" *ngIf="filteredResources.length > 0 && !loading">
+      <button
+        (click)="loadMore()"
+        class="bg-white border-2 border-green-600 text-green-600 px-8 py-4 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg hover:shadow-xl"
+      >
+        <i class="fas fa-plus-circle mr-2"></i>
         Load More Resources
       </button>
     </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center mt-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <p class="mt-4 text-gray-600">Loading more resources...</p>
+    </div>
   </div>
 
-  <!-- Footer -->
-  <div class="bg-green-50 text-white py-6 mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <p class="text-sm text-gray-300">
-        Tanzania Plant Health and Pesticides Authority (TPHPA) - Resources Center
-      </p>
+  <!-- Enhanced Footer -->
+  <div class="bg-gradient-to-r from-gray-600 to-green-900 text-white py-12 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div>
+          <i class="fas fa-leaf text-3xl text-green-400 mb-4"></i>
+          <h4 class="text-lg font-semibold mb-2">Quality Resources</h4>
+          <p class="text-gray-300">Expert-curated materials for plant health excellence</p>
+        </div>
+        <div>
+          <i class="fas fa-users text-3xl text-blue-400 mb-4"></i>
+          <h4 class="text-lg font-semibold mb-2">Community Support</h4>
+          <p class="text-gray-300">Connect with professionals across Tanzania</p>
+        </div>
+        <div>
+          <i class="fas fa-award text-3xl text-yellow-400 mb-4"></i>
+          <h4 class="text-lg font-semibold mb-2">Certified Content</h4>
+          <p class="text-gray-300">Official TPHPA approved training materials</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+        <p class="text-gray-400">
+          © 2024 Tanzania Plant Health and Pesticides Authority (TPHPA) - Resources Center
+        </p>
+      </div>
     </div>
   </div>
 </div>

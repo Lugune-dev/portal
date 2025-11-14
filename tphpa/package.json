@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "portal",
   "version": "0.0.0",
   "scripts": {
@@ -41,6 +42,7 @@
     "jwt-decode": "^4.0.0",
     "multer": "^2.0.2",
     "mysql2": "^3.14.5",
+    "ngx-slick-carousel": "^20.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.23.0",
     "swiper": "^11.1.14",

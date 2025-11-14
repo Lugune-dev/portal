@@ -66,6 +66,7 @@ export class ResourcesComponent implements OnInit {
   selectedCategory = 'All';
   searchTerm = '';
   filteredResources = this.resources;
+  loading = false;
 
   ngOnInit() {
     this.filterResources();
@@ -85,28 +86,59 @@ export class ResourcesComponent implements OnInit {
     });
   }
 
+  clearFilters() {
+    this.selectedCategory = 'All';
+    this.searchTerm = '';
+    this.filterResources();
+  }
+
+  loadMore() {
+    this.loading = true;
+    // Simulate loading more resources
+    setTimeout(() => {
+      // In a real app, this would fetch more data from an API
+      this.loading = false;
+    }, 1000);
+  }
+
+  trackByResource(index: number, resource: any): number {
+    return resource.id;
+  }
+
   getTypeColor(type: string): string {
     const colors: { [key: string]: string } = {
-      'Training Material': 'bg-blue-100 text-blue-800',
-      'Guide': 'bg-green-100 text-green-800',
-      'Handbook': 'bg-purple-100 text-purple-800',
-      'Protocol': 'bg-orange-100 text-orange-800',
-      'Template': 'bg-red-100 text-red-800',
-      'Toolkit': 'bg-indigo-100 text-indigo-800'
+      'Training Material': 'bg-g-900 text-green-900',
+      'Guide': 'bg-green-900 text-green-800',
+      'Handbook': 'bg-green-900 text-purple-800',
+      'Protocol': 'bg-green-900 text-orange-800',
+      'Template': 'bg-green-900 text-red-800',
+      'Toolkit': 'bg-green-900 text-indigo-800'
     };
     return colors[type] || 'bg-gray-100 text-gray-800';
   }
 
   getTypeBgColor(type: string): string {
     const colors: { [key: string]: string } = {
-      'Training Material': 'bg-blue-600',
+      'Training Material': 'bg-green-900',
       'Guide': 'bg-green-600',
-      'Handbook': 'bg-purple-600',
-      'Protocol': 'bg-orange-600',
-      'Template': 'bg-red-600',
-      'Toolkit': 'bg-indigo-600'
+      'Handbook': 'bg-green-900',
+      'Protocol': 'bg-green-900',
+      'Template': 'bg-green-900',
+      'Toolkit': 'bg-green-900'
     };
     return colors[type] || 'bg-gray-600';
+  }
+
+  getTypeGradient(type: string): string {
+    const gradients: { [key: string]: string } = {
+      'Training Material': 'from-primary-700 to-primary-800',
+      'Guide': 'from-primary-700 to-primary-800',
+      'Handbook': 'from-primary-700 to-primary-800',
+      'Protocol': 'from-primary-700 to-primary-800',
+      'Template': 'from-primary-700 to-primary-800',
+      'Toolkit': 'from-primary-700 to-primary-800'
+    };
+    return gradients[type] || 'from-gray-500 to-gray-600';
   }
 
   getTypeIcon(type: string): string {
