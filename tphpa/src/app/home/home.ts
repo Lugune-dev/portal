@@ -199,7 +199,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     this.adsLoading = true;
     this.adsError = false;
 
-    this.http.get<{ success: boolean; data: Advertisement[] }>('/api/advertisements')
+    this.http.get<{ success: boolean; data: Advertisement[] }>('https://portal-api-z927.onrender.com/')
       .subscribe({
         next: (res) => {
           const today = new Date();

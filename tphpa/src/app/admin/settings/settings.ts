@@ -106,7 +106,7 @@ export class SettingsComponent implements OnInit {
   }
 
   loadAdvertisements(): void {
-    this.http.get('/api/advertisements').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/').subscribe((res: any) => {
       if (res.success) {
         this.advertisements = res.data;
       }
