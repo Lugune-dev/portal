@@ -6,7 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto'); // 🔒 Used for password hashing
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 const app = express();
 app.use(cors());
@@ -17,6 +17,8 @@ app.use((req, res, next) => {
  console.log(`➡️ Received request: ${req.method} ${req.originalUrl}`);
 next();
 });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
