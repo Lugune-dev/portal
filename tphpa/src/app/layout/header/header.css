@@ -446,6 +446,7 @@ header {
     /* Overlay for mobile menu */
     .bg-black.bg-opacity-50 {
         backdrop-filter: blur(2px);
+        top: 40px !important; /* Adjusted dynamically in TS */
     }
 
     /* Slide-in animation for mobile menu */
@@ -462,9 +463,10 @@ header {
     }
 
     /* Mobile menu container */
-    .absolute.top-0.right-0.w-80.max-w-full.h-full.bg-white.shadow-lg {
+    .absolute.top-0.left-0.w-80.max-w-full.h-full.bg-white.shadow-lg {
         width: 80vw;
         max-width: 320px;
+        top: 0 !important; /* Reset to 0 since overlay handles positioning */
     }
 
     /* Menu header */
