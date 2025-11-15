@@ -89,6 +89,7 @@ export class DirectorGeneralDashboardComponent implements OnInit {
 
   public setActiveView(view: string): void {
     this.activeView = view;
+    this.approvalComment = '';
   }
 
   public getViewTitle(): string {

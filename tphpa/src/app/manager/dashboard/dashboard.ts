@@ -222,7 +222,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  setActiveView(view: string): void {
+  public setActiveView(view: string): void {
     this.activeView = view;
   }
 }

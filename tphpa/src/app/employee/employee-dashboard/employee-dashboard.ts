@@ -322,8 +322,9 @@ export class EmployeeDashboard implements OnInit {
     return statusClasses[status] || 'submitted';
   }
 
-  setActiveView(view: string): void {
+  public setActiveView(view: string): void {
     this.activeView = view;
     this.sidebarOpen = false;
+    this.cdr.detectChanges();
   }
 }
