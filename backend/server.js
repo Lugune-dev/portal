@@ -449,6 +449,17 @@ app.get('/api/welcome', (req, res) => {
 });
 
 // ---------------------------------------------------
+// --- HELLO ROUTE WITH ENHANCED LOGGING ---
+// ---------------------------------------------------
+app.get('/api/hello', (req, res) => {
+    const timestamp = new Date().toISOString();
+    const ip = req.ip || req.connection?.remoteAddress || 'Unknown';
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+    console.log(`[${timestamp}] ${req.method} ${req.path} - IP: ${ip} - User-Agent: ${userAgent}`);
+    res.json({ message: 'Welcome to the API Service!' });
+});
+
+// ---------------------------------------------------
 // --- ADVERTISEMENT UPLOAD (FIXED isActive) ---
 // ---------------------------------------------------
 app.post('/api/advertisements', upload.single('image'), async (req, res) => {
