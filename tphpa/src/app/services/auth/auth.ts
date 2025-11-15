@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}login`, { email, password }).pipe(
+    return this.http.post(`${this.apiUrl}api/login`, { email, password }).pipe(
       tap((response: any) => {
         // Store the token and user data in local storage
         if (isPlatformBrowser(this.platformId)) {
@@ -179,10 +179,10 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}forgot-password`, { email });
+    return this.http.post(`${this.apiUrl}api/forgot-password`, { email });
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}change-password`, { currentPassword, newPassword });
+    return this.http.post(`${this.apiUrl}api/change-password`, { currentPassword, newPassword });
   }
 }
