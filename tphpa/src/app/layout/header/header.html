@@ -61,6 +61,7 @@
     </div>
 
     <!-- Mobile Menu -->
+     <br><br>
     <div class="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50" [class.hidden]="!isMenuOpen" (click)="toggleMenu()">
       <div class="absolute top-0 left-0 w-80 max-w-full h-full bg-white shadow-lg transform transition-transform duration-300" [class.-translate-x-full]="!isMenuOpen" [class.translate-x-0]="isMenuOpen" (click)="$event.stopPropagation()">
         <div class="flex justify-between items-center p-4 border-b border-gray-200">
