@@ -17,6 +17,22 @@ app.use((req, res, next) => {
  console.log(`➡️ Received request: ${req.method} ${req.originalUrl}`);
 next();
 });
+const angularDistPath = path.join(__dirname, 'dist/portal/browser');
+
+console.log('=== ANGULAR CONFIGURATION ===');
+console.log('Serving Angular from:', angularDistPath);
+console.log('Angular files exist:', fs.existsSync(angularDistPath));
+
+if (fs.existsSync(angularDistPath)) {
+  const indexPath = path.join(angularDistPath, 'index.html');
+  console.log('index.html exists:', fs.existsSync(indexPath));
+  
+  // Serve Angular static files
+  app.use(express.static(angularDistPath));
+  console.log('✅ Angular static files configured');
+} else {
+  console.log('❌ Angular build files not found at:', angularDistPath);
+}
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -35,11 +51,7 @@ filename: (req, file, cb) => {
 });
 const upload = multer({ storage });
 
-const angularDistPath = path.join(__dirname, 'dist/portal/browser'); 
-// <-- updated path
 
-console.log('Angular dist path:', angularDistPath);
-app.use(express.static(angularDistPath));
 
 const db = mysql.createConnection({
  host: process.env.DB_HOST, // Replaces 'localhost' with 'interchange.proxy.rlwy.net'
@@ -1657,9 +1669,7 @@ app.use('/uploads', express.static(uploadDir));
 app.get('/', (req, res) => {
     res.status(200).send('API is running successfully!');
 });
-app.get('*', (req, res) => {
-  res.sendFile(path.join(angularDistPath, 'index.html'));
-});
+
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
