@@ -35,7 +35,7 @@ filename: (req, file, cb) => {
 });
 const upload = multer({ storage });
 
-const angularDistPath = path.join(__dirname, 'dist/portal'); 
+const angularDistPath = path.join(__dirname, 'dist/portal/browser'); 
 // <-- updated path
 
 console.log('Angular dist path:', angularDistPath);
