@@ -1,94 +1,74 @@
-<!-- Sub Navigation Bar -->
-
-<div class="sub-nav-container bg-gradient-to-r from-primary-700 to-primary-800 text-white" #subNav>
-  <div class="sub-nav-left">
+<!-- Responsive Sub Navigation Bar -->
+<div class="sub-nav-container w-full fixed top-0 left-0 right-0 bg-gradient-to-r from-primary-700 to-primary-800 text-white flex justify-between items-center px-4 py-1 text-sm z-50">
+  <div class="flex items-center gap-3 flex-wrap">
     <a href="https://www.linkedin.com/in/tphpa-news-a33863271/" target="_blank" aria-label="Linkedin"><i class="fab fa-linkedin"></i></a>
     <a href="https://www.youtube.com/@tphpahabaritv82/" target="_blank" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
     <a href="https://www.instagram.com/tphpa_tz/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    <span class="domain">tphpaportal.go.tz</span>
-    <span class="contact"><i class="fas fa-phone"></i> +255 123 456 789</span>
+    <span class="font-semibold domain">tphpaportal.go.tz</span>
+    <span class="flex items-center gap-1 contact"><i class="fas fa-phone"></i> +255 123 456 789</span>
   </div>
-  <div class="sub-nav-center">
-    <span class="portal-title font-bold text-lg text-white-100 tracking-wide">TPHPA REPORTING PORTAL</span>
+
+  <div class="hidden sm:flex font-bold text-white text-base tracking-wide">
+    TPHPA REPORTING PORTAL
   </div>
-  <div class="sub-nav-right">
-    <button (click)="changeLanguage('en')" [class.active]="languageService.getLanguage() === 'en'">{{ 'english' | translate | async }}</button>
-    <span class="divider">|</span>
-    <button (click)="changeLanguage('sw')" [class.active]="languageService.getLanguage() === 'sw'">{{ 'swahili' | translate | async }}</button>
+
+  <div class="flex items-center gap-2 sub-nav-right">
+    <button (click)="changeLanguage('en')" class="px-2 py-1 text-xs rounded" [class.bg-white/20]="languageService.getLanguage() === 'en'">English</button>
+    <span class="opacity-50">|</span>
+    <button (click)="changeLanguage('sw')" class="px-2 py-1 text-xs rounded" [class.bg-white/20]="languageService.getLanguage() === 'sw'">Swahili</button>
   </div>
 </div>
 
 <!-- Main Header -->
-<header class="fixed-header bg-white shadow-lg z-40" style="width: 100%">
+<header class="fixed w-full bg-white shadow-md z-40" style="top: 40px;">
   <nav class="flex justify-between items-center px-4 py-2 max-w-7xl mx-auto">
-    <a [routerLink]="'/'" class="flex items-center no-underline">
-      <img src="assets/images/logo.png" alt="TPHPA Logo" class="h-12 w-auto">
+
+    <a [routerLink]="'/'" class="flex items-center">
+      <img src="assets/images/logo.png" alt="TPHPA Logo" class="h-12 w-auto" />
     </a>
 
-    <button class="md:hidden bg-none border-none text-black text-xl p-2 cursor-pointer" (click)="toggleMenu()">
+    <!-- Hamburger for Mobile -->
+    <button class="md:hidden text-black text-2xl p-2" (click)="toggleMenu()">
       <i class="fas fa-bars"></i>
     </button>
 
-    <div class="hidden md:flex items-center ml-auto gap-4">
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-4 ml-auto">
       <ng-container *ngIf="!isAuthenticated">
-        <a class="px-3 py-0 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'home' | translate | async }}</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/resources'">Resources</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/careers'">Careers</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/about'">About</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/contact'">Contact</a>
 
-
-
-        <a class="px-3 py-0 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/resources'" routerLinkActive="active">{{ 'resources' | translate | async }}</a>
-        <a class="px-3 py-0 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/careers'" routerLinkActive="active">{{ 'careers' | translate | async }}</a>
-        <a class="px-3 py-0 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/about'" routerLinkActive="active">{{ 'about' | translate | async }}</a>
-        <a class="px-3 py-0 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/contact'" routerLinkActive="active">{{ 'contact' | translate | async }}</a>
-
-        <a class="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold no-underline transition hover:bg-primary-700 ml-4" [routerLink]="'/login'">{{ 'signIn' | translate | async }}</a>
+        <a class="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-primary-700" [routerLink]="'/login'">Sign In</a>
       </ng-container>
-
-      <ng-container *ngIf="isAuthenticated">
-        <!-- <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600" [routerLink]="'/employee'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'dashboard' | translate | async }}</a> -->
-
-        <div class="relative">
-          <!-- <a class="px-3 py-2 no-underline text-black font-semibold transition hover:text-primary-600 flex items-center gap-1" routerLinkActive="active">{{ 'reports' | translate | async }} <i class="fas fa-chevron-down text-sm"></i></a>
-          <div class="absolute top-full left-0 bg-white min-w-48 shadow-lg z-10 rounded border hidden hover:block">
-            <a class="block px-4 py-2 no-underline text-gray-700 hover:bg-gray-50 hover:text-primary-600" [routerLink]="'/employee/submit-report'" routerLinkActive="active">{{ 'submitReport' | translate | async }}</a>
-            <a class="block px-4 py-2 no-underline text-gray-700 hover:bg-gray-50 hover:text-primary-600" [routerLink]="'/employee/my-reports'" routerLinkActive="active">{{ 'myReports' | translate | async }}</a>
-          </div> -->
-        </div>
-
-        <div class="flex items-center gap-4 ml-4 mr-6">
-          <!-- <span class="text-black font-normal">{{ 'welcome' | translate | async }}, {{ userName }}</span>
-          <div class="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">{{ getUserInitials() }}</div>
-          <a class="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold no-underline transition hover:bg-primary-700 cursor-pointer" (click)="logout()">{{ 'logout' | translate | async }}</a> -->
-        </div>
-      </ng-container>
-    </div>
-
-    <!-- Mobile Menu -->
-     
-    <div class="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50" [class.hidden]="!isMenuOpen" (click)="toggleMenu()">
-      <div class="absolute top-0 left-0 w-80 max-w-full h-full bg-white shadow-lg transform transition-transform duration-300" [class.-translate-x-full]="!isMenuOpen" [class.translate-x-0]="isMenuOpen" (click)="$event.stopPropagation()">
-        <div class="flex justify-between items-center p-4 border-b border-gray-200">
-          <h3 class="text-lg font-semibold">Menu</h3>
-          <button (click)="toggleMenu()" class="text-gray-500 hover:text-gray-700">
-            <i class="fas fa-times text-xl"></i>
-          </button>
-        </div>
-        <div class="flex flex-col overflow-y-auto h-full pb-20">
-          <ng-container *ngIf="!isAuthenticated">
-            <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200 hover:bg-gray-50" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMenu()">{{ 'home' | translate | async }}</a>
-            <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200 hover:bg-gray-50" [routerLink]="'/resources'" routerLinkActive="active" (click)="toggleMenu()">{{ 'resources' | translate | async }}</a>
-            <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200 hover:bg-gray-50" [routerLink]="'/careers'" routerLinkActive="active" (click)="toggleMenu()">{{ 'careers' | translate | async }}</a>
-            <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200 hover:bg-gray-50" [routerLink]="'/about'" routerLinkActive="active" (click)="toggleMenu()">{{ 'about' | translate | async }}</a>
-            <a class="px-4 py-3 no-underline text-black font-semibold border-b border-gray-200 hover:bg-gray-50" [routerLink]="'/contact'" routerLinkActive="active" (click)="toggleMenu()">{{ 'contact' | translate | async }}</a>
-            <div class="px-4 py-3">
-              <a class="sign-in-btn bg-primary-600 text-white px-4 py-2 rounded-full font-semibold no-underline block text-center hover:bg-primary-700" [routerLink]="'/login'" (click)="toggleMenu()">{{ 'signIn' | translate | async }}</a>
-            </div>
-          </ng-container>
-
-          <ng-container *ngIf="isAuthenticated">
-            
-          </ng-container>
-        </div>
-      </div>
     </div>
   </nav>
+
+  <!-- Mobile Menu -->
+  <div class="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-50" [class.hidden]="!isMenuOpen" (click)="toggleMenu()">
+    <div class="absolute top-0 left-0 w-72 max-w-full h-full bg-white shadow-lg transform transition-transform duration-300" [class.-translate-x-full]="!isMenuOpen" [class.translate-x-0]="isMenuOpen" (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center p-4 border-b">
+        <h3 class="text-lg font-semibold">Menu</h3>
+        <button (click)="toggleMenu()" class="text-gray-600 text-xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-col overflow-y-auto h-full pb-24">
+        <ng-container *ngIf="!isAuthenticated">
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/'" (click)="toggleMenu()">Home</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/resources'" (click)="toggleMenu()">Resources</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/careers'" (click)="toggleMenu()">Careers</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/about'" (click)="toggleMenu()">About</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/contact'" (click)="toggleMenu()">Contact</a>
+
+          <div class="px-4 py-3">
+            <a class="block text-center bg-primary-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-primary-700" [routerLink]="'/login'" (click)="toggleMenu()">Sign In</a>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
 </header>
