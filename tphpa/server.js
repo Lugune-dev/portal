@@ -367,13 +367,53 @@ return res.status(500).json({ error: 'Debug query failed: ' + err.message });
 
 });
 
+// --- ORGANIZATION UNITS ROUTE ---
+app.get('/api/organization-units', async (req, res) => {
+  try {
+    const query = 'SELECT OrgUnitID, UnitName, ParentUnitID FROM OrganizationUnits ORDER BY UnitName';
+    const [results] = await db.query(query);
+    res.json({ success: true, data: results });
+  } catch (err) {
+    console.error('Error fetching organization units:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// --- FORMS USER ROUTE ---
+app.get('/api/forms/user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    // Get the latest submission for each form instance submitted by the user
+    const query = `
+      SELECT fs.submission_id AS id, fs.instance_id, fs.action_type, fs.action_by, fs.comments, fs.form_data, fs.created_at,
+             COALESCE(ft.form_type_name, fs.form_type, 'Unknown') AS form_type_name, ft.form_type_code
+      FROM form_submissions fs
+      LEFT JOIN form_types ft ON fs.form_type = ft.form_type_code
+      INNER JOIN (
+        SELECT instance_id, MAX(created_at) as latest_created_at
+        FROM form_submissions
+        WHERE instance_id IN (
+          SELECT instance_id FROM form_submissions WHERE action_type = 'submit' AND action_by = ?
+        )
+        GROUP BY instance_id
+      ) latest ON fs.instance_id = latest.instance_id AND fs.created_at = latest.latest_created_at
+      ORDER BY fs.created_at DESC
+    `;
+    const [forms] = await db.query(query, [userId]);
+    res.json({ success: true, data: forms });
+  } catch (err) {
+    console.error('Error fetching user forms:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
 // --- HIERARCHY AND REPORTS ROUTES ---
 app.get('/api/hierarchy/subordinates/:userId', async (req, res) => {
   const { userId } = req.params;
   try {
     // Query subordinates based on reporting structure (assume users table has reporting_to column)
     const query = `
-      SELECT id, name, email, role FROM users 
+      SELECT id, name, email, role FROM users
       WHERE reporting_to = ? AND role = 'employee'
     `;
     const [subordinates] = await db.query(query, [userId]);
@@ -403,11 +443,26 @@ app.get('/api/hierarchy/reports/:role', async (req, res) => {
 app.get('/api/forms/subordinate-forms/:userId', async (req, res) => {
   const { userId } = req.params;
   try {
+    // Get the manager's OrgUnitID
+    const managerQuery = 'SELECT OrgUnitID FROM Users WHERE UserID = ?';
+    const [managerRows] = await db.query(managerQuery, [userId]);
+    if (managerRows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Manager not found' });
+    }
+    const managerUnitId = managerRows[0].OrgUnitID;
+
+    // Get forms submitted by users in the manager's unit, direct subordinate units, or units under direct subordinates
     const query = `
-      SELECT * FROM form_submissions 
-      WHERE action_by = ? OR instance_id IN (SELECT id FROM users WHERE reporting_to = ?)
+      SELECT fs.submission_id AS id, fs.instance_id, fs.action_type, fs.action_by, fs.comments, fs.form_data, fs.created_at,
+             u.FirstName, u.LastName, u.Email, ou.UnitName, COALESCE(ft.form_type_name, fs.form_type, 'Unknown') AS form_type_name, ft.form_type_code AS form_type_code
+      FROM form_submissions fs
+      JOIN Users u ON fs.action_by = u.UserID
+      JOIN OrganizationUnits ou ON u.OrgUnitID = ou.OrgUnitID
+      LEFT JOIN form_types ft ON fs.form_type = ft.form_type_code
+      WHERE (ou.OrgUnitID = ? OR ou.ParentUnitID = ? OR ou.ParentUnitID IN (SELECT OrgUnitID FROM OrganizationUnits WHERE ParentUnitID = ?)) AND fs.action_type = 'submit'
+      ORDER BY fs.created_at DESC
     `;
-    const [forms] = await db.query(query, [userId, userId]);
+    const [forms] = await db.query(query, [managerUnitId, managerUnitId, managerUnitId]);
     res.json({ success: true, data: forms });
   } catch (err) {
     console.error('Error fetching subordinate forms:', err);
