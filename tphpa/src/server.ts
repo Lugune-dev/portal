@@ -25,6 +25,16 @@ const angularApp = new AngularNodeAppEngine();
  */
 
 /**
+ * Middleware to set correct Content-Type for CSS files
+ */
+app.use((req, res, next) => {
+  if (req.path.endsWith('.css')) {
+    res.setHeader('Content-Type', 'text/css');
+  }
+  next();
+});
+
+/**
  * Serve static files from /browser
  */
 app.use(
