@@ -1,13 +1,13 @@
-# TODO: Add 'APPROVED' Status to Report Workflow
+# TODO: Implement Form Approval Workflow Extension
 
 ## Steps to Complete
 
-1. **Update Report Service Interface** - Add 'APPROVED' to the status union type in `tphpa/src/app/services/report.service.ts`. ✅ COMPLETED
+1. **Update Backend Logic** - Modify backend/server.js to add director form approval endpoints and change manager approval to set 'sent_to_director' status. ✅ COMPLETED
 
-2. **Update Director General Dashboard** - Add 'APPROVED' to the status type in `tphpa/src/app/director/director-general-dashboard/director-reports-dashboard.ts`. ✅ COMPLETED
+2. **Update Forms Service** - Add director approval methods to forms.service.ts. ✅ COMPLETED
 
-3. **Update Director Dashboard** - Add 'APPROVED' to the FinalApprovalReport status in `tphpa/src/app/director/director-dashboard/director-dashboard.ts`. ✅ COMPLETED
+3. **Update Director Dashboard Component** - Add form approval logic to director-dashboard.ts. ✅ COMPLETED
 
-4. **Update Backend Logic** - Modify or add backend endpoint in `backend/server.js` to handle setting report status to 'APPROVED'. ✅ COMPLETED
+4. **Update Director Dashboard Template** - Add form approval view to director-dashboard.html. ✅ COMPLETED
 
-5. **Test Workflow** - Verify that the approval workflow correctly sets and displays the 'APPROVED' status. ✅ COMPLETED
+5. **Test Workflow** - Verify that the form approval workflow works from employee submission to director approval. ✅ COMPLETED

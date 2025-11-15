@@ -35,7 +35,7 @@ filename: (req, file, cb) => {
 });
 const upload = multer({ storage });
 
-const angularDistPath = path.join(__dirname, 'dist', 'portal');
+const angularDistPath = path.join(__dirname, '..', 'tphpa', 'dist', 'portal');
 app.use(express.static(angularDistPath));
 
 const db = mysql.createConnection({
@@ -936,7 +936,7 @@ app.post('/api/forms/approve/:formId', async (req, res) => {
   try {
     const query = `
       INSERT INTO form_submissions (instance_id, action_type, action_by, comments, form_data, form_type)
-      SELECT instance_id, 'approve', ?, ?, form_data, form_type
+      SELECT instance_id, 'sent_to_director', ?, ?, form_data, form_type
       FROM form_submissions
       WHERE submission_id = ?
     `;
@@ -944,7 +944,7 @@ app.post('/api/forms/approve/:formId', async (req, res) => {
     const [result] = await db.query(query, [approverId, comments, formId]);
     console.log('Approve result:', result);
     if (result.affectedRows > 0) {
-      res.json({ success: true, message: 'Form approved' });
+      res.json({ success: true, message: 'Form sent to director for final approval' });
     } else {
       res.status(404).json({ success: false, message: 'Form not found' });
     }
