@@ -370,7 +370,7 @@ header {
     
     /* FIX: Ensure header position is correct for this breakpoint */
     .fixed-header {
-        top: 68px; /* Adjusted to match stacked sub-nav */
+        top: 10px; /* Adjusted to match stacked sub-nav */
     }
     
     /* FIX: Ensure mobile menu overlay starts below the sub-nav */
