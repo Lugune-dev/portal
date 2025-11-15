@@ -17,7 +17,7 @@ export interface Report {
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = '/api'; // Use relative path to leverage proxy
+  private apiUrl = 'https://portal-api-z927.onrender.com/api'; // Use relative path to leverage proxy
 
   constructor(private http: HttpClient) {}
 

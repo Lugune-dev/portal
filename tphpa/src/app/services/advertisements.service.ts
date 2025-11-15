@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AdvertisementService {
-  private baseUrl = '/api';
+  private baseUrl = 'https://portal-api-z927.onrender.com/api';
 
   constructor(private http: HttpClient) { }
 
