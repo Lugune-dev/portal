@@ -415,9 +415,14 @@ header {
     .sub-nav-container {
         padding: 0.25rem;
         gap: 0.25rem;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        height: auto;
     }
 
     .sub-nav-left, .sub-nav-right {
+        flex-wrap: wrap; /* Allow elements inside to wrap to the next line */
+        justify-content: center;
         gap: 0.5rem;
     }
 
@@ -427,6 +432,11 @@ header {
 
     .sub-nav-left .contact:last-child {
         margin-left: 0 !important;
+        display: block; /* Make it take its own line */
+        width: 100%; /* Ensure it spans full width */
+        text-align: center;
+        font-size: 0.7rem; /* Significantly smaller font */
+        order:4;
     }
 
     .banner-logo {
