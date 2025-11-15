@@ -101,7 +101,7 @@
       <div *ngIf="advertisements.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div *ngFor="let ad of advertisements" class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
           <div class="h-48 bg-gray-100 flex items-center justify-center relative">
-            <img *ngIf="ad.imageUrl" [src]="ad.imageUrl" alt="Ad Image" class="w-full h-full object-cover" />
+            <img *ngIf="ad.imageUrl" [src]="ad.imageUrl ? ('https://portal-api-z927.onrender.com' + ad.imageUrl) : 'assets/images/air.jpg'" alt="Ad Image" class="w-full h-full object-cover" />
             <div *ngIf="!ad.imageUrl" class="text-gray-400">
               <i class="fas fa-image text-4xl"></i>
               <p class="mt-2">No Image</p>

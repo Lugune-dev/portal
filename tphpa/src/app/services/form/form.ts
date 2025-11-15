@@ -49,7 +49,7 @@ export interface FormInstance {
   providedIn: 'root'
 })
 export class FormService {
-  private apiUrl = 'https://portal-api-z927.onrender.com/api/api';
+  private apiUrl = 'https://portal-api-z927.onrender.com/api';
 
   constructor(private http: HttpClient) { }
 
