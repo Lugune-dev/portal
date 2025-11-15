@@ -35,7 +35,7 @@ filename: (req, file, cb) => {
 });
 const upload = multer({ storage });
 
-const angularDistPath = path.join(__dirname, 'backend/dist/portal'); // <-- updated path
+const angularDistPath = path.join(__dirname, 'dist/portal'); // <-- updated path
 app.use(express.static(angularDistPath));
 
 const db = mysql.createConnection({
