@@ -23,7 +23,7 @@ export interface FormSubmission {
 })
 export class FormsService {
 
-  private apiUrl = '/api';
+  private apiUrl = 'https://portal-api-z927.onrender.com/api';
 
   constructor(private http: HttpClient) { }
 
