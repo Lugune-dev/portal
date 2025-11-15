@@ -45,11 +45,16 @@ body {
     right: 0;
 }
 
-.sub-nav-left, .sub-nav-right {
+.sub-nav-left, .sub-nav-center, .sub-nav-right {
     display: flex;
     align-items: center;
     gap: 0.75rem; /* Reduced gap */
     padding: 0 0.5rem;
+}
+
+.sub-nav-center {
+    flex: 1;
+    justify-content: center;
 }
 
 .sub-nav-left a {
