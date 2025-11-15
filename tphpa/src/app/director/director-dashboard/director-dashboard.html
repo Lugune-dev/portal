@@ -2,16 +2,16 @@
     <!-- Sidebar -->
     <div class="w-72 bg-gradient-to-br from-gray-600 to-green-700 text-white p-8 shadow-xl fixed h-full left-0 top-0 overflow-y-auto z-50">
         <h3 class="text-xl font-bold mb-8 text-center text-white drop-shadow-lg">Director Portal</h3>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'dashboard'" (click)="setActiveView('dashboard')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg" [class.bg-white/25]="activeView === 'dashboard'" (click)="setActiveView('dashboard')">
             <i class="fas fa-chart-bar mr-4 text-xl w-5 text-center"></i> Overview
         </button>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'queue'" (click)="setActiveView('queue')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg" [class.bg-white/25]="activeView === 'queue'" (click)="setActiveView('queue')">
             <i class="fas fa-gavel mr-4 text-xl w-5 text-center"></i> Final Approvals
         </button>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'metrics'" (click)="setActiveView('metrics')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg" [class.bg-white/25]="activeView === 'metrics'" (click)="setActiveView('metrics')">
             <i class="fas fa-rocket mr-4 text-xl w-5 text-center"></i> Performance KPIs
         </button>
-        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg backdrop-blur-sm" [class.bg-white/25]="activeView === 'change-password'" (click)="setActiveView('change-password')">
+        <button class="flex items-center w-full px-5 py-4 mb-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-1 hover:shadow-lg" [class.bg-white/25]="activeView === 'change-password'" (click)="setActiveView('change-password')">
             <i class="fas fa-key mr-4 text-xl w-5 text-center"></i> Change Password
         </button>
     </div>

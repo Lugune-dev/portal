@@ -49,7 +49,7 @@ export interface FormInstance {
   providedIn: 'root'
 })
 export class FormService {
-  private apiUrl = 'https://portal-api-z927.onrender.com/api';
+  private apiUrl = '/api';
 
   constructor(private http: HttpClient) { }
 
@@ -57,40 +57,40 @@ export class FormService {
     if (!formTypeCode) {
       throw new Error('Form type code is required');
     }
-    return this.http.get<FormConfig>(`${this.apiUrl}https://portal-api-z927.onrender.com/forms/config/${formTypeCode}`);
+    return this.http.get<FormConfig>(`${this.apiUrl}/forms/config/${formTypeCode}`);
   }
 
 
   saveDraft(formData: Partial<FormInstance>, formTypeCode: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}https://portal-api-z927.onrender.com/forms/submit/${formTypeCode}`, { ...formData, action_type: 'save_draft' });
+    return this.http.post(`${this.apiUrl}/forms/submit/${formTypeCode}`, { ...formData, action_type: 'save_draft' });
   }
 
 
   submitForm(formData: Partial<FormInstance>, formTypeCode: string): Observable<any> {
     // Construct the URL correctly using the formTypeCode
-    const url = `${this.apiUrl}https://portal-api-z927.onrender.com/forms/submit/${formTypeCode}`;
+    const url = `${this.apiUrl}/forms/submit/${formTypeCode}`;
     console.log('Submitting form to:', url);
     return this.http.post(url, { ...formData, action_type: 'submit' });
   }
 
   getFormInstance(instanceId: number): Observable<FormInstance> {
-    return this.http.get<FormInstance>(`${this.apiUrl}https://portal-api-z927.onrender.com/forms/instance/${instanceId}`);
+    return this.http.get<FormInstance>(`${this.apiUrl}/forms/instance/${instanceId}`);
   }
 
   getMyForms(): Observable<FormInstance[]> {
-    return this.http.get<FormInstance[]>(`${this.apiUrl}https://portal-api-z927.onrender.com/forms/my-forms`);
+    return this.http.get<FormInstance[]>(`${this.apiUrl}/forms/my-forms`);
   }
 
   getBudgetInfo(budgetItemId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}https://portal-api-z927.onrender.com/budget/${budgetItemId}`);
+    return this.http.get(`${this.apiUrl}/budget/${budgetItemId}`);
   }
 
   testConnection(): Observable<any> {
-    return this.http.get(`${this.apiUrl}https://portal-api-z927.onrender.com/health`);
+    return this.http.get(`${this.apiUrl}/health`);
   }
 
   testFormsConnection(): Observable<any> {
-    return this.http.get(`${this.apiUrl}https://portal-api-z927.onrender.com/forms/health`);
+    return this.http.get(`${this.apiUrl}/forms/health`);
   }
 
   getFormStructure(formCode: string): Observable<any> {
@@ -99,10 +99,10 @@ export class FormService {
 
   getFormsByReportingLine(level: string, userId?: string): Observable<FormInstance[]> {
     const params = userId ? `/${userId}` : '';
-    return this.http.get<FormInstance[]>(`${this.apiUrl}https://portal-api-z927.onrender.com/forms/reporting-line/${level}${params}`);
+    return this.http.get<FormInstance[]>(`${this.apiUrl}/forms/reporting-line/${level}${params}`);
   }
 
   getSubordinateForms(subordinateId: string): Observable<FormInstance[]> {
-    return this.http.get<FormInstance[]>(`${this.apiUrl}https://portal-api-z927.onrender.com/forms/subordinates/${subordinateId}`);
+    return this.http.get<FormInstance[]>(`${this.apiUrl}/forms/subordinates/${subordinateId}`);
   }
 }
