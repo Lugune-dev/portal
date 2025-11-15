@@ -7,16 +7,17 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto'); // 🔒 Used for password hashing
 
-
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
- console.log(`➡️ Received request: ${req.method} ${req.originalUrl}`);
-next();
+  console.log(`➡️ Received request: ${req.method} ${req.originalUrl}`);
+  next();
 });
+
+// ==================== ANGULAR STATIC FILES ====================
 const angularDistPath = path.join(__dirname, 'dist/portal/browser');
 
 console.log('=== ANGULAR CONFIGURATION ===');
@@ -38,35 +39,33 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
- fs.mkdirSync(uploadDir);
+  fs.mkdirSync(uploadDir);
 }
 
 const storage = multer.diskStorage({
-destination: (req, file, cb) => {
- cb(null, uploadDir);
- },
-filename: (req, file, cb) => {
- cb(null, Date.now() + '-' + file.originalname);
- }
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
 const upload = multer({ storage });
 
-
-
 const db = mysql.createConnection({
- host: process.env.DB_HOST, // Replaces 'localhost' with 'interchange.proxy.rlwy.net'
- user: process.env.DB_USER, // Replaces 'sheddy' with 'root'
- password: process.env.DB_PASSWORD, // Uses the strong Railway password
- database: process.env.DB_NAME, // Replaces 'tphpa' with 'railway'
- port: parseInt(process.env.DB_PORT, 10), // CRUCIAL: Uses port 54879 and converts it to a number
+  host: process.env.DB_HOST, // Replaces 'localhost' with 'interchange.proxy.rlwy.net'
+  user: process.env.DB_USER, // Replaces 'sheddy' with 'root'
+  password: process.env.DB_PASSWORD, // Uses the strong Railway password
+  database: process.env.DB_NAME, // Replaces 'tphpa' with 'railway'
+  port: parseInt(process.env.DB_PORT, 10), // CRUCIAL: Uses port 54879 and converts it to a number
 }).promise();
 
 db.connect((err) => {
- if (err) {
- console.error('❌ DB connection error:', err);
-} else {
-console.log('✅ MySQL Connected');
-}
+  if (err) {
+    console.error('❌ DB connection error:', err);
+  } else {
+    console.log('✅ MySQL Connected');
+  }
 });
 
 // Ensure approvals table exists (simple migration)
@@ -131,7 +130,7 @@ db.query(approvalsTableSql).then(() => {
     await ensureColumn('approvals', 'approver_ip', "VARCHAR(64) NULL");
     await ensureColumn('approvals', 'approver_user_agent', 'TEXT NULL');
     await ensureColumn('approvals', 'signature_payload', 'JSON NULL');
-  await ensureColumn('approvals', 'notified_at', 'DATETIME NULL');
+    await ensureColumn('approvals', 'notified_at', 'DATETIME NULL');
 
     // Legacy schema: some DBs may have a non-nullable 'form_id' column; ensure it's present and nullable
     const [formIdCols] = await db.query(`SELECT COLUMN_NAME, IS_NULLABLE, COLUMN_DEFAULT, COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'approvals' AND COLUMN_NAME = 'form_id'`);
@@ -162,7 +161,7 @@ db.query(approvalsTableSql).then(() => {
 })();
 
 app.get('/', (req, res) => {
-    res.status(200).send('API is running successfully!');
+  res.status(200).send('API is running successfully!');
 });
 
 // -----------------------
@@ -223,13 +222,13 @@ app.post('/api/approvals', async (req, res) => {
     const tokenHash = cryptoHash(token);
     const expiresAt = new Date(Date.now() + ((process.env.APPROVAL_TOKEN_TTL_MINUTES ? parseInt(process.env.APPROVAL_TOKEN_TTL_MINUTES) : 24*60) * 60000));
 
-  // Some legacy schemas include a non-nullable `form_id` column. Provide explicit NULL for compatibility.
-  const insertSql = `INSERT INTO approvals (form_id, instance_id, form_type_code, field_name, requestor_user_id, approver_email, token_hash, token_expires_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`;
-  // formId could be an instance id or a form type code; try to store number if numeric
-  const instanceId = (typeof formId === 'number' || (typeof formId === 'string' && /^[0-9]+$/.test(formId))) ? formId : null;
-  const formTypeCode = instanceId ? null : formId;
+    // Some legacy schemas include a non-nullable `form_id` column. Provide explicit NULL for compatibility.
+    const insertSql = `INSERT INTO approvals (form_id, instance_id, form_type_code, field_name, requestor_user_id, approver_email, token_hash, token_expires_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`;
+    // formId could be an instance id or a form type code; try to store number if numeric
+    const instanceId = (typeof formId === 'number' || (typeof formId === 'string' && /^[0-9]+$/.test(formId))) ? formId : null;
+    const formTypeCode = instanceId ? null : formId;
 
-  const [result] = await db.query(insertSql, [null, instanceId, formTypeCode, fieldName, requestorId || null, targetEmail, tokenHash, expiresAt]);
+    const [result] = await db.query(insertSql, [null, instanceId, formTypeCode, fieldName, requestorId || null, targetEmail, tokenHash, expiresAt]);
     const approvalId = result.insertId;
 
     // build approval link
@@ -386,36 +385,36 @@ app.post('/api/approvals/confirm', async (req, res) => {
 // --- LOGIN ROUTE (Updated with Hashing) ---
 // ---------------------------------------------------
 app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    try {
-        const query = 'SELECT UserID, Email, FirstName, LastName, PasswordHash, UserRoleID, OrgUnitID FROM Users WHERE Email = ?';
-        const [rows] = await db.query(query, [email]);
-        const user = rows[0];
+  try {
+    const query = 'SELECT UserID, Email, FirstName, LastName, PasswordHash, UserRoleID, OrgUnitID FROM Users WHERE Email = ?';
+    const [rows] = await db.query(query, [email]);
+    const user = rows[0];
 
-        if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
-        }
-
-        // 🔒 Hash the incoming password for comparison
-        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-
-        if (user.PasswordHash === hashedPassword) {
-            // Remove hash before sending user object to client
-            delete user.PasswordHash;
-
-            // 🔑 CRITICAL DEBUG LOG: Print the exact user object being sent
-            console.log(`✅ Login successful for ${user.Email}. User object sent:`, user);
-
-            return res.status(200).json({ message: 'Login successful', user: user });
-        } else {
-            return res.status(401).json({ message: 'Invalid email or password' });
-        }
-
-    } catch (err) {
-        console.error('Login error:', err);
-        return res.status(500).json({ message: 'Server error' });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
+
+    // 🔒 Hash the incoming password for comparison
+    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+    if (user.PasswordHash === hashedPassword) {
+      // Remove hash before sending user object to client
+      delete user.PasswordHash;
+
+      // 🔑 CRITICAL DEBUG LOG: Print the exact user object being sent
+      console.log(`✅ Login successful for ${user.Email}. User object sent:`, user);
+
+      return res.status(200).json({ message: 'Login successful', user: user });
+    } else {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+  } catch (err) {
+    console.error('Login error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
 });
 
 // ---------------------------------------------------
@@ -423,55 +422,55 @@ app.post('/api/login', async (req, res) => {
 // ---------------------------------------------------
 console.log('Defining forgot-password route');
 app.post('/api/forgot-password', async (req, res) => {
-    const { email } = req.body;
+  const { email } = req.body;
 
-    if (!email) {
-        return res.status(400).json({ message: 'Email is required' });
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  try {
+    // Check if user exists
+    const query = 'SELECT UserID, Email FROM Users WHERE Email = ?';
+    const [rows] = await db.query(query, [email]);
+    const user = rows[0];
+
+    if (!user) {
+      // For security reasons, don't reveal if email exists or not
+      return res.status(200).json({ message: 'If the email exists, a password reset link has been sent.' });
     }
 
-    try {
-        // Check if user exists
-        const query = 'SELECT UserID, Email FROM Users WHERE Email = ?';
-        const [rows] = await db.query(query, [email]);
-        const user = rows[0];
+    // TODO: In a real application, you would:
+    // 1. Generate a secure reset token
+    // 2. Store it in the database with expiration
+    // 3. Send an email with the reset link
+    // For now, just return success message
 
-        if (!user) {
-            // For security reasons, don't reveal if email exists or not
-            return res.status(200).json({ message: 'If the email exists, a password reset link has been sent.' });
-        }
+    console.log(`Password reset requested for: ${email}`);
+    return res.status(200).json({ message: 'If the email exists, a password reset link has been sent.' });
 
-        // TODO: In a real application, you would:
-        // 1. Generate a secure reset token
-        // 2. Store it in the database with expiration
-        // 3. Send an email with the reset link
-        // For now, just return success message
-
-        console.log(`Password reset requested for: ${email}`);
-        return res.status(200).json({ message: 'If the email exists, a password reset link has been sent.' });
-
-    } catch (err) {
-        console.error('Forgot password error:', err);
-        return res.status(500).json({ message: 'Server error' });
-    }
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
 });
 
 // ---------------------------------------------------
 // --- WELCOME ROUTE ---
 // ---------------------------------------------------
 app.get('/api/welcome', (req, res) => {
-    console.log(`Request received: ${req.method} ${req.path}`);
-    res.json({ message: 'Welcome to the API Service!' });
+  console.log(`Request received: ${req.method} ${req.path}`);
+  res.json({ message: 'Welcome to the API Service!' });
 });
 
 // ---------------------------------------------------
 // --- HELLO ROUTE WITH ENHANCED LOGGING ---
 // ---------------------------------------------------
 app.get('/api/hello', (req, res) => {
-    const timestamp = new Date().toISOString();
-    const ip = req.ip || req.connection?.remoteAddress || 'Unknown';
-    const userAgent = req.headers['user-agent'] || 'Unknown';
-    console.log(`[${timestamp}] ${req.method} ${req.path} - IP: ${ip} - User-Agent: ${userAgent}`);
-    res.json({ message: 'Welcome to the API Service!' });
+  const timestamp = new Date().toISOString();
+  const ip = req.ip || req.connection?.remoteAddress || 'Unknown';
+  const userAgent = req.headers['user-agent'] || 'Unknown';
+  console.log(`[${timestamp}] ${req.method} ${req.path} - IP: ${ip} - User-Agent: ${userAgent}`);
+  res.json({ message: 'Welcome to the API Service!' });
 });
 
 // ---------------------------------------------------
@@ -512,28 +511,28 @@ app.post('/api/advertisements', upload.single('image'), async (req, res) => {
 // --- ADVERTISEMENT FETCH (FIXED IMAGE URL) ---
 // ---------------------------------------------------
 app.get('/api/advertisements', async (req, res) => {
-    const query = 'SELECT * FROM advertisements';
-    try {
-        const [results] = await db.query(query);
+  const query = 'SELECT * FROM advertisements';
+  try {
+    const [results] = await db.query(query);
 
-        const adsWithUrls = results.map(ad => ({
-            id: ad.id,
-            title: ad.title,
-            description: ad.description,
-            // 💡 CRITICAL FIX: Return a RELATIVE URL so the Angular proxy handles it
-            imageUrl: ad.imageUrl ? `/uploads/${ad.imageUrl}` : '',
-            linkUrl: ad.linkUrl || '#',
-            startDate: ad.startDate,
-            endDate: ad.endDate,
-            isActive: ad.isActive === 1
-        }));
+    const adsWithUrls = results.map(ad => ({
+      id: ad.id,
+      title: ad.title,
+      description: ad.description,
+      // 💡 CRITICAL FIX: Return a RELATIVE URL so the Angular proxy handles it
+      imageUrl: ad.imageUrl ? `/uploads/${ad.imageUrl}` : '',
+      linkUrl: ad.linkUrl || '#',
+      startDate: ad.startDate,
+      endDate: ad.endDate,
+      isActive: ad.isActive === 1
+    }));
 
-        console.log('Final data sent to client:', adsWithUrls);
-        res.json({ success: true, data: adsWithUrls });
-    } catch (err) {
-        console.error('❌ Error fetching advertisements:', err);
-        return res.status(500).json({ success: false, error: 'Database error' });
-    }
+    console.log('Final data sent to client:', adsWithUrls);
+    res.json({ success: true, data: adsWithUrls });
+  } catch (err) {
+    console.error('❌ Error fetching advertisements:', err);
+    return res.status(500).json({ success: false, error: 'Database error' });
+  }
 });
 
 // --- IMPREST, RETIREMENT, CLAIMS, FORMS, DEBUG ROUTES (UNCHANGED) ---
@@ -543,9 +542,7 @@ app.post('/api/claims', upload.array('receipts', 10), async (req, res) => { /* .
 app.get('/api/debug/tables', async (req, res) => { /* ... */ });
 
 app.post('/api/forms/submit/:formType', async (req, res) => {
-
   const { formType } = req.params;
-
   const { instance_id, action_type, action_by, comments, ...formData } = req.body;
 
   console.log(`➡️ Received submission for form type: ${formType}`);
@@ -603,35 +600,34 @@ app.post('/api/forms/submit/:formType', async (req, res) => {
 });
 
 app.get('/api/forms/config/:formType', async (req, res) => {
-
   const { formType } = req.params;
   console.log('📋 Fetching form config for:', formType);
 
-const query = `SELECT
-ft.form_type_id,
-ft.form_type_name,
-ft.form_type_code,
-fs.section_id,
-fs.section_name,
-fs.section_order,
-fs.is_repeatable,
-fs.max_repeats,
-ff.field_id,
-ff.field_name,
-ff.field_label,
-ff.field_type,
-ff.field_order,
-ff.is_required,
-ff.default_value,
-ff.placeholder_text,
-ff.validation_rules,
-ff.options,
-ff.signature_type
-FROM form_types ft
-LEFT JOIN form_sections fs ON ft.form_type_id = fs.form_type_id
-LEFT JOIN form_fields ff ON fs.section_id = ff.section_id
-WHERE ft.form_type_code = ?
-ORDER BY fs.section_order, ff.field_order`;
+  const query = `SELECT
+  ft.form_type_id,
+  ft.form_type_name,
+  ft.form_type_code,
+  fs.section_id,
+  fs.section_name,
+  fs.section_order,
+  fs.is_repeatable,
+  fs.max_repeats,
+  ff.field_id,
+  ff.field_name,
+  ff.field_label,
+  ff.field_type,
+  ff.field_order,
+  ff.is_required,
+  ff.default_value,
+  ff.placeholder_text,
+  ff.validation_rules,
+  ff.options,
+  ff.signature_type
+  FROM form_types ft
+  LEFT JOIN form_sections fs ON ft.form_type_id = fs.form_type_id
+  LEFT JOIN form_fields ff ON fs.section_id = ff.section_id
+  WHERE ft.form_type_code = ?
+  ORDER BY fs.section_order, ff.field_order`;
 
   try {
     const [results] = await db.query(query, [formType]);
@@ -663,7 +659,7 @@ ORDER BY fs.section_order, ff.field_order`;
         try {
           // Attempt JSON parsing only if it looks like JSON
           if (fieldValue.trim().startsWith('{') || fieldValue.trim().startsWith('[')) {
-             return JSON.parse(fieldValue);
+            return JSON.parse(fieldValue);
           }
           return fieldValue; // Return the string as-is
         } catch (parseError) {
@@ -673,7 +669,6 @@ ORDER BY fs.section_order, ff.field_order`;
       }
       return fieldValue;
     };
-
 
     results.forEach(row => {
       // Only process if we have section data
@@ -730,7 +725,6 @@ ORDER BY fs.section_order, ff.field_order`;
 // --- DEBUG: Check JSON fields in DB ---
 // ---------------------------------------------------
 app.get('/api/debug/json-fields', async (req, res) => {
-
   const query = `
     SELECT
       field_id,
@@ -742,7 +736,6 @@ app.get('/api/debug/json-fields', async (req, res) => {
     FROM form_fields
     WHERE validation_rules IS NOT NULL OR options IS NOT NULL
   `;
-
 
   try {
     const [results] = await db.query(query);
@@ -756,7 +749,6 @@ app.get('/api/debug/json-fields', async (req, res) => {
   } catch (err) {
     return res.status(500).json({ error: 'Debug query failed: ' + err.message });
   }
-
 });
 
 // --- REPORTS ROUTES (UPDATED FOR REAL DATABASE) ---
@@ -1667,11 +1659,33 @@ app.get('/api/admin/reports-to', async (req, res) => {
 // 🚀 CRITICAL FIX: STATIC FILE SERVER ENABLED AND ACTIVE
 app.use('/uploads', express.static(uploadDir));
 app.get('/', (req, res) => {
-    res.status(200).send('API is running successfully!');
+  res.status(200).send('API is running successfully!');
+});
+
+// ==================== ANGULAR SPA FALLBACK ====================
+// 🚀 CRITICAL: This must be the LAST route in your server
+app.get('*', (req, res) => {
+  const indexPath = path.join(angularDistPath, 'index.html');
+  
+  if (fs.existsSync(indexPath)) {
+    console.log('🔄 SPA fallback for:', req.url, '-> serving index.html');
+    res.sendFile(indexPath);
+  } else {
+    console.log('❌ index.html not found at:', indexPath);
+    res.status(404).json({ 
+      error: 'Angular app not built', 
+      path: angularDistPath,
+      exists: fs.existsSync(angularDistPath)
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log('='.repeat(50));
+  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`📁 Angular app: ${angularDistPath}`);
+  console.log(`📁 Uploads: ${uploadDir}`);
+  console.log('='.repeat(50));
 });
