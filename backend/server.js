@@ -441,6 +441,14 @@ app.post('/api/forgot-password', async (req, res) => {
 });
 
 // ---------------------------------------------------
+// --- WELCOME ROUTE ---
+// ---------------------------------------------------
+app.get('/api/welcome', (req, res) => {
+    console.log(`Request received: ${req.method} ${req.path}`);
+    res.json({ message: 'Welcome to the API Service!' });
+});
+
+// ---------------------------------------------------
 // --- ADVERTISEMENT UPLOAD (FIXED isActive) ---
 // ---------------------------------------------------
 app.post('/api/advertisements', upload.single('image'), async (req, res) => {
