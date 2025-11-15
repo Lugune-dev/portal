@@ -58,6 +58,14 @@ app.use((req, res, next) => {
 });
 
 /**
+ * Catch-all handler: serve index.html for client-side routes
+ * This ensures that refreshing the page on routes like /employee/dashboard works
+ */
+app.get('*', (req, res) => {
+  res.sendFile(join(browserDistFolder, 'index.html'));
+});
+
+/**
  * Start the server if this module is the main entry point.
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
