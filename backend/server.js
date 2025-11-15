@@ -1635,10 +1635,10 @@ app.use('/uploads', express.static(uploadDir));
 app.get('/', (req, res) => {
     res.status(200).send('API is running successfully!');
 });
+const PORT = process.env.PORT || 3001;
 app.get('*', (req, res) => {
   res.sendFile(path.join(angularDistPath, 'index.html'));
 });
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 console.log(`✅ Server running at http://localhost:${PORT}`);
 });
