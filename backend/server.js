@@ -35,6 +35,9 @@ filename: (req, file, cb) => {
 });
 const upload = multer({ storage });
 
+const angularDistPath = path.join(__dirname, 'dist', 'portal');
+app.use(express.static(angularDistPath));
+
 const db = mysql.createConnection({
  host: process.env.DB_HOST, // Replaces 'localhost' with 'interchange.proxy.rlwy.net'
  user: process.env.DB_USER, // Replaces 'sheddy' with 'root'
@@ -1631,6 +1634,9 @@ app.get('/api/admin/reports-to', async (req, res) => {
 app.use('/uploads', express.static(uploadDir));
 app.get('/', (req, res) => {
     res.status(200).send('API is running successfully!');
+});
+app.get('*', (req, res) => {
+  res.sendFile(path.join(angularDistPath, 'index.html'));
 });
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
