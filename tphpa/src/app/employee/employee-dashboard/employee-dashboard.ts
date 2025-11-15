@@ -4,18 +4,14 @@ import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 
-// Import actual services
 import { AuthService } from '../../services/auth/auth';
 import { ReportService, Report } from '../../services/report.service';
 import { FormsService, FormSubmission } from '../../services/forms.service';
 import { Observable, of } from 'rxjs';
 
-// Import the actual DynamicFormComponent
 import { DynamicFormComponent } from '../../dynamic-forms/dynamic-forms';
-// Import the ChangePasswordComponent
 import { ChangePasswordComponent } from '../../features/auth/change-password/change-password';
 
-// Interface for Forms/Applications
 export interface FormInstance {
   id: number;
   form_type_id: number;
@@ -51,7 +47,7 @@ export class EmployeeDashboard implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public authService: AuthService, // Changed to public for template access
+    private authService: AuthService,
     private router: Router,
     private reportService: ReportService,
     private formsService: FormsService,
@@ -59,21 +55,14 @@ export class EmployeeDashboard implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('🔄 EmployeeDashboard initialized');
     this.initializeReportForm();
 
-    // Load data immediately if already authenticated
     if (this.authService.isAuthenticated() && this.authService.getUserId()) {
-      console.log('✅ User authenticated, loading data...');
       this.loadMyForms();
       this.loadReports();
-    } else {
-      console.log('❌ User not authenticated');
     }
 
-    // Subscribe to auth state changes
     this.authService.authState$.subscribe(isAuthenticated => {
-      console.log('🔐 Auth state changed:', isAuthenticated);
       if (isAuthenticated && this.authService.getUserId()) {
         this.loadMyForms();
         this.loadReports();
@@ -85,14 +74,11 @@ export class EmployeeDashboard implements OnInit {
     });
   }
 
-  // --- Auth & Navigation Methods ---
-
   get userName(): string | null {
     return this.authService.getFullName();
   }
 
   logout(): void {
-    console.log('🚪 Logging out...');
     this.authService.logout();
     this.router.navigate(['/login']);
   }
@@ -118,37 +104,28 @@ export class EmployeeDashboard implements OnInit {
     return titles[this.activeView] || 'Dashboard';
   }
 
-  // --- Form/Application Methods ---
-
   selectForm(code: string): void {
-    console.log('🎯 Selecting form:', code);
     this.selectedFormType = code;
     this.activeView = 'form';
-    console.log('🔄 Active view set to:', this.activeView);
-    console.log('📝 Selected form type:', this.selectedFormType);
     this.cdr.detectChanges();
   }
 
   loadMyForms(): void {
     const userId = this.authService.getUserId();
-    console.log('📋 Loading my forms for user:', userId);
     if (userId) {
       this.formsService.getUserForms(userId).subscribe({
         next: (response) => {
           if (response.success) {
-            console.log('✅ Forms loaded successfully:', response.data.length, 'forms');
             this.myForms = response.data.map(form => ({
               id: form.id,
               form_type_id: this.getFormTypeId(form.form_type_code || form.form_type_name || ''),
               form_status: this.mapActionTypeToStatus(form.action_type),
               created_at: form.created_at
             }));
-          } else {
-            console.error('❌ Failed to load forms:', response);
           }
         },
         error: (err) => {
-          console.error('❌ Error loading user forms:', err);
+          console.error('Error loading user forms:', err);
         }
       });
     }
@@ -201,13 +178,10 @@ export class EmployeeDashboard implements OnInit {
   }
   
   onFormBack(): void {
-    console.log('🔙 Back button clicked, returning to launch view');
     this.activeView = 'launch';
     this.selectedFormType = '';
     this.cdr.detectChanges();
   }
-
-  // --- Report Methods ---
 
   initializeReportForm(): void {
     this.reportForm = this.fb.group({
@@ -297,8 +271,6 @@ export class EmployeeDashboard implements OnInit {
     }
   }
   
-  // --- Style/Utility Methods ---
-
   getFormDescription(code: string): string {
     const descriptions: { [key: string]: string } = {
       'RETIREMENT_IMPREST': 'Request funds for retirement-related expenses',
@@ -322,7 +294,6 @@ export class EmployeeDashboard implements OnInit {
   }
 
   public setActiveView(view: string): void {
-    console.log('🔄 Setting active view to:', view);
     this.activeView = view;
     this.sidebarOpen = false;
     this.cdr.detectChanges();

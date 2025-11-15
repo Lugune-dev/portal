@@ -2,7 +2,21 @@
   <div class="max-w-4xl mx-auto">
     <!-- Navigation -->
     <div class="flex justify-between items-center mb-8" *ngIf="showBack || showSwitcher">
-     
+      <button *ngIf="showBack" (click)="backToFormsList()"
+              class="px-6 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 font-medium flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Back to Forms
+      </button>
+      
+      <select *ngIf="showSwitcher" (change)="navigateToForm($event)"
+              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white transition-all duration-300">
+        <option value="">Select Form Type</option>
+        <option value="RETIREMENT_IMPREST">Retirement Imprest</option>
+        <option value="SAFARI_IMPREST">Safari Imprest</option>
+        <option value="SPECIAL_IMPREST">Special Imprest</option>
+        <option value="CLAIM_FORM">Claim Form</option>
+        <option value="OUTSTANDING_IMPREST">Outstanding Imprest</option>
+        <option value="PETTY_CASH">Petty Cash</option>
+      </select>
     </div>
 
     <!-- Loading State -->
@@ -48,26 +62,6 @@
         </div>
       </div>
 
-      <!-- Debug Info -->
-      <div *ngIf="formConfig" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 mx-8 mt-6">
-        <h4 class="font-semibold text-blue-800 mb-2">Debug Info:</h4>
-        <div class="text-sm text-blue-700">
-          <p>Form Type: {{ formTypeCode }}</p>
-          <p>Sections: {{ formConfig.sections?.length || 0 }}</p>
-          <p>Total Fields: {{ getTotalFieldCount() }}</p>
-          <p>Form Valid: {{ dynamicForm?.valid }}</p>
-        </div>
-      </div>
-
-      <!-- Debug sections -->
-      <div class="mx-8 mb-6">
-        <div *ngFor="let section of formConfig.sections; trackBy: trackBySectionId" class="mb-2">
-          <div class="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-            Section: {{ section.section_name }} ({{ section.fields.length }} fields)
-          </div>
-        </div>
-      </div>
-
       <!-- Form Sections -->
       <div class="p-8 space-y-10">
         <div *ngFor="let section of formConfig.sections; trackBy: trackBySectionId" class="space-y-8">
@@ -83,7 +77,6 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div *ngFor="let field of section.fields; trackBy: trackByFieldId" class="space-y-3">
                 <label [for]="field.field_name" class="block text-sm font-semibold text-gray-700 flex items-center">
-                <!-- For external signature fields (Director-level approvals) show a read-only 'Approval' label to reflect external workflow -->
                 {{ getApprovalLabel(field) }}
                 <span *ngIf="field.is_required" class="text-red-500 ml-1">*</span>
               </label>
@@ -127,7 +120,7 @@
                       [id]="field.field_name"
                       [formControlName]="field.field_name"
                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white transition-all duration-300 hover:border-gray-400 text-gray-900">
-                <option value="">Section {{ field.field_label }}</option>
+                <option value="">Select {{ field.field_label }}</option>
                 <option *ngFor="let unit of (field.field_name === 'department' || field.field_name === 'section' ? organizationUnits : [])" [value]="unit.OrgUnitID">{{ unit.UnitName }}</option>
                 <option *ngFor="let option of (field.field_name !== 'department' && field.field_name !== 'section' ? field.options || [] : [])" [value]="option.value">{{ option.label }}</option>
               </select>
@@ -166,12 +159,11 @@
                 </div>
 
                 <!-- Dashboard Signature (Head of Project/Section) - Interactive -->
-                <!-- Treat any non-external signature as dashboard (fallback when signature_type is missing) -->
                 <div *ngIf="!isExternalField(field)" class="space-y-3">
                   <div *ngIf="!dynamicForm.get(field.field_name)?.value" class="flex items-center space-x-3">
                     <button type="button"
                             [disabled]="!canSign"
-                            (click)="$event.preventDefault(); $event.stopPropagation(); debugField(field); onSign(field.field_name)"
+                            (click)="$event.preventDefault(); $event.stopPropagation(); onSign(field.field_name)"
                             [attr.aria-disabled]="!canSign"
                             title="{{ canSign ? ('Sign ' + field.field_label) : 'Signing unavailable' }}"
                             class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all duration-300 hover:shadow-lg text-sm font-medium flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60 disabled:cursor-not-allowed">
