@@ -1,4 +1,4 @@
-/* Custom CSS Variables */
+/* Custom CSS Variables - (No changes needed here) */
 :root {
     --primary-color: #1a56db;
     --secondary-color: #0e2e71;
@@ -80,7 +80,7 @@ body {
 }
 
 .divider {
-    color: rgba(255, 255, 255, 0.3);
+    color: white;
 }
 
 .sub-nav-right button {
@@ -114,7 +114,7 @@ header {
 
 .fixed-header {
     position: fixed;
-    top: 40px;
+    top: 40px; /* Default for desktop */
     left: 0;
     right: 0;
 }
@@ -125,7 +125,7 @@ header {
     align-items: center;
     padding: 10px 20px;
     width: 100%;
-    top: 40px;
+    /* top: 40px; <-- Removed, fixed-header handles this */
     position: fixed;
     margin: 0 auto;
     background-color: #f4f4f4;
@@ -367,9 +367,15 @@ header {
     .banner-logo {
         height: 50px;
     }
-
-    header {
-        top: 50px;
+    
+    /* FIX: Ensure header position is correct for this breakpoint */
+    .fixed-header {
+        top: 68px; /* Adjusted to match stacked sub-nav */
+    }
+    
+    /* FIX: Ensure mobile menu overlay starts below the sub-nav */
+    .bg-black.bg-opacity-50 {
+        top: 68px !important;
     }
 }
 
@@ -384,7 +390,7 @@ header {
     }
 
     .sub-nav-left, .sub-nav-right {
-        flex-wrap: wrap; /* Force wrap */
+        flex-wrap: wrap; 
         justify-content: center; 
         gap: 0.4rem;
         padding: 0;
@@ -392,12 +398,12 @@ header {
     }
 
     /* FIX: TPHPA REPORTING PORTAL text must stack and shrink */
-    .sub-nav-left .contact:last-child {
+    .sub-nav-left .contact:last-child,
+    .sub-nav-center .portal-title { /* Targeting the new portal-title class */
         margin-left: 0 !important;
         display: block; 
         width: 100%; 
         text-align: center;
-        /* Aggressively reduced font size */
         font-size: 0.65rem; 
         order: 4; 
         margin-top: 0.1rem;
@@ -409,7 +415,7 @@ header {
     }
     
     .sub-nav-left a {
-        font-size: 0.75rem; /* Smaller icons */
+        font-size: 0.75rem;
     }
     
     .sub-nav-right button {
@@ -422,10 +428,10 @@ header {
 
     /* FIX: Position fixed-header correctly below the now taller sub-nav */
     .fixed-header {
-        top: 68px; /* Adjusted to account for the stacked height */
+        top: 68px; /* Set a definitive top position */
     }
-
-    /* Mobile Menu Overlay fix */
+    
+    /* FIX: Ensure mobile menu overlay starts below the sub-nav */
     .bg-black.bg-opacity-50 {
         top: 68px !important; 
     }
@@ -434,7 +440,7 @@ header {
 /* Mobile Menu Styles (Ensuring proper top alignment) */
 @media (max-width: 768px) {
     .fixed-header {
-        top: 68px; /* Maintain height from 600px breakpoint */
+        top: 68px; /* Must match the top position of 600px breakpoint */
         left: 0;
         right: 0;
         z-index: 999;
@@ -442,8 +448,27 @@ header {
 
     .bg-black.bg-opacity-50 {
         backdrop-filter: blur(2px);
-        top: 68px !important; /* Must match fixed-header top value */
+        top: 68px !important; 
     }
+    
+    .transform.transition-transform.duration-300 {
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .translate-x-full {
+        transform: translateX(100%);
+    }
+
+    .translate-x-0 {
+        transform: translateX(0);
+    }
+
+    .absolute.top-0.left-0.w-80.max-w-full.h-full.bg-white.shadow-lg {
+        width: 80vw;
+        max-width: 320px;
+        top: 0 !important; 
+    }
+    
     /* ... rest of the mobile menu styles ... */
 }
 
