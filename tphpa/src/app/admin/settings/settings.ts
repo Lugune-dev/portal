@@ -98,7 +98,7 @@ export class SettingsComponent implements OnInit {
   }
 
   loadUsers(): void {
-    this.http.get('/api/users').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/users').subscribe((res: any) => {
       if (res.success) {
         this.users = res.data;
       }
@@ -114,7 +114,7 @@ export class SettingsComponent implements OnInit {
   }
 
   loadReports(): void {
-    this.http.get('/api/reports').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/reports').subscribe((res: any) => {
       if (res.success) {
         this.reports = res.data;
       }
@@ -122,7 +122,7 @@ export class SettingsComponent implements OnInit {
   }
 
   loadApplications(): void {
-    this.http.get('/api/forms').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/forms').subscribe((res: any) => {
       if (res.success) {
         this.applications = res.data;
       }
@@ -135,7 +135,7 @@ export class SettingsComponent implements OnInit {
 
   saveUser(): void {
     if (this.editingUser) {
-      this.http.put(`/api/users/${this.editingUser.UserID}`, this.editingUser).subscribe(() => {
+      this.http.put(`https://portal-api-z927.onrender.com/api/users/${this.editingUser.UserID}`, this.editingUser).subscribe(() => {
         this.loadUsers();
         this.editingUser = null;
       });
@@ -144,7 +144,7 @@ export class SettingsComponent implements OnInit {
 
   deleteUser(userId: number): void {
     if (confirm('Are you sure you want to delete this user?')) {
-      this.http.delete(`/api/users/${userId}`).subscribe(() => {
+      this.http.delete(`https://portal-api-z927.onrender.com/api/users/${userId}`).subscribe(() => {
         this.loadUsers();
       });
     }

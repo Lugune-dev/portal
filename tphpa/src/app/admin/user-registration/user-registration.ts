@@ -71,7 +71,7 @@ export class UserRegistrationComponent implements OnInit {
     const token = localStorage.getItem('auth_token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    this.http.get<ReportsTo[]>('/api/admin/reports-to', { headers })
+    this.http.get<ReportsTo[]>('https://portal-api-z927.onrender.com/api/admin/reports-to', { headers })
       .subscribe({
         next: (data) => {
           this.reportsToUsers = data;
@@ -96,7 +96,7 @@ export class UserRegistrationComponent implements OnInit {
     const token = localStorage.getItem('auth_token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.post('/api/admin/register-user', this.userForm.value, { headers })
+    this.http.post('https://portal-api-z927.onrender.com/api/admin/register-user', this.userForm.value, { headers })
       .subscribe({
         next: (response: any) => {
           Swal.fire({

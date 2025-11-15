@@ -73,7 +73,7 @@ export class UserListComponent implements OnInit {
     const token = localStorage.getItem('auth_token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.get<{ success: boolean; data: User[] }>('/api/users', { headers })
+    this.http.get<{ success: boolean; data: User[] }>('https://portal-api-z927.onrender.com/api/users', { headers })
       .subscribe({
         next: (response) => {
           this.users = response.data;
@@ -113,7 +113,7 @@ export class UserListComponent implements OnInit {
     const token = localStorage.getItem('auth_token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.put(`/api/users/${this.selectedUser.UserID}`, this.editForm.value, { headers })
+    this.http.put(`https://portal-api-z927.onrender.com/api/users/${this.selectedUser.UserID}`, this.editForm.value, { headers })
       .subscribe({
         next: (response: any) => {
           Swal.fire({
@@ -149,7 +149,7 @@ export class UserListComponent implements OnInit {
         const token = localStorage.getItem('auth_token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-        this.http.delete(`/api/users/${user.UserID}`, { headers })
+        this.http.delete(`https://portal-api-z927.onrender.com/api/users/${user.UserID}`, { headers })
           .subscribe({
             next: (response: any) => {
               Swal.fire({

@@ -113,7 +113,7 @@ export class AdminDashboardComponent implements OnInit {
 
   loadOverviewData(): void {
     // Fetch total users
-    this.http.get('/api/users').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/users').subscribe((res: any) => {
       if (res.success) {
         this.overviewCards[0].value = res.data.length.toString();
       }
@@ -128,14 +128,14 @@ export class AdminDashboardComponent implements OnInit {
     });
 
     // Fetch reports count
-    this.http.get('/api/reports').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/reports').subscribe((res: any) => {
       if (res.success) {
         this.overviewCards[2].value = res.data.length.toString();
       }
     });
 
     // Fetch forms count
-    this.http.get('/api/forms').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/forms').subscribe((res: any) => {
       if (res.success) {
         this.overviewCards[3].value = res.data.length.toString();
       }
@@ -144,7 +144,7 @@ export class AdminDashboardComponent implements OnInit {
 
   loadRecentActivities(): void {
     // Fetch recent reports as activities
-    this.http.get('/api/reports').subscribe((res: any) => {
+    this.http.get('https://portal-api-z927.onrender.com/api/reports').subscribe((res: any) => {
       if (res.success) {
         const reportActivities = res.data.slice(0, 3).map((report: any) => ({
           activity: report.title,
@@ -157,7 +157,7 @@ export class AdminDashboardComponent implements OnInit {
         }));
 
         // Fetch recent form submissions
-        this.http.get('/api/forms').subscribe((formsRes: any) => {
+        this.http.get('https://portal-api-z927.onrender.com/api/forms').subscribe((formsRes: any) => {
           if (formsRes.success) {
             const formActivities = formsRes.data.slice(0, 2).map((form: any) => ({
               activity: 'Application Submitted',

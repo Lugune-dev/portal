@@ -82,7 +82,7 @@ export class ApprovalsVerifyComponent implements OnInit {
     if (!this.token) return;
     const approverName = this.auth.getFullName() || this.auth.getUserEmail();
     this.approvals.requestApproval; // noop to ensure import
-    fetch('/api/approvals/confirm', {
+    fetch('https://portal-api-z927.onrender.com/api/approvals/confirm', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: this.token, decision, approverName })
