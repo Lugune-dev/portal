@@ -1,21 +1,21 @@
 <!-- Responsive Sub Navigation Bar -->
-<div class="sub-nav-container w-full fixed top-0 left-0 right-0 bg-gradient-to-r from-primary-700 to-primary-800 text-white flex justify-between items-center px-4 py-1 text-sm z-50 h-8">
+<div class="sub-nav-container w-full fixed top-0 left-0 right-0 bg-gradient-to-r from-primary-700 to-primary-800 text-white flex justify-between items-center px-4 py-0 text-xs z-50" style="height: 32px;">
   <div class="flex items-center gap-3 flex-wrap">
-    <a href="https://www.linkedin.com/in/tphpa-news-a33863271/" target="_blank" aria-label="Linkedin"><i class="fab fa-linkedin"></i></a>
-    <a href="https://www.youtube.com/@tphpahabaritv82/" target="_blank" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
-    <a href="https://www.instagram.com/tphpa_tz/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    <span class="font-semibold domain">tphpaportal.go.tz</span>
-    <span class="flex items-center gap-1 contact"><i class="fas fa-phone"></i> +255 123 456 789</span>
+    <a href="https://www.linkedin.com/in/tphpa-news-a33863271/" target="_blank" aria-label="Linkedin" class="text-xs"><i class="fab fa-linkedin"></i></a>
+    <a href="https://www.youtube.com/@tphpahabaritv82/" target="_blank" aria-label="Youtube" class="text-xs"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.instagram.com/tphpa_tz/" target="_blank" aria-label="Instagram" class="text-xs"><i class="fab fa-instagram"></i></a>
+    <span class="font-semibold domain text-xs">tphpaportal.go.tz</span>
+    <span class="flex items-center gap-1 contact text-xs"><i class="fas fa-phone text-xs"></i> +255 123 456 789</span>
   </div>
 
-  <div class="hidden sm:flex font-bold text-white text-base tracking-wide">
+  <div class="hidden sm:flex font-bold text-white text-sm tracking-wide">
     TPHPA REPORTING PORTAL
   </div>
 
   <div class="flex items-center gap-2 sub-nav-right">
-    <button (click)="changeLanguage('en')" class="px-2 py-1 text-xs rounded" [class.bg-white/20]="languageService.getLanguage() === 'en'">English</button>
-    <span class="opacity-50">|</span>
-    <button (click)="changeLanguage('sw')" class="px-2 py-1 text-xs rounded" [class.bg-white/20]="languageService.getLanguage() === 'sw'">Swahili</button>
+    <button (click)="changeLanguage('en')" class="px-1 py-0 text-xs rounded" [class.bg-white/20]="languageService.getLanguage() === 'en'">English</button>
+    <span class="opacity-50 text-xs">|</span>
+    <button (click)="changeLanguage('sw')" class="px-1 py-0 text-xs rounded" [class.bg-white/20]="languageService.getLanguage() === 'sw'">Swahili</button>
   </div>
 </div>
 
