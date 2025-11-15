@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -62,7 +62,8 @@ export class EmployeeDashboard implements OnInit {
     private authService: AuthService,
     private router: Router,
     private reportService: ReportService, // Injected ReportService
-    private formsService: FormsService
+    private formsService: FormsService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +85,7 @@ export class EmployeeDashboard implements OnInit {
         this.myForms = [];
         this.reports = [];
       }
+      this.cdr.detectChanges();
     });
   }
 
@@ -253,20 +255,21 @@ export class EmployeeDashboard implements OnInit {
     }
 
     this.reportService.submitReport(formData).subscribe({
-      next: () => {
-        // alert('Report submitted successfully!');
-        Swal.fire({
-          title: 'Successfully',
-          text: 'Report submitted Successfully',
-          confirmButtonText: 'OK',
-          cancelButtonColor: 'green-900'
-        })
-        this.loadReports();
-        this.reportForm.reset();
-        this.reportForm.patchValue({ type: 'GENERAL' });
-        this.selectedFile = null;
-        this.activeView = 'view-report';
-      },
+        next: () => {
+          // alert('Report submitted successfully!');
+          Swal.fire({
+            title: 'Successfully',
+            text: 'Report submitted Successfully',
+            confirmButtonText: 'OK',
+            cancelButtonColor: 'green-900'
+          })
+          this.loadReports();
+          this.reportForm.reset();
+          this.reportForm.patchValue({ type: 'GENERAL' });
+          this.selectedFile = null;
+          this.activeView = 'view-report';
+          this.cdr.detectChanges();
+        },
       error: (err) => {
         console.error('Report submission failed:', err);
         alert('Failed to submit report. Please try again.');
