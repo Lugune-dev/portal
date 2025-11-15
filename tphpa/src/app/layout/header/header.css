@@ -328,11 +328,11 @@ header {
 
     /* FIX MUHIMU: Main Header inakaa chini ya Sub-Nav */
     .fixed-header {
-        top: 68px; /* Nafasi thabiti */
+        top: 120px; /* Increased to ensure header appears below taller sub-nav on mobile */
     }
-    
+
     .bg-black.bg-opacity-50 {
-        top: 68px !important; 
+        top: 120px !important;
     }
 }
 
