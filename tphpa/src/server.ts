@@ -60,8 +60,13 @@ app.use((req, res, next) => {
 /**
  * Catch-all handler: serve index.html for client-side routes
  * This ensures that refreshing the page on routes like /employee/dashboard works
+ * Exclude API routes and static assets
  */
-app.get('*', (req, res) => {
+app.get('*', (req, res, next) => {
+  // Skip API routes and static assets
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.includes('.')) {
+    return next();
+  }
   res.sendFile(join(browserDistFolder, 'index.html'));
 });
 

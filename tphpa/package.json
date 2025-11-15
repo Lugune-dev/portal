@@ -34,6 +34,7 @@
     "@types/jwt-decode": "^2.2.1",
     "bootstrap": "^5.3.8",
     "jwt-decode": "^4.0.0",
+    "mysql2": "^3.15.3",
     "ngx-slick-carousel": "^20.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.23.0",
