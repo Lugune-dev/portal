@@ -12,7 +12,7 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://portal-api-z927.onrender.com/api';
+  private apiUrl = 'https://portal-api-z927.onrender.com/';
 
   // Valid roles for TPHA hierarchy based on database
   private validRoles: string[] = [
