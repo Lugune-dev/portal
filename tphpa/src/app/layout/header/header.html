@@ -35,13 +35,13 @@
     <!-- Desktop Menu -->
     <div class="hidden md:flex items-center gap-4 ml-auto">
       <ng-container *ngIf="!isAuthenticated">
-        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/resources'">Resources</a>
-        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/careers'">Careers</a>
-        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/about'">About</a>
-        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/contact'">Contact</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'home' | translate }}</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/resources'">{{ 'publicationResources' | translate }}</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/careers'">{{ 'careers' | translate }}</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/about'">{{ 'about' | translate }}</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/contact'">{{ 'contact' | translate }}</a>
 
-        <a class="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-primary-700" [routerLink]="'/login'">Sign In</a>
+        <a class="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-primary-700" [routerLink]="'/login'">{{ 'signIn' | translate }}</a>
       </ng-container>
     </div>
   </nav>
@@ -58,14 +58,14 @@
 
       <div class="flex flex-col overflow-y-auto h-full pb-24">
         <ng-container *ngIf="!isAuthenticated">
-          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/'" (click)="toggleMenu()">Home</a>
-          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/resources'" (click)="toggleMenu()">Resources</a>
-          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/careers'" (click)="toggleMenu()">Careers</a>
-          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/about'" (click)="toggleMenu()">About</a>
-          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/contact'" (click)="toggleMenu()">Contact</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/'" (click)="toggleMenu()">{{ 'home' | translate }}</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/resources'" (click)="toggleMenu()">{{ 'publicationResources' | translate }}</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/careers'" (click)="toggleMenu()">{{ 'careers' | translate }}</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/about'" (click)="toggleMenu()">{{ 'about' | translate }}</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/contact'" (click)="toggleMenu()">{{ 'contact' | translate }}</a>
 
           <div class="px-4 py-3">
-            <a class="block text-center bg-primary-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-primary-700" [routerLink]="'/login'" (click)="toggleMenu()">Sign In</a>
+            <a class="block text-center bg-primary-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-primary-700" [routerLink]="'/login'" (click)="toggleMenu()">{{ 'signIn' | translate }}</a>
           </div>
         </ng-container>
       </div>
