@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, NgIf, AsyncPipe, RouterModule, RouterLink, RouterLinkActive, TranslatePipe],
+  imports: [CommonModule, NgIf, RouterModule, RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })

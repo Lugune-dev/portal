@@ -1,17 +1,26 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { LanguageService } from '../services/language.service';
 
 @Pipe({
   name: 'translate',
   pure: false
 })
-export class TranslatePipe implements PipeTransform {
-  constructor(private languageService: LanguageService) {}
+export class TranslatePipe implements PipeTransform, OnDestroy {
+  private subscription: Subscription = new Subscription();
+  private currentValue: string = '';
 
-  transform(key: string): Observable<string> {
-    return this.languageService.getLanguageObservable().pipe(
-      map(() => this.languageService.translate(key))
-    );
+  constructor(private languageService: LanguageService) {
+    this.subscription = this.languageService.getLanguageObservable().subscribe(() => {
+      // Force pipe to re-evaluate when language changes
+    });
+  }
+
+  transform(key: string): string {
+    return this.languageService.translate(key);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
