@@ -268,14 +268,14 @@ header {
     .banner-logo {
         height: 50px;
     }
-    
+
     /* FIX MUHIMU: Kurekebisha nafasi ya Main Header */
     .fixed-header {
-        top: 68px; /* Huhakikisha Main Header inaanza chini ya Sub-Nav */
+        top: 100px; /* Increased to ensure header appears below sub-nav */
     }
-    
+
     .bg-black.bg-opacity-50 {
-        top: 68px !important;
+        top: 100px !important;
     }
 }
 
@@ -339,7 +339,7 @@ header {
 /* Mobile Menu Styles (Kuhakikisha mpangilio sahihi wa juu) */
 @media (max-width: 768px) {
     .fixed-header {
-        top: 68px; /* Nafasi thabiti */
+        top: 100px; /* Updated to match the new top value */
         left: 0;
         right: 0;
         z-index: 999;
@@ -347,13 +347,13 @@ header {
 
     .bg-black.bg-opacity-50 {
         backdrop-filter: blur(2px);
-        top: 68px !important; 
+        top: 100px !important;
     }
-    
+
     .transform.transition-transform.duration-300 {
         transition: transform 0.3s ease-in-out;
     }
-    
+
     .translate-x-full {
         transform: translateX(100%);
     }
@@ -365,7 +365,7 @@ header {
     .absolute.top-0.left-0.w-80.max-w-full.h-full.bg-white.shadow-lg {
         width: 80vw;
         max-width: 320px;
-        top: 0 !important; 
+        top: 0 !important;
     }
 }
 
