@@ -454,4 +454,9 @@ export class DynamicFormComponent implements OnInit {
     if (nameLower.includes('director') || nameLower.includes('dg') || nameLower.includes('director_general') || nameLower.includes('director-general')) return true;
     return false;
   }
+  // Add this method to your DynamicFormComponent
+getTotalFieldCount(): number {
+  if (!this.formConfig?.sections) return 0;
+  return this.formConfig.sections.reduce((total, section) => total + section.fields.length, 0);
+}
 }
