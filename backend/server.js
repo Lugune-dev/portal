@@ -1682,9 +1682,9 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log('='.repeat(50));
-  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://0.0.0.0:${PORT}`);
   console.log(`📁 Angular app: ${angularDistPath}`);
   console.log(`📁 Uploads: ${uploadDir}`);
   console.log('='.repeat(50));
