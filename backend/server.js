@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 
 // ==================== ANGULAR STATIC FILES ====================
-const angularDistPath = path.join(__dirname, '../tphpa/dist/portal/browser');
+const angularDistPath = path.join(__dirname, 'dist/portal/browser');
 
 console.log('=== ANGULAR CONFIGURATION ===');
 console.log('Serving Angular from:', angularDistPath);
@@ -29,11 +29,20 @@ if (fs.existsSync(angularDistPath)) {
   console.log('index.html exists:', fs.existsSync(indexPath));
   
   // Serve Angular static files
-  app.use(express.static(angularDistPath));
+  app.use(express.static(angularDistPath, {
+    dotfiles: 'ignore',
+    etag: true,
+    extensions: ['css', 'js', 'json', 'html', 'ico', 'png', 'jpg', 'jpeg', 'svg'],
+    index: false, // Don't serve index.html for directories
+    maxAge: '1d',
+    redirect: false
+  }));
+  
   console.log('✅ Angular static files configured');
 } else {
   console.log('❌ Angular build files not found at:', angularDistPath);
 }
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
