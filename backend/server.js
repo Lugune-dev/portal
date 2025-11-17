@@ -1679,7 +1679,26 @@ app.get('*', (req, res) => {
     });
   }
 });
-
+// Add this route right after your Angular static files configuration
+app.get('/api/debug-build', (req, res) => {
+  const indexPath = path.join(angularDistPath, 'index.html');
+  const files = fs.existsSync(angularDistPath) ? fs.readdirSync(angularDistPath) : [];
+  
+  res.json({
+    message: 'Angular Build Debug',
+    angularDistPath,
+    angularExists: fs.existsSync(angularDistPath),
+    indexExists: fs.existsSync(indexPath),
+    totalFiles: files.length,
+    files: files.slice(0, 10), // Show first 10 files
+    currentDir: __dirname,
+    buildInfo: {
+      nodeVersion: process.version,
+      npmVersion: process.env.npm_version,
+      NODE_ENV: process.env.NODE_ENV
+    }
+  });
+});
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, '0.0.0.0', () => {
