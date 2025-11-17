@@ -1673,21 +1673,7 @@ app.get('/', (req, res) => {
 
 // ==================== ANGULAR SPA FALLBACK ====================
 // 🚀 CRITICAL: This must be the LAST route in your server
-app.get('*', (req, res) => {
-  const indexPath = path.join(angularDistPath, 'index.html');
-  
-  if (fs.existsSync(indexPath)) {
-    console.log('🔄 SPA fallback for:', req.url, '-> serving index.html');
-    res.sendFile(indexPath);
-  } else {
-    console.log('❌ index.html not found at:', indexPath);
-    res.status(404).json({ 
-      error: 'Angular app not built', 
-      path: angularDistPath,
-      exists: fs.existsSync(angularDistPath)
-    });
-  }
-});
+
 // Add this route right after your Angular static files configuration
 app.get('/api/debug-build', (req, res) => {
   const indexPath = path.join(angularDistPath, 'index.html');
@@ -1708,6 +1694,31 @@ app.get('/api/debug-build', (req, res) => {
     }
   });
 });
+
+app.get('*', (req, res) => {
+  // Skip API routes - let Angular handle everything else
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API route not found' });
+  }
+  
+  const indexPath = path.join(angularDistPath, 'index.html');
+  
+  if (fs.existsSync(indexPath)) {
+    console.log('🔄 SPA fallback for:', req.path, '-> serving index.html');
+    
+    // Set proper headers for HTML
+    res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+    res.sendFile(indexPath);
+  } else {
+    console.log('❌ index.html not found at:', indexPath);
+    res.status(500).json({ 
+      error: 'Angular app not built properly',
+      angularPath: angularDistPath,
+      exists: fs.existsSync(angularDistPath)
+    });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, '0.0.0.0', () => {
