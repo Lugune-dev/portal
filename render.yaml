@@ -2,7 +2,7 @@ services:
   - type: web
     name: portal-frontend
     env: node
-    buildCommand: npm install && ng build --configuration=production && cd backend && npm install
+    buildCommand: cd tphpa && npm install && ng build --configuration=production && cd ../backend && npm install
     startCommand: cd backend && node server.js
     envVars:
       - key: NODE_ENV
