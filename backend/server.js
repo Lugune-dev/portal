@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 
 // ==================== ANGULAR STATIC FILES ====================
-const angularDistPath = path.join(__dirname, '..tphpa/dist/portal/browser');
+const angularDistPath = path.join(__dirname, '../tphpa/dist/portal/browser');
 
 console.log('=== ANGULAR CONFIGURATION ===');
 console.log('Serving Angular from:', angularDistPath);
