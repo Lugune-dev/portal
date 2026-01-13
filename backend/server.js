@@ -99,13 +99,12 @@ CREATE TABLE IF NOT EXISTS approvals (
 );
 `;
 
-db.query(approvalsTableSql).then(() => {
-  console.log('✅ approvals table ensured');
-}).catch(err => {
-  console.error('❌ Could not ensure approvals table:', err);
-});
+// db.query(approvalsTableSql).then(() => {
+//   console.log('✅ approvals table ensured');
+// }).catch(err => {
+//   console.error('❌ Could not ensure approvals table:', err);
+// });
 
-// Backfill / ALTER existing approvals table if it was created previously without some columns
 (async () => {
   try {
     const ensureColumn = async (table, column, definition) => {
@@ -114,14 +113,14 @@ db.query(approvalsTableSql).then(() => {
         console.log(`ℹ️ Adding missing column ${column} to table ${table}`);
         await db.query(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
       } else {
-        // If column exists but is NOT NULL and our desired definition allows NULL, try to modify it
+        
         const col = cols[0];
         if (definition.includes('DEFAULT NULL') && (col.IS_NULLABLE === 'NO' || col.COLUMN_DEFAULT !== null)) {
           try {
             console.log(`ℹ️ Modifying column ${column} on ${table} to allow NULL/default NULL`);
             await db.query(`ALTER TABLE ${table} MODIFY COLUMN ${column} ${definition}`);
           } catch (modErr) {
-            // ignore modification errors (permissions or incompatible types)
+      
             console.warn(`⚠️ Could not modify column ${column}:`, modErr.message || modErr);
           }
         }
@@ -141,7 +140,7 @@ db.query(approvalsTableSql).then(() => {
     await ensureColumn('approvals', 'signature_payload', 'JSON NULL');
     await ensureColumn('approvals', 'notified_at', 'DATETIME NULL');
 
-    // Legacy schema: some DBs may have a non-nullable 'form_id' column; ensure it's present and nullable
+    
     const [formIdCols] = await db.query(`SELECT COLUMN_NAME, IS_NULLABLE, COLUMN_DEFAULT, COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'approvals' AND COLUMN_NAME = 'form_id'`);
     if (formIdCols && formIdCols.length > 0) {
       const col = formIdCols[0];
@@ -154,7 +153,7 @@ db.query(approvalsTableSql).then(() => {
         }
       }
     } else {
-      // Add missing form_id column as nullable for compatibility
+      
       try {
         console.log('ℹ️ Adding missing column form_id to approvals');
         await db.query(`ALTER TABLE approvals ADD COLUMN form_id BIGINT DEFAULT NULL`);
