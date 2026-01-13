@@ -24,11 +24,7 @@ console.log('=== ANGULAR CONFIGURATION ===');
 console.log('Serving Angular from:', angularDistPath);
 console.log('Angular files exist:', fs.existsSync(angularDistPath));
 
-if (fs.existsSync(angularDistPath)) {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(angularDistPath, 'index.html'));
-  });
-}
+
   // Serve Angular static files
   app.use(express.static(angularDistPath, {
     dotfiles: 'ignore',
@@ -39,10 +35,7 @@ if (fs.existsSync(angularDistPath)) {
     redirect: false
   }));
   
-  console.log('✅ Angular static files configured');
-} else {
-  console.log('❌ Angular build files not found at:', angularDistPath);
-}
+
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -1718,7 +1711,11 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-
+if (fs.existsSync(angularDistPath)) {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(angularDistPath, 'index.html'));
+  });
+}
 app.listen(PORT, '0.0.0.0', () => {
   console.log('='.repeat(50));
   console.log(`✅ Server running at http://0.0.0.0:${PORT}`);
