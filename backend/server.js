@@ -75,6 +75,7 @@ const db = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0
 });
+module.exports = db;
 // Ensure approvals table exists (simple migration)
 const approvalsTableSql = `
 CREATE TABLE IF NOT EXISTS approvals (
