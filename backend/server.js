@@ -18,16 +18,17 @@ app.use((req, res, next) => {
 });
 
 // ==================== ANGULAR STATIC FILES ====================
-const angularDistPath = path.join(__dirname, '../tphpa/dist/portal/browser');
+const angularDistPath = path.resolve(__dirname, '..', 'tphpa', 'dist', 'portal', 'browser');
 
 console.log('=== ANGULAR CONFIGURATION ===');
 console.log('Serving Angular from:', angularDistPath);
 console.log('Angular files exist:', fs.existsSync(angularDistPath));
 
 if (fs.existsSync(angularDistPath)) {
-  const indexPath = path.join(angularDistPath, 'index.html');
-  console.log('index.html exists:', fs.existsSync(indexPath));
-  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(angularDistPath, 'index.html'));
+  });
+}
   // Serve Angular static files
   app.use(express.static(angularDistPath, {
     dotfiles: 'ignore',
@@ -67,17 +68,15 @@ const db = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-
   ssl: {
-    rejectUnauthorized: true
+    minVersion: 'TLSv1.2',
+    rejectUnauthorized: true 
   },
-
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
-module.exports = db;
-// Ensure approvals table exists (simple migration)
+
 const approvalsTableSql = `
 CREATE TABLE IF NOT EXISTS approvals (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -99,11 +98,11 @@ CREATE TABLE IF NOT EXISTS approvals (
 );
 `;
 
-// db.query(approvalsTableSql).then(() => {
-//   console.log('✅ approvals table ensured');
-// }).catch(err => {
-//   console.error('❌ Could not ensure approvals table:', err);
-// });
+db.query(approvalsTableSql).then(() => {
+  console.log('✅ approvals table ensured');
+}).catch(err => {
+  console.error('❌ Could not ensure approvals table:', err);
+});
 
 (async () => {
   try {
@@ -1389,8 +1388,8 @@ app.post('/api/reports/director-reject', async (req, res) => {
 // ---------------------------------------------------
 app.get('/api/reports/dg-critical-items', async (req, res) => {
   try {
-    // Get critical items that require DG absolute approval
-    // This could be high-value reports, policy changes, or items flagged as critical
+
+    
     const query = `
       SELECT r.id, r.title, r.submitter_name, r.submitter_unit_id, r.type, r.submitted_date, r.status, r.comments, r.amount,
              ou.UnitName as submitter_unit_name,
@@ -1412,7 +1411,7 @@ app.get('/api/reports/dg-critical-items', async (req, res) => {
     `;
     const [items] = await db.query(query);
 
-    // Transform to match frontend interface
+    
     const transformedItems = items.map(item => ({
       id: item.id,
       title: item.title,
@@ -1434,14 +1433,14 @@ app.get('/api/reports/dg-critical-items', async (req, res) => {
 
 app.get('/api/reports/dg-metrics', async (req, res) => {
   try {
-    // Get organization-wide metrics for DG dashboard
+    
     const queries = {
       totalBudget: `SELECT COALESCE(SUM(amount), 2500000000) as total FROM reports WHERE type = 'FINANCE' AND YEAR(submitted_date) = YEAR(CURDATE())`,
       activeDirectorates: `SELECT COUNT(*) as count FROM OrganizationUnits WHERE ParentUnitID IS NULL OR ParentUnitID = 1`,
       criticalItemsProcessed: `SELECT COUNT(*) as count FROM reports WHERE status IN ('ABSOLUTE_APPROVED', 'ABSOLUTE_REJECTED') AND YEAR(submitted_date) = YEAR(CURDATE())`,
       staffHeadcount: `SELECT COUNT(*) as count FROM Users`,
-      complianceRate: `SELECT 98.2 as rate`, // This would need actual compliance tracking
-      performanceScore: `SELECT 94.7 as score` // This would need actual performance metrics
+      complianceRate: `SELECT 98.2 as rate`, 
+      performanceScore: `SELECT 94.7 as score` 
     };
 
     const [budget] = await db.query(queries.totalBudget);
@@ -1625,7 +1624,7 @@ app.post('/api/admin/register-user', async (req, res) => {
     // Hash the password
     const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
 
-    // Find OrgUnitID based on directorate/unit if provided, default to 100 (Director General Office) if not found
+    
     let orgUnitID = 100; // Default OrgUnitID
     if (directorate || unit) {
       const unitQuery = 'SELECT OrgUnitID FROM OrganizationUnits WHERE UnitName = ? LIMIT 1';
@@ -1671,9 +1670,9 @@ app.get('/', (req, res) => {
 });
 
 // ==================== ANGULAR SPA FALLBACK ====================
-// 🚀 CRITICAL: This must be the LAST route in your server
 
-// Add this route right after your Angular static files configuration
+
+
 app.get('/api/debug-build', (req, res) => {
   const indexPath = path.join(angularDistPath, 'index.html');
   const files = fs.existsSync(angularDistPath) ? fs.readdirSync(angularDistPath) : [];
