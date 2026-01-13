@@ -60,23 +60,21 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT) || 4000,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST, // Replaces 'localhost' with 'interchange.proxy.rlwy.net'
-  user: process.env.DB_USER, // Replaces 'sheddy' with 'root'
-  password: process.env.DB_PASSWORD, // Uses the strong Railway password
-  database: process.env.DB_NAME, // Replaces 'tphpa' with 'railway'
-  port: parseInt(process.env.DB_PORT, 10), // CRUCIAL: Uses port 54879 and converts it to a number
-}).promise();
+  ssl: {
+    rejectUnauthorized: true
+  },
 
-db.connect((err) => {
-  if (err) {
-    console.error('❌ DB connection error:', err);
-  } else {
-    console.log('✅ MySQL Connected');
-  }
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
-
 // Ensure approvals table exists (simple migration)
 const approvalsTableSql = `
 CREATE TABLE IF NOT EXISTS approvals (
