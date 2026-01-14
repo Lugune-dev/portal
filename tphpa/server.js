@@ -33,19 +33,20 @@ filename: (req, file, cb) => {
 const upload = multer({ storage });
 
 const db = mysql.createConnection({
- host: 'localhost',
-user: 'sheddy',
- password: '**Lugun7',
- database: 'tphpa'
+  host: 'localhost',
+  user: 'sheddy',
+  password: '**Lugun7',
+  database: 'tphpa'
 }).promise();
 
-db.connect((err) => {
- if (err) {
- console.error('❌ DB connection error:', err);
-} else {
-console.log('✅ MySQL Connected');
-}
-});
+// Use promise-style connect() to avoid callback usage on the promise-wrapped connection
+db.connect()
+  .then(() => {
+    console.log('✅ MySQL Connected');
+  })
+  .catch((err) => {
+    console.error('❌ DB connection error:', err);
+  });
 
 app.get('/api/health', (req, res) => {
 res.json({ status: 'ok' });

@@ -1710,7 +1710,7 @@ app.get('*', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 10000;
 if (fs.existsSync(angularDistPath)) {
   app.get('*', (req, res) => {
     res.sendFile(path.join(angularDistPath, 'index.html'));
