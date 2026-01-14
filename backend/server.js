@@ -8,7 +8,28 @@ const fs = require('fs');
 const crypto = require('crypto'); // 🔒 Used for password hashing
 
 const app = express();
-app.use(cors());
+
+// Configure CORS with explicit options and preflight handling
+const corsOptions = {
+  origin: (origin, cb) => {
+    // allow requests from any origin by default; you can restrict this in production
+    cb(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+app.use(cors(corsOptions));
+// Ensure preflight requests get a response
+app.options('*', (req, res) => {
+  console.log('➡️ CORS preflight for', req.originalUrl, 'from', req.headers.origin || 'unknown');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(corsOptions.optionsSuccessStatus);
+});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -115,6 +136,27 @@ db.query(approvalsTableSql).then(() => {
   console.error('❌ Could not ensure approvals table:', err);
 });
 
+// Ensure advertisements table exists with proper schema
+const adsTableSql = `
+CREATE TABLE IF NOT EXISTS advertisements (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NULL,
+  description TEXT NULL,
+  imageUrl VARCHAR(255) NULL,
+  linkUrl VARCHAR(255) NULL,
+  startDate DATETIME NULL,
+  endDate DATETIME NULL,
+  isActive TINYINT(1) DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`;
+
+db.query(adsTableSql).then(() => {
+  console.log('✅ advertisements table ensured');
+}).catch(err => {
+  console.error('❌ Could not ensure advertisements table:', err);
+});
+
 (async () => {
   try {
     const ensureColumn = async (table, column, definition) => {
@@ -173,6 +215,26 @@ db.query(approvalsTableSql).then(() => {
     }
 
     console.log('✅ approvals table columns checked/updated');
+    // Also ensure advertisements.id is AUTO_INCREMENT (some old schemas may have non-AI id)
+    try {
+      const [idCols] = await db.query(`SELECT COLUMN_NAME, COLUMN_TYPE, EXTRA FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'advertisements' AND COLUMN_NAME = 'id'`);
+      if (idCols && idCols.length > 0) {
+        const col = idCols[0];
+        if (!col.EXTRA || col.EXTRA.toLowerCase().indexOf('auto_increment') === -1) {
+          try {
+            console.log('ℹ️ Modifying advertisements.id to be AUTO_INCREMENT PRIMARY KEY');
+            await db.query(`ALTER TABLE advertisements MODIFY COLUMN id ${col.COLUMN_TYPE} NOT NULL AUTO_INCREMENT PRIMARY KEY`);
+            console.log('✅ advertisements.id modified to AUTO_INCREMENT');
+          } catch (aiErr) {
+            console.warn('⚠️ Could not alter advertisements.id to AUTO_INCREMENT:', aiErr && aiErr.message ? aiErr.message : aiErr);
+          }
+        }
+      } else {
+        console.log('ℹ️ advertisements.id column not found (table may be missing)');
+      }
+    } catch (checkErr) {
+      console.warn('⚠️ Error checking/modifying advertisements.id:', checkErr && checkErr.message ? checkErr.message : checkErr);
+    }
   } catch (e) {
     console.warn('⚠️ Could not alter approvals table (may already be correct or lack permissions):', e.message || e);
   }
