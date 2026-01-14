@@ -499,6 +499,12 @@ app.post('/api/advertisements', upload.single('image'), async (req, res) => {
   const { title, description, linkUrl, startDate, endDate, isActive } = req.body;
   const imagePath = req.file ? req.file.filename : null;
 
+  // Log incoming payload for debugging
+  console.log('📝 Advertisement upload payload:', {
+    body: req.body,
+    file: req.file ? { originalname: req.file.originalname, filename: req.file.filename, size: req.file.size } : null
+  });
+
   if (!imagePath) {
     return res.status(400).json({ message: 'Image file is required' });
   }
@@ -509,6 +515,7 @@ app.post('/api/advertisements', upload.single('image'), async (req, res) => {
   const query = 'INSERT INTO advertisements (title, description, imageUrl, linkUrl, startDate, endDate, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
   try {
+    console.log('📤 Executing DB query:', query, [title, description, imagePath, linkUrl, startDate, endDate, isActiveDbValue]);
     const [result] = await db.query(query, [
       title,
       description,
@@ -523,6 +530,16 @@ app.post('/api/advertisements', upload.single('image'), async (req, res) => {
     console.error('❌ DB Insert Error:', err && err.stack ? err.stack : err);
     return res.status(500).json({ success: false, error: 'Failed to save advertisement', details: err && err.message ? err.message : String(err) });
   }
+});
+
+// Global error handler to catch Multer errors and any unhandled exceptions
+app.use((err, req, res, next) => {
+  if (!err) return next();
+  console.error('🚨 Uncaught error middleware:', err && err.stack ? err.stack : err);
+  if (err.code === 'LIMIT_FILE_SIZE' || err instanceof multer.MulterError) {
+    return res.status(400).json({ success: false, error: 'File upload error', details: err.message });
+  }
+  return res.status(500).json({ success: false, error: 'Server error', details: err && err.message ? err.message : String(err) });
 });
 
 // ---------------------------------------------------
