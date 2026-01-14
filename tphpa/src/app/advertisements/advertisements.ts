@@ -134,7 +134,7 @@ export class Advertisements implements OnInit, AfterViewInit, OnDestroy {
           console.debug('[Ads page] total ads from server:', Array.isArray(res.data) ? res.data.length : 0);
 
           this.activeAds = res.data
-            .filter(ad => ad.isActive && new Date(ad.endDate) >= today)
+            .filter(ad => ad.isActive && (!ad.endDate || new Date(ad.endDate) >= today))
             .slice(0, 12); // Show more ads on dedicated page
 
           // Fallback: if filter removed all items but the server returned items,

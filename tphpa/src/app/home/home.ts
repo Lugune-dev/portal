@@ -206,7 +206,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           today.setHours(0, 0, 0, 0);
 
           this.activeAds = res.data
-            .filter(ad => ad.isActive && new Date(ad.endDate) >= today)
+            .filter(ad => ad.isActive && (!ad.endDate || new Date(ad.endDate) >= today))
             .slice(0, 6); // Limit to 6 active ads
 
           console.log('Active ads loaded:', this.activeAds.length);
