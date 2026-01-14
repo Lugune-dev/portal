@@ -903,10 +903,10 @@ app.get('/api/reports/user/:userId', async (req, res) => {
       ORDER BY submitted_date DESC
     `;
     const [reports] = await db.query(query, [submitterName]);
-    res.json(reports);
+    res.json({ success: true, data: reports });
   } catch (err) {
-    console.error('Error fetching user reports:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error fetching user reports:', err && err.stack ? err.stack : err);
+    res.status(500).json({ success: false, error: 'Server error', details: err && err.message ? err.message : String(err) });
   }
 });
 
