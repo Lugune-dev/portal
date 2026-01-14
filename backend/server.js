@@ -38,6 +38,38 @@ app.use((req, res, next) => {
   next();
 });
 
+// Debug helper: when hitting API paths, log whether a matching route exists
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api/')) return next();
+  try {
+    const routes = [];
+    if (app && app._router && app._router.stack) {
+      app._router.stack.forEach(layer => {
+        if (layer.route && layer.route.path) {
+          const methods = Object.keys(layer.route.methods).join(',').toUpperCase();
+          routes.push({ path: layer.route.path, methods });
+        }
+      });
+    }
+    const matched = routes.find(r => {
+      // simple match: exact path or parameterized
+      if (r.path === req.path) return r.methods.includes(req.method);
+      // parameterized route e.g. /api/users/:id
+      const pattern = r.path.replace(/:([^/]+)/g, '[^/]+');
+      try {
+        const re = new RegExp(`^${pattern}$`);
+        return re.test(req.path) && r.methods.includes(req.method);
+      } catch (e) {
+        return false;
+      }
+    });
+    console.log('🔎 API route debug — requested:', req.method, req.path, 'matchedRoute=', matched ? matched.path + ' (' + matched.methods + ')' : 'NONE', 'totalApiRoutes=' + routes.length);
+  } catch (e) {
+    console.warn('⚠️ Route debug failed:', e && e.message ? e.message : e);
+  }
+  next();
+});
+
 // ==================== ANGULAR STATIC FILES ====================
 console.log('=== ANGULAR CONFIGURATION ===');
         const angularBrowserPath = path.resolve(__dirname, '..', 'tphpa', 'dist', 'portal', 'browser');
@@ -558,7 +590,7 @@ app.get('/api/hello', (req, res) => {
 // ---------------------------------------------------
 app.post('/api/advertisements', upload.single('image'), async (req, res) => {
   // Destructure all the fields you need from the request body
-  const { title, description, linkUrl, startDate, endDate, isActive } = req.body;
+  const { title, description,  linkUrl, startDate, endDate, isActive } = req.body;
   const imagePath = req.file ? req.file.filename : null;
 
   // Log incoming payload for debugging
