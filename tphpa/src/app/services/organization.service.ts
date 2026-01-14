@@ -13,7 +13,8 @@ export interface OrganizationUnit {
 })
 export class OrganizationService {
 
-  private apiUrl = '/api';
+  // Allow runtime override via `window.__env.API_BASE` (set during deployment), otherwise default to API host
+  private apiUrl = (window as any).__env?.API_BASE || 'https://portal-api-z927.onrender.com/api';
 
   constructor(private http: HttpClient) { }
 

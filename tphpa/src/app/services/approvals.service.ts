@@ -12,8 +12,8 @@ export interface ApprovalRequestPayload {
 
 @Injectable({ providedIn: 'root' })
 export class ApprovalsService {
-  // Configure base URL via environment in a real app.
-  private base = '/api/approvals';
+  // Configure base URL via runtime window.__env.API_BASE or default to deployed API host
+  private base = ((window as any).__env?.API_BASE || 'https://portal-api-z927.onrender.com') + '/api/approvals';
 
   constructor(private http: HttpClient) {}
 
