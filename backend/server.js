@@ -589,41 +589,58 @@ app.get('/api/hello', (req, res) => {
 // --- ADVERTISEMENT UPLOAD (FIXED isActive) ---
 // ---------------------------------------------------
 app.post('/api/advertisements', upload.single('image'), async (req, res) => {
-  const { title, description, linkUrl, startDate, endDate, isActive } = req.body;
-  const imagePath = req.file ? req.file.filename : null;
-
-  // 1. Validate mandatory file
-  if (!imagePath) {
-    return res.status(400).json({ message: 'Image file is required' });
-  }
-
-  // 2. Data Cleaning: Convert empty strings to NULL for the DB
-  const cleanStartDate = (startDate && startDate.trim() !== "") ? startDate : null;
-  const cleanEndDate = (endDate && endDate.trim() !== "") ? endDate : null;
-  
-  // 3. Handle Boolean conversion
-  const isActiveDbValue = (isActive === '1' || isActive === 'true' || isActive === true) ? 1 : 0;
-
-  const query = 'INSERT INTO advertisements (title, description, imageUrl, linkUrl, startDate, endDate, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)';
-
   try {
+    const { title, description, linkUrl, startDate, endDate, isActive } = req.body;
+    const imagePath = req.file ? req.file.filename : null;
+
+    // 1. Mandatory Field Validation
+    if (!title || title.trim() === "") {
+      return res.status(400).json({ success: false, error: 'Title is required' });
+    }
+    if (!imagePath) {
+      return res.status(400).json({ success: false, error: 'Image file is required' });
+    }
+
+    // 2. Data Cleaning for MySQL
+    // If startDate/endDate are empty strings, MySQL DATE column will throw a 500 error.
+    // We must convert empty strings to null.
+    const cleanStartDate = (startDate && startDate.trim() !== "") ? startDate : null;
+    const cleanEndDate = (endDate && endDate.trim() !== "") ? endDate : null;
+    
+    // Convert isActive string ('1' or '0') to integer 1 or 0
+    const isActiveDbValue = (isActive === '1' || isActive === 'true' || isActive === true) ? 1 : 0;
+
+    const query = `
+      INSERT INTO advertisements (title, description, imageUrl, linkUrl, startDate, endDate, isActive) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
     const [result] = await db.query(query, [
-      title || 'Untitled', // Ensure title isn't null as per your schema (NO NULLs allowed)
+      title.trim(),
       description || null,
       imagePath,
       linkUrl || null,
-      cleanStartDate, // Using cleaned date
-      cleanEndDate,   // Using cleaned date
+      cleanStartDate,
+      cleanEndDate,
       isActiveDbValue
     ]);
-    
-    res.status(201).json({ success: true, message: 'Advertisement uploaded successfully', id: result.insertId });
+
+    console.log('✅ Advertisement saved. ID:', result.insertId);
+    res.status(201).json({ 
+      success: true, 
+      message: 'Advertisement uploaded successfully', 
+      id: result.insertId 
+    });
+
   } catch (err) {
-    console.error('❌ DB Insert Error:', err);
-    // Return specific error details to help debugging
-    return res.status(500).json({ 
+    // 3. Detailed logging for Render console
+    console.error('❌ DB Insert Error:', err.message);
+    console.error('Full Error Stack:', err.stack);
+
+    // Send the specific MySQL error back to the frontend to stop the "Unknown Error" mystery
+    res.status(500).json({ 
       success: false, 
-      error: 'Database Error', 
+      error: 'Server Database Error', 
       details: err.message 
     });
   }
