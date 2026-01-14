@@ -518,10 +518,10 @@ app.post('/api/advertisements', upload.single('image'), async (req, res) => {
       endDate,
       isActiveDbValue // 👈 Now passing 1 or 0
     ]);
-    res.status(201).json({ message: 'Advertisement uploaded successfully', id: result.insertId });
+    res.status(201).json({ success: true, message: 'Advertisement uploaded successfully', id: result.insertId });
   } catch (err) {
-    console.error('❌ DB Insert Error:', err);
-    return res.status(500).json({ message: 'Failed to save advertisement' });
+    console.error('❌ DB Insert Error:', err && err.stack ? err.stack : err);
+    return res.status(500).json({ success: false, error: 'Failed to save advertisement', details: err && err.message ? err.message : String(err) });
   }
 });
 
