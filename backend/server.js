@@ -589,40 +589,43 @@ app.get('/api/hello', (req, res) => {
 // --- ADVERTISEMENT UPLOAD (FIXED isActive) ---
 // ---------------------------------------------------
 app.post('/api/advertisements', upload.single('image'), async (req, res) => {
-  // Destructure all the fields you need from the request body
-  const { title, description,  linkUrl, startDate, endDate, isActive } = req.body;
+  const { title, description, linkUrl, startDate, endDate, isActive } = req.body;
   const imagePath = req.file ? req.file.filename : null;
 
-  // Log incoming payload for debugging
-  console.log('📝 Advertisement upload payload:', {
-    body: req.body,
-    file: req.file ? { originalname: req.file.originalname, filename: req.file.filename, size: req.file.size } : null
-  });
-
+  // 1. Validate mandatory file
   if (!imagePath) {
     return res.status(400).json({ message: 'Image file is required' });
   }
 
-  // 🔑 CRITICAL FIX: Convert the incoming string '1'/'0' to the integer 1 or 0.
-  const isActiveDbValue = isActive === '1' ? 1 : 0;
+  // 2. Data Cleaning: Convert empty strings to NULL for the DB
+  const cleanStartDate = (startDate && startDate.trim() !== "") ? startDate : null;
+  const cleanEndDate = (endDate && endDate.trim() !== "") ? endDate : null;
+  
+  // 3. Handle Boolean conversion
+  const isActiveDbValue = (isActive === '1' || isActive === 'true' || isActive === true) ? 1 : 0;
 
   const query = 'INSERT INTO advertisements (title, description, imageUrl, linkUrl, startDate, endDate, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
   try {
-    console.log('📤 Executing DB query:', query, [title, description, imagePath, linkUrl, startDate, endDate, isActiveDbValue]);
     const [result] = await db.query(query, [
-      title,
-      description,
+      title || 'Untitled', // Ensure title isn't null as per your schema (NO NULLs allowed)
+      description || null,
       imagePath,
-      linkUrl,
-      startDate,
-      endDate,
-      isActiveDbValue // 👈 Now passing 1 or 0
+      linkUrl || null,
+      cleanStartDate, // Using cleaned date
+      cleanEndDate,   // Using cleaned date
+      isActiveDbValue
     ]);
+    
     res.status(201).json({ success: true, message: 'Advertisement uploaded successfully', id: result.insertId });
   } catch (err) {
-    console.error('❌ DB Insert Error:', err && err.stack ? err.stack : err);
-    return res.status(500).json({ success: false, error: 'Failed to save advertisement', details: err && err.message ? err.message : String(err) });
+    console.error('❌ DB Insert Error:', err);
+    // Return specific error details to help debugging
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Database Error', 
+      details: err.message 
+    });
   }
 });
 
