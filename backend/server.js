@@ -18,11 +18,13 @@ app.use((req, res, next) => {
 });
 
 // ==================== ANGULAR STATIC FILES ====================
-const angularDistPath = path.resolve(__dirname, '..', 'tphpa', 'dist', 'portal', 'browser');
-
 console.log('=== ANGULAR CONFIGURATION ===');
-console.log('Serving Angular from:', angularDistPath);
-console.log('Angular files exist:', fs.existsSync(angularDistPath));
+        const angularBrowserPath = path.resolve(__dirname, '..', 'tphpa', 'dist', 'portal', 'browser');
+        const angularDistPath = fs.existsSync(angularBrowserPath)
+          ? angularBrowserPath
+          : path.resolve(__dirname, '..', 'tphpa', 'dist', 'portal');
+        console.log('Serving Angular from:', angularDistPath);
+        console.log('Angular files exist:', fs.existsSync(angularDistPath));
 
 
   // Serve Angular static files
@@ -55,16 +57,32 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// Configure SSL for DB connections. Prefer a CA file if provided, otherwise allow explicit opt-in insecure flag.
+const dbSsl = (() => {
+  if (process.env.DB_SSL_CA_PATH) {
+    try {
+      const ca = fs.readFileSync(path.resolve(process.env.DB_SSL_CA_PATH));
+      return { ca, minVersion: 'TLSv1.2', rejectUnauthorized: true };
+    } catch (err) {
+      console.warn('⚠️ Could not read DB_SSL_CA_PATH, proceeding without CA file:', err.message || err);
+    }
+  }
+
+  if (process.env.DB_ALLOW_INSECURE === 'true') {
+    console.warn('⚠️ DB_ALLOW_INSECURE=true — connecting without verified TLS (INSECURE)');
+    return { minVersion: 'TLSv1.2', rejectUnauthorized: false };
+  }
+
+  return { minVersion: 'TLSv1.2', rejectUnauthorized: true };
+})();
+
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 4000,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  ssl: {
-    minVersion: 'TLSv1.2',
-    rejectUnauthorized: true 
-  },
+  ssl: dbSsl,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
