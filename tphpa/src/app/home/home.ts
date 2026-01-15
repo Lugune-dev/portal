@@ -19,7 +19,7 @@ interface Advertisement {
   linkUrl: string;
   startDate: string;
   endDate: string;
-  isActive: boolean;
+  isActive: boolean | number | string;
 }
 
 interface Stats {
@@ -205,8 +205,23 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           const today = new Date();
           today.setHours(0, 0, 0, 0);
 
+          const parseDate = (d: any) => {
+            if (!d) return null;
+            const dt = new Date(d);
+            return isNaN(dt.getTime()) ? null : dt;
+          };
+
           this.activeAds = res.data
-            .filter(ad => ad.isActive && (!ad.endDate || new Date(ad.endDate) >= today))
+            .filter(ad => {
+              // normalize isActive which may be boolean, number, or string
+              const activeFlag = (ad.isActive === true) || (ad.isActive === 1) || (String(ad.isActive) === '1') || (String(ad.isActive).toLowerCase() === 'true');
+              if (!activeFlag) return false;
+              const start = parseDate(ad.startDate);
+              const end = parseDate(ad.endDate);
+              if (start && start > today) return false; // not started yet
+              if (end && end < today) return false; // already ended
+              return true; // include open-ended or within window
+            })
             .slice(0, 6); // Limit to 6 active ads
 
           console.log('Active ads loaded:', this.activeAds.length);

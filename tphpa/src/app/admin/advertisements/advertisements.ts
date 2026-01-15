@@ -9,7 +9,7 @@ import { Advertisement } from '../../services/advertisement.model';
   selector: 'app-advertisements',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './advertisements.html',
-  styleUrl: './advertisements.css'
+  styleUrls: ['./advertisements.css']
 })
 export class AdvertisementsComponent implements OnInit {
   adForm!: FormGroup;
