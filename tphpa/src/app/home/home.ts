@@ -216,15 +216,22 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
               // normalize isActive which may be boolean, number, or string
               const activeFlag = (ad.isActive === true) || (ad.isActive === 1) || (String(ad.isActive) === '1') || (String(ad.isActive).toLowerCase() === 'true');
               if (!activeFlag) return false;
+              
+              // Only filter by dates if they are provided
               const start = parseDate(ad.startDate);
               const end = parseDate(ad.endDate);
-              if (start && start > today) return false; // not started yet
-              if (end && end < today) return false; // already ended
-              return true; // include open-ended or within window
-            })
-            .slice(0, 6); // Limit to 6 active ads
+              
+              // If start date exists and is in the future, exclude it
+              if (start && start > today) return false;
+              
+              // If end date exists and is in the past, exclude it
+              if (end && end < today) return false;
+              
+              // Include ads that are active and within valid date range
+              return true;
+            });
 
-          console.log('Active ads loaded:', this.activeAds.length);
+          console.log('Active ads loaded:', this.activeAds.length, 'Total ads:', res.data.length);
           this.adsLoading = false;
         },
         error: (err) => {
