@@ -19,7 +19,7 @@ export const routes: Routes = [
   { path: 'admin/user-list', loadComponent: () => import('./admin/user-list/user-list').then(m => m.UserListComponent), canActivate: [() => import('./guards/admin-guard').then(m => m.adminGuard)] },
   { path: 'admin/reports', loadComponent: () => import('./admin/reports/reports').then(m => m.ReportsComponent), canActivate: [() => import('./guards/admin-guard').then(m => m.adminGuard)] },
   { path: 'admin/settings', loadComponent: () => import('./admin/settings/settings').then(m => m.SettingsComponent), canActivate: [() => import('./guards/admin-guard').then(m => m.adminGuard)] },
-  { path: 'advertisements', loadComponent: () => import('./admin/advertisements/advertisements').then(m => m.Advertisements) },
+  { path: 'advertisements', loadComponent: () => import('./admin/advertisements/advertisements').then(m => m.AdvertisementsComponent) },
   { path: 'fa-manager/fa-manger-dashboard', loadComponent: () => import('./fa-manager/fa-manager-dashboard/fa-manager-dashboard').then(m => m.FaManagerDashboardComponent) },
   { path: 'manager/dashboard', loadComponent: () => import('./manager/dashboard/dashboard').then(m => m.DashboardComponent), canActivate: [() => import('./guards/unit-manager-guard').then(m => m.unitManagerGuard)] },
   { path: 'publications', loadComponent: () => import('./publications/publications').then(m => m.PublicationsComponent) },
