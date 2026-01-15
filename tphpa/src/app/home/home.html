@@ -543,8 +543,8 @@
     <div *ngIf="!adsLoading && !adsError && activeAds.length > 0" class="max-w-7xl mx-auto">
       <div class="relative overflow-hidden">
         <div class="flex animate-scroll-right-to-left">
-          <!-- Duplicate ads for seamless loop -->
-          <div *ngFor="let ad of activeAds.concat(activeAds); let i = index" class="flex-shrink-0 w-96 mx-4">
+          <!-- Display each ad once -->
+          <div *ngFor="let ad of activeAds; let i = index" class="flex-shrink-0 w-96 mx-4">
             <div class="relative group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
           <!-- Image Container -->
           <div class="relative h-32 overflow-hidden">
