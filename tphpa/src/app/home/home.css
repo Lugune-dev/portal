@@ -99,6 +99,32 @@
   transform: scale(1.2);
 }
 
+/* Advertisement Grid Styles */
+.ads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .ads-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ads-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .ads-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 /* Advertisement Carousel Specific Styles */
 .advertisement-carousel {
   position: relative;
