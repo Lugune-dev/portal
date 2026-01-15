@@ -214,7 +214,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           this.activeAds = res.data
             .filter(ad => {
               // normalize isActive which may be boolean, number, or string
-              const activeFlag = (ad.isActive === true) || (ad.isActive === 4) || (String(ad.isActive) === '4') || (String(ad.isActive).toLowerCase() === 'true');
+              const activeFlag = (ad.isActive === true) || (ad.isActive === 1) || (String(ad.isActive) === '1') || (String(ad.isActive).toLowerCase() === 'true');
               if (!activeFlag) return false;
               
               // Only filter by dates if they are provided
