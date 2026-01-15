@@ -539,11 +539,13 @@
       </div>
     </div>
 
-    <!-- Advertisements Grid Layout -->
-    <div *ngIf="!adsLoading && !adsError && activeAds.length > 0" class="max-w-7xl mx-auto px-4">
-      <div class="ads-grid">
-        <!-- Display each ad -->
-        <div *ngFor="let ad of activeAds; let i = index" class="flex-shrink-0">
+    <!-- Advertisements Carousel Scroll Layout -->
+    <div *ngIf="!adsLoading && !adsError && activeAds.length > 0" class="max-w-7xl mx-auto px-4 py-8">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6">Latest Announcements</h2>
+      <div class="ads-carousel-container">
+        <div class="ads-carousel">
+          <!-- Display each ad -->
+          <div *ngFor="let ad of activeAds; let i = index" class="ads-carousel-item">
             <div class="relative group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
           <!-- Image Container -->
           <div class="relative h-32 overflow-hidden">
