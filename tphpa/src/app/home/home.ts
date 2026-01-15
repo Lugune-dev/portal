@@ -207,7 +207,18 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
           const parseDate = (d: any) => {
             if (!d) return null;
-            const dt = new Date(d);
+            let dt: Date;
+            
+            // Handle YYYY-MM-DD format (string)
+            if (typeof d === 'string' && d.includes('-')) {
+              const [year, month, day] = d.split('-');
+              dt = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+            } else {
+              dt = new Date(d);
+            }
+            
+            // Set hours to 0 for date comparison
+            dt.setHours(0, 0, 0, 0);
             return isNaN(dt.getTime()) ? null : dt;
           };
 
@@ -221,12 +232,21 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
               const start = parseDate(ad.startDate);
               const end = parseDate(ad.endDate);
               
+              console.log(`Ad "${ad.title}": startDate=${ad.startDate} (${start}), endDate=${ad.endDate} (${end}), today=${today}`);
+              
               // If start date exists and is in the future, exclude it
-              if (start && start > today) return false;
+              if (start && start > today) {
+                console.log(`  → Excluded: not started yet`);
+                return false;
+              }
               
               // If end date exists and is in the past, exclude it
-              if (end && end < today) return false;
+              if (end && end < today) {
+                console.log(`  → Excluded: already ended`);
+                return false;
+              }
               
+              console.log(`  → Included`);
               // Include ads that are active and within valid date range
               return true;
             });
