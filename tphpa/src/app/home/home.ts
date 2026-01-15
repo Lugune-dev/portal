@@ -231,7 +231,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
               return true;
             });
 
-          console.log('Active ads loaded:', this.activeAds.length, 'Total ads:', res.data.length);
+          console.log('Raw API response ads:', res.data.length);
+          console.log('Filtered active ads:', this.activeAds.length);
+          console.log('Active ads:', this.activeAds);
+          console.log('Today date:', today);
           this.adsLoading = false;
         },
         error: (err) => {

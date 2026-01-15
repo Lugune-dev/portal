@@ -124,7 +124,7 @@
 }
 
 .animate-scroll-right-to-left {
-  animation: scroll-right-to-left 30s linear infinite;
+  animation: scroll-right-to-left 45s linear infinite;
 }
 
 /* Responsive adjustments */
