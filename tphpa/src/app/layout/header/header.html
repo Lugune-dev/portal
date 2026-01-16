@@ -36,8 +36,9 @@
     <div class="hidden md:flex items-center gap-4 ml-auto">
       <ng-container *ngIf="!isAuthenticated">
         <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'home' | translate | async }}</a>
-        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/resources'">{{ 'news&Announcement' | translate | async }}</a>
-        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/careers'">{{ 'careers' | translate | async }}</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/Announcement'">{{ 'news&Announcement' | translate | async }}</a>
+        <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/training-module'">{{ 'trainingModule' | translate | async }}</a>
+          <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/help-desk'">{{ 'ICThelpDesk' | translate | async }}</a>
         <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/about'">{{ 'about' | translate | async }}</a>
         <a class="px-3 py-1 font-semibold hover:text-primary-600" [routerLink]="'/contact'">{{ 'contact' | translate | async }}</a>
 
@@ -59,8 +60,9 @@
       <div class="flex flex-col overflow-y-auto h-full pb-24">
         <ng-container *ngIf="!isAuthenticated">
           <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/'" (click)="toggleMenu()">{{ 'home' | translate | async }}</a>
-          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/resources'" (click)="toggleMenu()">{{ 'news&Announcement' | translate | async }}</a>
-          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/careers'" (click)="toggleMenu()">{{ 'careers' | translate | async }}</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/Announcement'" (click)="toggleMenu()">{{ 'news&Announcement' | translate | async }}</a>
+          <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/training-module'" (click)="toggleMenu()">{{ 'trainingModule' | translate | async }}</a>
+           <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/help-desk'" (click)="toggleMenu()">{{ 'ICThelpDesk' | translate | async }}</a>
           <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/about'" (click)="toggleMenu()">{{ 'about' | translate | async }}</a>
           <a class="px-4 py-3 border-b font-semibold hover:bg-gray-50" [routerLink]="'/contact'" (click)="toggleMenu()">{{ 'contact' | translate | async }}</a>
 

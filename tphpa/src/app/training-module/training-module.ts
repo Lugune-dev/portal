@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-careers',
+  selector: 'app-training-module',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './careers.html',
-  styleUrls: ['./careers.css']
+  templateUrl: './training-module.html',
+  styleUrls: ['./training-module.css']
 })
-export class CareersComponent {
+export class TrainingModuleComponent {
   jobOpenings = [
     {
       id: 1,

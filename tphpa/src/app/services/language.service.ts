@@ -34,7 +34,8 @@ export class LanguageService {
       en: {
         'home': 'HOME',
         'news&Announcement': 'NEWS & ANNOUNCEMENT',
-        'careers': 'CAREERS',
+        'trainingModule': 'TRAINING MODULE',
+        'ICThelpDesk': 'ICT HELP DESK',
         'about': 'ABOUT',
         'contact': 'CONTACT',
         'dashboard': 'DASHBOARD',
@@ -181,7 +182,8 @@ export class LanguageService {
       sw: {
         'home': 'NYUMBANI',
         'news&Announcement': 'HABARI NA MATANGAZO',
-        'careers': 'KAZI',
+        'trainingModule': 'MODULI YA MAFUNZO',
+        'ICThelpDesk': 'MSAADA WA ICT',
         'about': 'KUHUSU',
         'contact': 'WASILIANA',
         'dashboard': 'UBAO',

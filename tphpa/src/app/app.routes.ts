@@ -23,9 +23,10 @@ export const routes: Routes = [
   { path: 'fa-manager/fa-manger-dashboard', loadComponent: () => import('./fa-manager/fa-manager-dashboard/fa-manager-dashboard').then(m => m.FaManagerDashboardComponent) },
   { path: 'manager/dashboard', loadComponent: () => import('./manager/dashboard/dashboard').then(m => m.DashboardComponent), canActivate: [() => import('./guards/unit-manager-guard').then(m => m.unitManagerGuard)] },
   { path: 'publications', loadComponent: () => import('./publications/publications').then(m => m.PublicationsComponent) },
-  { path: 'resources', loadComponent: () => import('./resources/resources').then(m => m.ResourcesComponent) },
+  { path: 'announcement', loadComponent: () => import('./announcement/announcement').then(m => m.AnnouncementComponent) },
   { path: 'submit', loadComponent: () => import('./dynamic-forms/dynamic-forms').then(m => m.DynamicFormComponent) },
-  { path: 'careers', loadComponent: () => import('./careers/careers').then(m => m.CareersComponent) },
+  { path: 'training-module', loadComponent: () => import('./training-module/training-module').then(m => m.TrainingModuleComponent) },
+    { path: 'help-desk', loadComponent: () => import('./help-desk/help-desk').then(m => m.HelpDeskComponent) },
   { path: 'about', loadComponent: () => import('./about/about').then(m => m.AboutComponent) },
   { path: 'contact', loadComponent: () => import('./contact/contact').then(m => m.ContactComponent) }
 ]
