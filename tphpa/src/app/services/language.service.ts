@@ -33,7 +33,7 @@ export class LanguageService {
       // English translations
       en: {
         'home': 'HOME',
-        'publicationResources': 'PUBLICATION & RESOURCES',
+        'news&Announcement': 'NEWS & ANNOUNCEMENT',
         'careers': 'CAREERS',
         'about': 'ABOUT',
         'contact': 'CONTACT',
@@ -180,7 +180,7 @@ export class LanguageService {
       // Swahili translations
       sw: {
         'home': 'NYUMBANI',
-        'publicationResources': 'UCHAPISHWAJI NA RASILIMALI',
+        'news&Announcement': 'HABARI NA MATANGAZO',
         'careers': 'KAZI',
         'about': 'KUHUSU',
         'contact': 'WASILIANA',
@@ -322,7 +322,7 @@ export class LanguageService {
         'termsOfService': 'Masharti ya Matumizi',
         'sitemap': 'Ramani ya Tovuti',
         // Publications page translations
-        'publicationsResources': 'Machapisho na Rasilimali',
+        'new&Announcement': 'Habari na Matangazo',
         'accessOfficialDocuments': 'Fikia hati rasmi za TPHPA, miongozo, ripoti, na nyenzo za utafiti',
         'searchPublications': 'Tafuta machapisho...',
         'allTypes': 'Aina Zote',
