@@ -40,7 +40,7 @@ interface Stats {
   schemas: [NO_ERRORS_SCHEMA],
   providers: [DatePipe],
   templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  styleUrls: ['./home.css', '../carousel-styles.css']
 })
 export class Home implements OnInit, AfterViewInit, OnDestroy {
   // Carousel Configuration
