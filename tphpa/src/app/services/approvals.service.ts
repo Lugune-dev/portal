@@ -17,12 +17,12 @@ export class ApprovalsService {
 
   constructor(private http: HttpClient) {}
 
-  // Create an approval request. Returns the approvals record or an acceptance response.
+  
   requestApproval(payload: ApprovalRequestPayload): Observable<any> {
-    // In dev without backend, this will still return a mocked response if the call fails.
+    
     return this.http.post(`${this.base}`, payload).pipe(
       catchError(err => {
-        // Fallback: return a mocked accepted response so frontend can continue UX testing
+      
         console.warn('ApprovalsService.requestApproval failed, returning mock response', err);
         return of({ ok: true, pending: true, mock: true, created_at: new Date().toISOString() });
       })

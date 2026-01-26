@@ -646,7 +646,7 @@ app.post('/api/advertisements', upload.single('image'), async (req, res) => {
   }
 });
 
-// Global error handler to catch Multer errors and any unhandled exceptions
+
 app.use((err, req, res, next) => {
   if (!err) return next();
   console.error('🚨 Uncaught error middleware:', err && err.stack ? err.stack : err);
@@ -656,9 +656,7 @@ app.use((err, req, res, next) => {
   return res.status(500).json({ success: false, error: 'Server error', details: err && err.message ? err.message : String(err) });
 });
 
-// ---------------------------------------------------
-// --- ADVERTISEMENT FETCH (FIXED IMAGE URL) ---
-// ---------------------------------------------------
+
 app.get('/api/advertisements', async (req, res) => {
   const query = 'SELECT * FROM advertisements';
   try {
@@ -668,7 +666,6 @@ app.get('/api/advertisements', async (req, res) => {
       id: ad.id,
       title: ad.title,
       description: ad.description,
-      // 💡 CRITICAL FIX: Return a RELATIVE URL so the Angular proxy handles it
       imageUrl: ad.imageUrl ? `/uploads/${ad.imageUrl}` : '',
       linkUrl: ad.linkUrl || '#',
       startDate: ad.startDate,
@@ -681,6 +678,28 @@ app.get('/api/advertisements', async (req, res) => {
   } catch (err) {
     console.error('❌ Error fetching advertisements:', err);
     return res.status(500).json({ success: false, error: 'Database error' });
+  }
+});
+app.get('/api/announcement', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM news_announcements ORDER BY date_published DESC');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+app.post('/api/announcement', async (req, res) => {
+  const { title, summary, category, date_published, is_urgent } = req.body;
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO news_announcements (title, summary, category, date_published, is_urgent) VALUES (?, ?, ?, ?, ?)',
+      [title, summary, category, date_published, is_urgent]
+    );
+    res.status(201).json({ id: result.insertId, message: "Added successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -698,7 +717,7 @@ app.post('/api/forms/submit/:formType', async (req, res) => {
   console.log(' - Action Type:', action_type);
   console.log(' - Instance ID:', instance_id);
 
-  // Basic validation for required fields from the client
+  
   if (!instance_id || !action_type || !action_by) {
     return res.status(400).json({ success: false, message: 'Missing required submission metadata (instance_id, action_type, action_by).' });
   }
@@ -716,7 +735,7 @@ app.post('/api/forms/submit/:formType', async (req, res) => {
     console.warn('Could not fetch form type name:', err);
   }
 
-  // Use JSON.stringify to ensure the data is stored correctly as a JSON string
+  
   const formDataJson = JSON.stringify(formData);
 
   const query = `
