@@ -263,6 +263,36 @@ db.query(adsTableSql).then(() => {
   console.error('❌ Could not ensure advertisements table:', err);
 });
 
+// Ensure reports table exists with proper schema
+const reportsTableSql = `
+CREATE TABLE IF NOT EXISTS reports (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  submitter_name VARCHAR(255) NULL,
+  submitter_unit_id BIGINT NULL,
+  type VARCHAR(100) NULL,
+  submitted_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status VARCHAR(50) DEFAULT 'PENDING',
+  comments TEXT NULL,
+  attachment_path VARCHAR(255) NULL,
+  generated_by VARCHAR(255) NULL,
+  start_date DATETIME NULL,
+  end_date DATETIME NULL,
+  role_filter VARCHAR(100) NULL,
+  unit_filter BIGINT NULL,
+  file_name VARCHAR(255) NULL,
+  amount DECIMAL(15, 2) NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+`;
+
+db.query(reportsTableSql).then(() => {
+  console.log('✅ reports table ensured');
+}).catch(err => {
+  console.error('❌ Could not ensure reports table:', err);
+});
+
 (async () => {
   try {
     const ensureColumn = async (table, column, definition) => {
