@@ -1152,14 +1152,14 @@ app.post('/api/reports/submit', (req, res, next) => {
     
     console.log('📝 Submitter info:', { submitterName, submitterUnitId });
 
-    // Insert into reports table
+    // Insert into reports table (matching actual schema: no attachment_path column)
     console.log('💾 Inserting report into database...');
     const insertQuery = `
-      INSERT INTO reports (title, submitter_name, submitter_unit_id, type, submitted_date, status, comments, attachment_path)
-      VALUES (?, ?, ?, ?, NOW(), 'PENDING', ?, ?)
+      INSERT INTO reports (title, submitter_name, submitter_unit_id, type, status, comments)
+      VALUES (?, ?, ?, ?, 'PENDING', ?)
     `;
-    const insertParams = [title, submitterName, submitterUnitId, type, description || '', attachmentPath];
-    console.log('📊 Insert query params:', { title, submitterName, submitterUnitId, type, hasDescription: !!description, attachmentPath });
+    const insertParams = [title, submitterName, submitterUnitId, type, description || ''];
+    console.log('📊 Insert query params:', { title, submitterName, submitterUnitId, type, hasDescription: !!description });
     
     const [result] = await db.query(insertQuery, insertParams);
 
