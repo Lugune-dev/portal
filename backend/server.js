@@ -380,6 +380,56 @@ app.get('/', (req, res) => {
   res.status(200).send('API is running successfully!');
 });
 
+// Database health check endpoint
+app.get('/health/db', async (req, res) => {
+  try {
+    const [result] = await db.query('SELECT 1 as status');
+    res.status(200).json({ 
+      ok: true,
+      database: 'connected',
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('❌ Database connection failed:', err.message);
+    res.status(503).json({ 
+      ok: false,
+      database: 'disconnected',
+      error: err.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Database table check endpoint
+app.get('/health/tables', async (req, res) => {
+  try {
+    const tables = ['reports', 'Users', 'approvals', 'advertisements'];
+    const tableStatus = {};
+    
+    for (const table of tables) {
+      try {
+        const [result] = await db.query(`SHOW TABLES LIKE ?`, [table]);
+        tableStatus[table] = result && result.length > 0 ? 'exists' : 'missing';
+      } catch (err) {
+        tableStatus[table] = 'error: ' + err.message;
+      }
+    }
+    
+    res.status(200).json({ 
+      ok: true,
+      tables: tableStatus,
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('❌ Table check failed:', err.message);
+    res.status(500).json({ 
+      ok: false,
+      error: err.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // -----------------------
 // Approvals endpoints
 // -----------------------
@@ -1020,43 +1070,117 @@ app.get('/api/debug/json-fields', async (req, res) => {
 });
 
 // --- REPORTS ROUTES (UPDATED FOR REAL DATABASE) ---
-app.post('/api/reports/submit', upload.single('attachment'), async (req, res) => {
+// Test endpoint to verify reports table
+app.get('/api/reports/test', async (req, res) => {
+  try {
+    const [result] = await db.query('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = "reports"');
+    const tableExists = result && result.length > 0;
+    
+    if (tableExists) {
+      const [columns] = await db.query('DESCRIBE reports');
+      res.json({ 
+        ok: true, 
+        tableExists: true, 
+        columns: columns.map(c => ({ name: c.Field, type: c.Type, null: c.Null }))
+      });
+    } else {
+      res.json({ 
+        ok: false, 
+        tableExists: false,
+        message: 'Reports table does not exist. It should be created on server startup.'
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ 
+      ok: false, 
+      error: err.message 
+    });
+  }
+});
+
+// Log all report submissions for debugging
+app.post('/api/reports/submit', (req, res, next) => {
+  console.log('📨 [PRE-UPLOAD] Report submit request received');
+  console.log('  Content-Type:', req.get('Content-Type'));
+  console.log('  Body keys:', Object.keys(req.body || {}));
+  console.log('  Body:', req.body);
+  next();
+}, upload.single('attachment'), (req, res, next) => {
+  console.log('📨 [POST-UPLOAD] After multer processing');
+  console.log('  Body:', req.body);
+  console.log('  File:', req.file ? { filename: req.file.filename, size: req.file.size } : null);
+  next();
+}, async (req, res) => {
+  console.log('📤 Received report submit request:', {
+    body: req.body,
+    file: req.file ? { filename: req.file.filename, size: req.file.size } : null,
+    userId: req.body.userId
+  });
+
   const { title, description, type, userId } = req.body;
   const attachmentPath = req.file ? req.file.filename : null;
 
   try {
+    // Validate required fields
+    if (!title) {
+      console.warn('⚠️ Report submit: Missing title');
+      return res.status(400).json({ success: false, error: 'Title is required' });
+    }
+    if (!userId) {
+      console.warn('⚠️ Report submit: Missing userId');
+      return res.status(400).json({ success: false, error: 'User ID is required' });
+    }
+    if (!type) {
+      console.warn('⚠️ Report submit: Missing type');
+      return res.status(400).json({ success: false, error: 'Report type is required' });
+    }
+
     // Get user details for submitter info
+    console.log('🔍 Looking up user with ID:', userId);
     const userQuery = 'SELECT FirstName, LastName, OrgUnitID FROM Users WHERE UserID = ?';
     const [userRows] = await db.query(userQuery, [userId]);
-    const user = userRows[0];
+    console.log('👤 User query result:', userRows);
+    const user = userRows && userRows[0] ? userRows[0] : null;
 
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      console.warn('⚠️ User not found with ID:', userId);
+      return res.status(404).json({ success: false, message: 'User not found', userId });
     }
 
     const submitterName = `${user.FirstName} ${user.LastName}`;
     const submitterUnitId = user.OrgUnitID;
+    
+    console.log('📝 Submitter info:', { submitterName, submitterUnitId });
 
     // Insert into reports table
+    console.log('💾 Inserting report into database...');
     const insertQuery = `
       INSERT INTO reports (title, submitter_name, submitter_unit_id, type, submitted_date, status, comments, attachment_path)
       VALUES (?, ?, ?, ?, NOW(), 'PENDING', ?, ?)
     `;
-    const [result] = await db.query(insertQuery, [title, submitterName, submitterUnitId, type, description || '', attachmentPath]);
+    const insertParams = [title, submitterName, submitterUnitId, type, description || '', attachmentPath];
+    console.log('📊 Insert query params:', { title, submitterName, submitterUnitId, type, hasDescription: !!description, attachmentPath });
+    
+    const [result] = await db.query(insertQuery, insertParams);
 
     console.log('✅ Report submitted successfully:', { reportId: result.insertId, title, submitterName, type });
     res.json({ success: true, message: 'Report submitted successfully', reportId: result.insertId });
   } catch (err) {
-    console.error('❌ Error submitting report:', err.message || err, {
-      title,
-      type,
-      userId,
-      hasAttachment: !!req.file
+    console.error('❌ Error submitting report:', {
+      message: err.message,
+      code: err.code,
+      errno: err.errno,
+      sqlState: err.sqlState,
+      sqlMessage: err.sqlMessage,
+      sql: err.sql,
+      requestBody: { title: req.body.title, type: req.body.type, userId: req.body.userId },
+      stack: err.stack
     });
     res.status(500).json({ 
       success: false, 
       error: 'Failed to submit report',
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined,
+      errorCode: err.code
     });
   }
 });
