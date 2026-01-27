@@ -1040,14 +1040,24 @@ app.post('/api/reports/submit', upload.single('attachment'), async (req, res) =>
     // Insert into reports table
     const insertQuery = `
       INSERT INTO reports (title, submitter_name, submitter_unit_id, type, submitted_date, status, comments, attachment_path)
-      VALUES (?, ?, ?, ?, NOW(), 'PENDING', '', ?)
+      VALUES (?, ?, ?, ?, NOW(), 'PENDING', ?, ?)
     `;
-    const [result] = await db.query(insertQuery, [title, submitterName, submitterUnitId, type, attachmentPath]);
+    const [result] = await db.query(insertQuery, [title, submitterName, submitterUnitId, type, description || '', attachmentPath]);
 
+    console.log('✅ Report submitted successfully:', { reportId: result.insertId, title, submitterName, type });
     res.json({ success: true, message: 'Report submitted successfully', reportId: result.insertId });
   } catch (err) {
-    console.error('Error submitting report:', err);
-    res.status(500).json({ success: false, error: 'Server error' });
+    console.error('❌ Error submitting report:', err.message || err, {
+      title,
+      type,
+      userId,
+      hasAttachment: !!req.file
+    });
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to submit report',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 
