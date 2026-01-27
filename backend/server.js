@@ -79,6 +79,39 @@ console.log('=== ANGULAR CONFIGURATION ===');
         console.log('Serving Angular from:', angularDistPath);
         console.log('Angular files exist:', fs.existsSync(angularDistPath));
 
+  // Set proper MIME types for static files
+  app.use((req, res, next) => {
+    if (req.path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+    } else if (req.path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css; charset=utf-8');
+    } else if (req.path.endsWith('.json')) {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    } else if (req.path.endsWith('.html')) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    } else if (req.path.endsWith('.svg')) {
+      res.setHeader('Content-Type', 'image/svg+xml');
+    } else if (req.path.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    } else if (req.path.endsWith('.jpg') || req.path.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (req.path.endsWith('.ico')) {
+      res.setHeader('Content-Type', 'image/x-icon');
+    } else if (req.path.endsWith('.woff')) {
+      res.setHeader('Content-Type', 'font/woff');
+    } else if (req.path.endsWith('.woff2')) {
+      res.setHeader('Content-Type', 'font/woff2');
+    } else if (req.path.endsWith('.ttf')) {
+      res.setHeader('Content-Type', 'font/ttf');
+    } else if (req.path.endsWith('.eot')) {
+      res.setHeader('Content-Type', 'application/vnd.ms-fontobject');
+    }
+    // Remove X-Content-Type-Options nosniff if it's being set incorrectly by middleware
+    if (!req.path.startsWith('/api/')) {
+      res.removeHeader('X-Content-Type-Options');
+    }
+    next();
+  });
 
   // Serve Angular static files
   app.use(express.static(angularDistPath, {
@@ -87,11 +120,52 @@ console.log('=== ANGULAR CONFIGURATION ===');
     extensions: ['css', 'js', 'json', 'html', 'ico', 'png', 'jpg', 'jpeg', 'svg'],
     index: false, // Don't serve index.html for directories
     maxAge: '1d',
-    redirect: false
+    redirect: false,
+    setHeaders: (res, path) => {
+      // Additional header configuration
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      if (path.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
+      }
+    }
   }));
   
 
 
+// Serve /employee module as SPA
+app.use('/employee', express.static(angularDistPath, {
+  dotfiles: 'ignore',
+  etag: true,
+  extensions: ['css', 'js', 'json', 'html', 'ico', 'png', 'jpg', 'jpeg', 'svg'],
+  index: 'index.html',
+  maxAge: '1d',
+  redirect: false,
+  setHeaders: (res, path) => {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
+    }
+  }
+}));
+
+// Serve other module routes as SPA
+const modules = ['admin', 'director', 'manager', 'unit-manager', 'head-directorate', 'fa-manager', 'help-desk', 'training-module', 'announcements', 'publications', 'about'];
+modules.forEach(module => {
+  app.use(`/${module}`, express.static(angularDistPath, {
+    dotfiles: 'ignore',
+    etag: true,
+    extensions: ['css', 'js', 'json', 'html', 'ico', 'png', 'jpg', 'jpeg', 'svg'],
+    index: 'index.html',
+    maxAge: '1d',
+    redirect: false,
+    setHeaders: (res, path) => {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      if (path.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
+      }
+    }
+  }));
+});
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -585,15 +659,13 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Welcome to the API Service!' });
 });
 
-// ---------------------------------------------------
-// --- ADVERTISEMENT UPLOAD (FIXED isActive) ---
-// ---------------------------------------------------
+
 app.post('/api/advertisements', upload.single('image'), async (req, res) => {
   try {
     const { title, description, linkUrl, startDate, endDate, isActive } = req.body;
     const imagePath = req.file ? req.file.filename : null;
 
-    // 1. Mandatory Field Validation
+    
     if (!title || title.trim() === "") {
       return res.status(400).json({ success: false, error: 'Title is required' });
     }
@@ -601,9 +673,7 @@ app.post('/api/advertisements', upload.single('image'), async (req, res) => {
       return res.status(400).json({ success: false, error: 'Image file is required' });
     }
 
-    // 2. Data Cleaning for MySQL
-    // If startDate/endDate are empty strings, MySQL DATE column will throw a 500 error.
-    // We must convert empty strings to null.
+   
     const cleanStartDate = (startDate && startDate.trim() !== "") ? startDate : null;
     const cleanEndDate = (endDate && endDate.trim() !== "") ? endDate : null;
     
