@@ -1137,7 +1137,7 @@ app.post('/api/reports/submit', (req, res, next) => {
 
     // Get user details for submitter info
     console.log('🔍 Looking up user with ID:', userId);
-    const userQuery = 'SELECT FirstName, LastName, OrgUnitID FROM Users WHERE UserID = ?';
+    const userQuery = 'SELECT UserID, FirstName, LastName, OrgUnitID FROM Users WHERE UserID = ?';
     const [userRows] = await db.query(userQuery, [userId]);
     console.log('👤 User query result:', userRows);
     const user = userRows && userRows[0] ? userRows[0] : null;
@@ -1147,19 +1147,25 @@ app.post('/api/reports/submit', (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found', userId });
     }
 
+    // Validate user has required data
+    if (!user.OrgUnitID) {
+      console.warn('⚠️ User has no OrgUnitID (submitter_unit_id cannot be NULL):', { userId, OrgUnitID: user.OrgUnitID });
+      return res.status(400).json({ success: false, message: 'User organization unit not set. Contact admin.' });
+    }
+
     const submitterName = `${user.FirstName} ${user.LastName}`;
     const submitterUnitId = user.OrgUnitID;
     
     console.log('📝 Submitter info:', { submitterName, submitterUnitId });
 
-    // Insert into reports table (matching actual schema: no attachment_path column)
+    // Insert into reports table (with attachment_path support)
     console.log('💾 Inserting report into database...');
     const insertQuery = `
-      INSERT INTO reports (title, submitter_name, submitter_unit_id, type, status, comments)
-      VALUES (?, ?, ?, ?, 'PENDING', ?)
+      INSERT INTO reports (title, submitter_name, submitter_unit_id, type, status, comments, attachment_path)
+      VALUES (?, ?, ?, ?, 'PENDING', ?, ?)
     `;
-    const insertParams = [title, submitterName, submitterUnitId, type, description || ''];
-    console.log('📊 Insert query params:', { title, submitterName, submitterUnitId, type, hasDescription: !!description });
+    const insertParams = [title, submitterName, submitterUnitId, type, description || '', attachmentPath];
+    console.log('📊 Insert query params:', { title, submitterName, submitterUnitId, type, hasDescription: !!description, hasAttachment: !!attachmentPath });
     
     const [result] = await db.query(insertQuery, insertParams);
 
@@ -1176,10 +1182,25 @@ app.post('/api/reports/submit', (req, res, next) => {
       requestBody: { title: req.body.title, type: req.body.type, userId: req.body.userId },
       stack: err.stack
     });
+    
+    // Return detailed error info for debugging
+    let errorDetail = 'Failed to submit report';
+    if (err.sqlMessage) {
+      errorDetail = `Database error: ${err.sqlMessage}`;
+    } else if (err.code === 'ER_BAD_FIELD_ERROR') {
+      errorDetail = 'Invalid column in query';
+    } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+      errorDetail = 'Foreign key constraint violation - check user ID';
+    }
+    
     res.status(500).json({ 
       success: false, 
-      error: 'Failed to submit report',
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined,
+      error: errorDetail,
+      details: process.env.NODE_ENV === 'development' ? {
+        message: err.message,
+        code: err.code,
+        sqlMessage: err.sqlMessage
+      } : undefined,
       errorCode: err.code
     });
   }
