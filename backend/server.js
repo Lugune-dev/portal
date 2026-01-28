@@ -1547,40 +1547,55 @@ app.post('/api/users', async (req, res) => {
 
 app.put('/api/users/:id', async (req, res) => {
   const { id } = req.params;
+  console.log('🔄 UPDATE USER - ID:', id, 'Body:', JSON.stringify(req.body));
   const { email, firstName, lastName, password, userRoleID, orgUnitID } = req.body;
+  
+  // Validate required fields
+  if (!email || !firstName || !lastName) {
+    console.warn('⚠️ Missing required fields in update request');
+    return res.status(400).json({ success: false, message: 'Required fields: email, firstName, lastName' });
+  }
+  
   try {
     let query = 'UPDATE Users SET Email = ?, FirstName = ?, LastName = ?, UserRoleID = ?, OrgUnitID = ? WHERE UserID = ?';
-    let params = [email, firstName, lastName, userRoleID, orgUnitID, id];
+    let params = [email, firstName, lastName, userRoleID || null, orgUnitID || null, id];
     if (password) {
       const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
       query = 'UPDATE Users SET Email = ?, FirstName = ?, LastName = ?, PasswordHash = ?, UserRoleID = ?, OrgUnitID = ? WHERE UserID = ?';
-      params = [email, firstName, lastName, hashedPassword, userRoleID, orgUnitID, id];
+      params = [email, firstName, lastName, hashedPassword, userRoleID || null, orgUnitID || null, id];
     }
+    console.log('📝 Executing query:', query, 'with params:', params);
     const [result] = await db.query(query, params);
+    console.log('✅ Update result:', result);
     if (result.affectedRows > 0) {
       res.json({ success: true, message: 'User updated' });
     } else {
+      console.warn('⚠️ User not found with ID:', id);
       res.status(404).json({ success: false, message: 'User not found' });
     }
   } catch (err) {
-    console.error('Error updating user:', err);
-    res.status(500).json({ success: false, error: 'Server error' });
+    console.error('❌ Error updating user:', err);
+    res.status(500).json({ success: false, error: 'Server error', details: err.message });
   }
 });
 
 app.delete('/api/users/:id', async (req, res) => {
   const { id } = req.params;
+  console.log('🗑️ DELETE USER - ID:', id);
   try {
     const query = 'DELETE FROM Users WHERE UserID = ?';
+    console.log('📝 Executing query:', query, 'with params:', [id]);
     const [result] = await db.query(query, [id]);
+    console.log('✅ Delete result:', result);
     if (result.affectedRows > 0) {
       res.json({ success: true, message: 'User deleted' });
     } else {
+      console.warn('⚠️ User not found with ID:', id);
       res.status(404).json({ success: false, message: 'User not found' });
     }
   } catch (err) {
-    console.error('Error deleting user:', err);
-    res.status(500).json({ success: false, error: 'Server error' });
+    console.error('❌ Error deleting user:', err);
+    res.status(500).json({ success: false, error: 'Server error', details: err.message });
   }
 });
 
