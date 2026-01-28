@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
+import { OrganizationService, OrganizationUnit } from '../../services/organization.service';
 
 
 interface UserRole {
@@ -34,6 +35,7 @@ export class UserRegistrationComponent implements OnInit {
     { value: 'support_officer', viewValue: 'Support Officer' }
   ];
   reportsToUsers: ReportsTo[] = [];
+  organizationUnits: OrganizationUnit[] = [];
   errorMessage: string | null = null;
   loading: boolean = false;
 
@@ -49,7 +51,8 @@ export class UserRegistrationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private organizationService: OrganizationService
   ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
@@ -65,6 +68,7 @@ export class UserRegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchReportsToUsers();
+    this.fetchOrganizationUnits();
   }
 
   fetchReportsToUsers(): void {
@@ -81,6 +85,18 @@ export class UserRegistrationComponent implements OnInit {
           this.errorMessage = 'Failed to load supervisor list.';
         }
       });
+  }
+
+  fetchOrganizationUnits(): void {
+    this.organizationService.getOrganizationUnits().subscribe({
+      next: (response) => {
+        this.organizationUnits = response.data;
+      },
+      error: (err) => {
+        console.error('Failed to fetch organization units', err);
+        this.errorMessage = 'Failed to load organization units.';
+      }
+    });
   }
 
   onSubmit(): void {

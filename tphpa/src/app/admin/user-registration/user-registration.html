@@ -67,7 +67,10 @@
             </div>
             <div class="col-md-4 mb-3">
               <label for="unit" class="form-label">Unit</label>
-              <input type="text" id="unit" formControlName="unit" class="form-control" placeholder="">
+              <select id="unit" formControlName="unit" class="form-select">
+                <option [ngValue]="null" selected>Select a unit</option>
+                <option *ngFor="let unit of organizationUnits" [ngValue]="unit.UnitName">{{ unit.UnitName }}</option>
+              </select>
             </div>
           </div>
 
