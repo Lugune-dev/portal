@@ -36,9 +36,11 @@ export class UserListComponent implements OnInit {
 
   roles: UserRole[] = [
     { value: 1, viewValue: 'Admin' },
-    { value: 2, viewValue: 'Director' },
-    { value: 3, viewValue: 'Manager' },
-    { value: 4, viewValue: 'User' }
+    { value: 2, viewValue: 'Director General' },
+    { value: 3, viewValue: 'Director' },
+    { value: 4, viewValue: 'Manager' },
+    { value: 5, viewValue: 'Staff Officer '},
+    { value: 6, viewValue: "Support Staff"}
   ];
 
   sidebarItems: any[] = [
