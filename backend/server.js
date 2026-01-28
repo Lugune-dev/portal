@@ -359,7 +359,7 @@ db.query(reportsTableSql).then(() => {
         if (!col.EXTRA || col.EXTRA.toLowerCase().indexOf('auto_increment') === -1) {
           try {
             console.log('ℹ️ Modifying advertisements.id to be AUTO_INCREMENT PRIMARY KEY');
-            await db.query(`ALTER TABLE advertisements MODIFY COLUMN id ${col.COLUMN_TYPE} NOT NULL AUTO_INCREMENT PRIMARY KEY`);
+            await db.query(`ALTER TABLE advertisements DROP PRIMARY KEY, MODIFY id ${col.COLUMN_TYPE} NOT NULL AUTO_INCREMENT, ADD PRIMARY KEY (id)`);
             console.log('✅ advertisements.id modified to AUTO_INCREMENT');
           } catch (aiErr) {
             console.warn('⚠️ Could not alter advertisements.id to AUTO_INCREMENT:', aiErr && aiErr.message ? aiErr.message : aiErr);
@@ -370,6 +370,27 @@ db.query(reportsTableSql).then(() => {
       }
     } catch (checkErr) {
       console.warn('⚠️ Error checking/modifying advertisements.id:', checkErr && checkErr.message ? checkErr.message : checkErr);
+    }
+
+    // Ensure reports.id is AUTO_INCREMENT (some old schemas may have non-AI id)
+    try {
+      const [reportIdCols] = await db.query(`SELECT COLUMN_NAME, COLUMN_TYPE, EXTRA FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'reports' AND COLUMN_NAME = 'id'`);
+      if (reportIdCols && reportIdCols.length > 0) {
+        const col = reportIdCols[0];
+        if (!col.EXTRA || col.EXTRA.toLowerCase().indexOf('auto_increment') === -1) {
+          try {
+            console.log('ℹ️ Modifying reports.id to be AUTO_INCREMENT PRIMARY KEY');
+            await db.query(`ALTER TABLE reports DROP PRIMARY KEY, MODIFY id ${col.COLUMN_TYPE} NOT NULL AUTO_INCREMENT, ADD PRIMARY KEY (id)`);
+            console.log('✅ reports.id modified to AUTO_INCREMENT');
+          } catch (aiErr) {
+            console.warn('⚠️ Could not alter reports.id to AUTO_INCREMENT:', aiErr && aiErr.message ? aiErr.message : aiErr);
+          }
+        }
+      } else {
+        console.log('ℹ️ reports.id column not found (table may be missing)');
+      }
+    } catch (checkErr) {
+      console.warn('⚠️ Error checking/modifying reports.id:', checkErr && checkErr.message ? checkErr.message : checkErr);
     }
   } catch (e) {
     console.warn('⚠️ Could not alter approvals table (may already be correct or lack permissions):', e.message || e);
@@ -1147,7 +1168,7 @@ app.post('/api/reports/submit', (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found', userId });
     }
 
-    // Validate user has required data
+    
     if (!user.OrgUnitID) {
       console.warn('⚠️ User has no OrgUnitID (submitter_unit_id cannot be NULL):', { userId, OrgUnitID: user.OrgUnitID });
       return res.status(400).json({ success: false, message: 'User organization unit not set. Contact admin.' });
