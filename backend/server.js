@@ -79,93 +79,75 @@ console.log('=== ANGULAR CONFIGURATION ===');
         console.log('Serving Angular from:', angularDistPath);
         console.log('Angular files exist:', fs.existsSync(angularDistPath));
 
-  // Set proper MIME types for static files
-  app.use((req, res, next) => {
-    if (req.path.endsWith('.js')) {
+  // Helper function to set MIME types and headers for static files
+  const setStaticHeaders = (res, path) => {
+    // Ensure proper MIME types are set explicitly
+    if (path.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-    } else if (req.path.endsWith('.css')) {
+    } else if (path.endsWith('.css')) {
       res.setHeader('Content-Type', 'text/css; charset=utf-8');
-    } else if (req.path.endsWith('.json')) {
+    } else if (path.endsWith('.json')) {
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    } else if (req.path.endsWith('.html')) {
+    } else if (path.endsWith('.html')) {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    } else if (req.path.endsWith('.svg')) {
+    } else if (path.endsWith('.svg')) {
       res.setHeader('Content-Type', 'image/svg+xml');
-    } else if (req.path.endsWith('.png')) {
+    } else if (path.endsWith('.png')) {
       res.setHeader('Content-Type', 'image/png');
-    } else if (req.path.endsWith('.jpg') || req.path.endsWith('.jpeg')) {
+    } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
       res.setHeader('Content-Type', 'image/jpeg');
-    } else if (req.path.endsWith('.ico')) {
+    } else if (path.endsWith('.ico')) {
       res.setHeader('Content-Type', 'image/x-icon');
-    } else if (req.path.endsWith('.woff')) {
+    } else if (path.endsWith('.woff')) {
       res.setHeader('Content-Type', 'font/woff');
-    } else if (req.path.endsWith('.woff2')) {
+    } else if (path.endsWith('.woff2')) {
       res.setHeader('Content-Type', 'font/woff2');
-    } else if (req.path.endsWith('.ttf')) {
+    } else if (path.endsWith('.ttf')) {
       res.setHeader('Content-Type', 'font/ttf');
-    } else if (req.path.endsWith('.eot')) {
+    } else if (path.endsWith('.eot')) {
       res.setHeader('Content-Type', 'application/vnd.ms-fontobject');
     }
-    // Remove X-Content-Type-Options nosniff if it's being set incorrectly by middleware
-    if (!req.path.startsWith('/api/')) {
-      res.removeHeader('X-Content-Type-Options');
-    }
-    next();
-  });
-
-  // Serve Angular static files
-  app.use(express.static(angularDistPath, {
-    dotfiles: 'ignore',
-    etag: true,
-    extensions: ['css', 'js', 'json', 'html', 'ico', 'png', 'jpg', 'jpeg', 'svg'],
-    index: false, // Don't serve index.html for directories
-    maxAge: '1d',
-    redirect: false,
-    setHeaders: (res, path) => {
-      // Additional header configuration
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-      if (path.endsWith('.html')) {
-        res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
-      }
-    }
-  }));
-  
-
-
-// Serve /employee module as SPA
-app.use('/employee', express.static(angularDistPath, {
-  dotfiles: 'ignore',
-  etag: true,
-  extensions: ['css', 'js', 'json', 'html', 'ico', 'png', 'jpg', 'jpeg', 'svg'],
-  index: 'index.html',
-  maxAge: '1d',
-  redirect: false,
-  setHeaders: (res, path) => {
+    
+    // Set cache headers
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     if (path.endsWith('.html')) {
       res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
     }
-  }
-}));
+    
+    // CRITICAL: Remove X-Content-Type-Options nosniff for static files
+    // This allows the browser to properly detect MIME types from Content-Type header
+    res.removeHeader('X-Content-Type-Options');
+  };
 
-// Serve other module routes as SPA
-const modules = ['admin', 'director', 'manager', 'unit-manager', 'head-directorate', 'fa-manager', 'help-desk', 'training-module', 'announcements', 'publications', 'about'];
-modules.forEach(module => {
-  app.use(`/${module}`, express.static(angularDistPath, {
+  // Serve Angular static files from root
+  app.use(express.static(angularDistPath, {
     dotfiles: 'ignore',
     etag: true,
-    extensions: ['css', 'js', 'json', 'html', 'ico', 'png', 'jpg', 'jpeg', 'svg'],
-    index: 'index.html',
-    maxAge: '1d',
+    index: false,
     redirect: false,
-    setHeaders: (res, path) => {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-      if (path.endsWith('.html')) {
-        res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
-      }
-    }
+    setHeaders: setStaticHeaders
   }));
-});
+
+  // Serve /employee module as SPA
+  app.use('/employee', express.static(angularDistPath, {
+    dotfiles: 'ignore',
+    etag: true,
+    index: 'index.html',
+    redirect: false,
+    setHeaders: setStaticHeaders
+  }));
+
+  // Serve other module routes as SPA
+  const modules = ['admin', 'director', 'manager', 'unit-manager', 'head-directorate', 'fa-manager', 'help-desk', 'training-module', 'announcements', 'publications', 'about'];
+  modules.forEach(module => {
+    app.use(`/${module}`, express.static(angularDistPath, {
+      dotfiles: 'ignore',
+      etag: true,
+      index: 'index.html',
+      redirect: false,
+      setHeaders: setStaticHeaders
+    }));
+  });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
