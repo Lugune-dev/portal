@@ -14,8 +14,6 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist/portal",
-            "baseHref": "/employee/",
-            "deployUrl": "/employee/",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
