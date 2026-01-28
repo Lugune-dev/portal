@@ -1521,7 +1521,12 @@ app.get('/api/users', async (req, res) => {
   try {
     const query = 'SELECT u.UserID, u.Email, u.FirstName, u.LastName, u.UserRoleID, u.OrgUnitID, ou.UnitName FROM Users u LEFT JOIN OrganizationUnits ou ON u.OrgUnitID = ou.OrgUnitID ORDER BY u.FirstName';
     const [results] = await db.query(query);
-    res.json({ success: true, data: results });
+    // Convert UserID to string to prevent JavaScript integer overflow for large BIGINT values
+    const formattedResults = results.map(user => ({
+      ...user,
+      UserID: String(user.UserID)
+    }));
+    res.json({ success: true, data: formattedResults });
   } catch (err) {
     console.error('Error fetching users:', err);
     res.status(500).json({ success: false, error: 'Server error' });

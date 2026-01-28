@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 
 interface User {
-  UserID: number;
+  UserID: string;
   Email: string;
   FirstName: string;
   LastName: string;
@@ -198,3 +198,4 @@ export class UserListComponent implements OnInit {
     }
   }
 }
+
