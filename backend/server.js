@@ -277,6 +277,25 @@ db.query(reportsTableSql).then(() => {
   console.error('❌ Could not ensure reports table:', err);
 });
 
+// Ensure news_announcements table exists with proper schema
+const announcementsTableSql = `
+CREATE TABLE IF NOT EXISTS news_announcements (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  summary TEXT NOT NULL,
+  category VARCHAR(50) DEFAULT 'Announcement',
+  date_published DATETIME DEFAULT CURRENT_TIMESTAMP,
+  is_urgent TINYINT(1) DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`;
+
+db.query(announcementsTableSql).then(() => {
+  console.log('✅ news_announcements table ensured');
+}).catch(err => {
+  console.error('❌ Could not ensure news_announcements table:', err);
+});
+
 (async () => {
   try {
     const ensureColumn = async (table, column, definition) => {
@@ -846,7 +865,7 @@ app.get('/api/advertisements', async (req, res) => {
 });
 app.get('/api/announcement', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM news_announcements ORDER BY date_published DESC');
+    const [rows] = await db.query('SELECT * FROM news_announcements ORDER BY date_published DESC');
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -857,11 +876,43 @@ app.get('/api/announcement', async (req, res) => {
 app.post('/api/announcement', async (req, res) => {
   const { title, summary, category, date_published, is_urgent } = req.body;
   try {
-    const [result] = await pool.query(
+    const [result] = await db.query(
       'INSERT INTO news_announcements (title, summary, category, date_published, is_urgent) VALUES (?, ?, ?, ?, ?)',
       [title, summary, category, date_published, is_urgent]
     );
     res.status(201).json({ id: result.insertId, message: "Added successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/announcement/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, summary, category, date_published, is_urgent } = req.body;
+  try {
+    const [result] = await db.query(
+      'UPDATE news_announcements SET title = ?, summary = ?, category = ?, date_published = ?, is_urgent = ? WHERE id = ?',
+      [title, summary, category, date_published, is_urgent, id]
+    );
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Announcement updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'Announcement not found' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/announcement/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [result] = await db.query('DELETE FROM news_announcements WHERE id = ?', [id]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Announcement deleted' });
+    } else {
+      res.status(404).json({ success: false, message: 'Announcement not found' });
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

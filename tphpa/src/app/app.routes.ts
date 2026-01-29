@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: 'forms/:formType', loadComponent: () => import('./dynamic-forms/dynamic-forms').then(m => m.DynamicFormComponent) },
   { path: 'employee/dashboard', loadComponent: () => import('./employee/employee-dashboard/employee-dashboard').then(m => m.EmployeeDashboard), canActivate: [() => import('./guards/employee-guard-guard').then(m => m.employeeGuardGuard)] },
   { path: 'admin/dashboard', loadComponent: () => import('./admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboardComponent), canActivate: [() => import('./guards/admin-guard').then(m => m.adminGuard)] },
+  { path: 'admin/announcements', loadComponent: () => import('./admin/announcements/announcements').then(m => m.AnnouncementsAdminComponent) },
   { path: 'director/dashboard', loadComponent: () => import('./director/director-dashboard/director-dashboard').then(m => m.DirectorDashboardComponent), canActivate: [() => import('./guards/admin-guard').then(m => m.adminGuard)] },
 
   { path: 'director-general/dashboard', loadComponent: () => import('./director/director-general-dashboard/director-general-dashboard').then(m => m.DirectorGeneralDashboardComponent), canActivate: [() => import('./guards/dg-guard').then(m => m.dgGuard)] },
