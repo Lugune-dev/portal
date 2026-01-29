@@ -6,9 +6,11 @@ export interface Announcement {
   id?: number;
   title: string;
   summary: string;
+  content?: string;
   category: string;
   date_published: string;
   is_urgent: boolean;
+  image_url?: string;
 }
 
 @Injectable({
@@ -19,16 +21,44 @@ export class AnnouncementService {
 
   constructor(private http: HttpClient){}
   
-  getAnnouncement(): Observable<any>{
+  getAnnouncement(): Observable<any[]>{
     return this.http.get<any []>(`${this.apiUrl}/announcement`);
   }
   
-  createAnnouncement(data: Announcement): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/announcement`, data);
+  createAnnouncement(data: Announcement, imageFile?: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('summary', data.summary);
+    if (data.content) {
+      formData.append('content', data.content);
+    }
+    formData.append('category', data.category);
+    formData.append('date_published', data.date_published);
+    formData.append('is_urgent', data.is_urgent ? '1' : '0');
+    
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    
+    return this.http.post<any>(`${this.apiUrl}/announcement`, formData);
   }
   
-  updateAnnouncement(id: number, data: Announcement): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/announcement/${id}`, data);
+  updateAnnouncement(id: number, data: Announcement, imageFile?: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('summary', data.summary);
+    if (data.content) {
+      formData.append('content', data.content);
+    }
+    formData.append('category', data.category);
+    formData.append('date_published', data.date_published);
+    formData.append('is_urgent', data.is_urgent ? '1' : '0');
+    
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    
+    return this.http.put<any>(`${this.apiUrl}/announcement/${id}`, formData);
   }
   
   deleteAnnouncement(id: number): Observable<any> {

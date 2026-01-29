@@ -20,6 +20,11 @@
         <div *ngFor="let item of updates" 
              class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
           
+          <!-- Image Section -->
+          <div *ngIf="item.image_url" class="w-full h-48 overflow-hidden bg-gray-100">
+            <img [src]="item.image_url" [alt]="item.title" class="w-full h-full object-cover">
+          </div>
+          
           <div class="p-6">
             <div class="flex items-center gap-3 mb-4">
               <span [ngClass]="item.category === 'Announcement' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'"
@@ -39,6 +44,10 @@
               {{ item.summary }}
             </p>
 
+            <div *ngIf="item.content" class="mt-4 p-4 bg-gray-50 rounded-lg">
+              <p class="text-gray-700 text-sm">{{ item.content }}</p>
+            </div>
+
             <div *ngIf="item.is_urgent" class="mt-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm">
               <strong>Notice:</strong> This is a high-priority regulatory update. Please review the official documents immediately.
             </div>
@@ -49,7 +58,7 @@
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </button>
               
-              <button *ngIf="item.category === 'Announcement'" class="text-gray-400 hover:text-blue-600">
+              <button *ngIf="item.image_url" class="text-gray-400 hover:text-blue-600" title="View Full Image">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
               </button>
             </div>

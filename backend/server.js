@@ -283,9 +283,11 @@ CREATE TABLE IF NOT EXISTS news_announcements (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   summary TEXT NOT NULL,
+  content LONGTEXT NULL,
   category VARCHAR(50) DEFAULT 'Announcement',
   date_published DATETIME DEFAULT CURRENT_TIMESTAMP,
   is_urgent TINYINT(1) DEFAULT 0,
+  image_url VARCHAR(255) NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 `;
@@ -863,44 +865,106 @@ app.get('/api/advertisements', async (req, res) => {
     return res.status(500).json({ success: false, error: 'Database error' });
   }
 });
+// GET announcements
 app.get('/api/announcement', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM news_announcements ORDER BY date_published DESC');
-    res.json(rows);
+    // Transform image_url to full URL
+    const announcementsWithUrls = rows.map(row => ({
+      ...row,
+      image_url: row.image_url ? `/uploads/${row.image_url}` : null
+    }));
+    res.json(announcementsWithUrls);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
 
-app.post('/api/announcement', async (req, res) => {
-  const { title, summary, category, date_published, is_urgent } = req.body;
+// POST announcement with optional image upload
+app.post('/api/announcement', upload.single('image'), async (req, res) => {
+  const { title, summary, content, category, date_published, is_urgent } = req.body;
+  const imagePath = req.file ? req.file.filename : null;
+
   try {
-    const [result] = await db.query(
-      'INSERT INTO news_announcements (title, summary, category, date_published, is_urgent) VALUES (?, ?, ?, ?, ?)',
-      [title, summary, category, date_published, is_urgent]
-    );
-    res.status(201).json({ id: result.insertId, message: "Added successfully" });
+    // Validate required fields
+    if (!title || !summary || !category) {
+      return res.status(400).json({ success: false, error: 'Title, summary, and category are required' });
+    }
+
+    const query = `
+      INSERT INTO news_announcements (title, summary, content, category, date_published, is_urgent, image_url)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    // Convert is_urgent to number
+    const isUrgentValue = (is_urgent === '1' || is_urgent === 'true' || is_urgent === true) ? 1 : 0;
+
+    const [result] = await db.query(query, [
+      title,
+      summary,
+      content || null,
+      category,
+      date_published || new Date(),
+      isUrgentValue,
+      imagePath
+    ]);
+
+    res.status(201).json({ 
+      success: true, 
+      id: result.insertId, 
+      message: 'Announcement created successfully',
+      image_url: imagePath ? `/uploads/${imagePath}` : null
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error creating announcement:', err);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
-app.put('/api/announcement/:id', async (req, res) => {
+// PUT announcement with optional image update
+app.put('/api/announcement/:id', upload.single('image'), async (req, res) => {
   const { id } = req.params;
-  const { title, summary, category, date_published, is_urgent } = req.body;
+  const { title, summary, content, category, date_published, is_urgent } = req.body;
+  const imagePath = req.file ? req.file.filename : null;
+
   try {
-    const [result] = await db.query(
-      'UPDATE news_announcements SET title = ?, summary = ?, category = ?, date_published = ?, is_urgent = ? WHERE id = ?',
-      [title, summary, category, date_published, is_urgent, id]
-    );
+    let query, params;
+
+    // If new image is uploaded, update it
+    if (imagePath) {
+      query = `
+        UPDATE news_announcements 
+        SET title = ?, summary = ?, content = ?, category = ?, date_published = ?, is_urgent = ?, image_url = ? 
+        WHERE id = ?
+      `;
+      const isUrgentValue = (is_urgent === '1' || is_urgent === 'true' || is_urgent === true) ? 1 : 0;
+      params = [title, summary, content || null, category, date_published, isUrgentValue, imagePath, id];
+    } else {
+      // Keep existing image
+      query = `
+        UPDATE news_announcements 
+        SET title = ?, summary = ?, content = ?, category = ?, date_published = ?, is_urgent = ? 
+        WHERE id = ?
+      `;
+      const isUrgentValue = (is_urgent === '1' || is_urgent === 'true' || is_urgent === true) ? 1 : 0;
+      params = [title, summary, content || null, category, date_published, isUrgentValue, id];
+    }
+
+    const [result] = await db.query(query, params);
+    
     if (result.affectedRows > 0) {
-      res.json({ success: true, message: 'Announcement updated' });
+      res.json({ 
+        success: true, 
+        message: 'Announcement updated',
+        image_url: imagePath ? `/uploads/${imagePath}` : null
+      });
     } else {
       res.status(404).json({ success: false, message: 'Announcement not found' });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error updating announcement:', err);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

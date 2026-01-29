@@ -2,16 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AnnouncementService } from '../../services/announcement';
-
-interface Announcement {
-  id?: number;
-  title: string;
-  summary: string;
-  category: string;
-  date_published: string;
-  is_urgent: boolean;
-}
+import { AnnouncementService, Announcement } from '../../services/announcement';
 
 @Component({
   selector: 'app-announcements-admin',
@@ -29,6 +20,9 @@ export class AnnouncementsAdminComponent implements OnInit {
   // Form state
   editingAnnouncement: Announcement | null = null;
   formData: Announcement = this.getEmptyForm();
+  selectedImage: File | null = null;
+  imagePreview: string | null = null;
+  existingImageUrl: string | null = null;
   
   sidebarItems: any[] = [
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', route: '/admin/dashboard' },
@@ -52,6 +46,7 @@ export class AnnouncementsAdminComponent implements OnInit {
     return {
       title: '',
       summary: '',
+      content: '',
       category: 'Announcement',
       date_published: new Date().toISOString().split('T')[0],
       is_urgent: false
@@ -83,8 +78,47 @@ export class AnnouncementsAdminComponent implements OnInit {
   resetForm(): void {
     this.formData = this.getEmptyForm();
     this.editingAnnouncement = null;
+    this.selectedImage = null;
+    this.imagePreview = null;
+    this.existingImageUrl = null;
     this.successMessage = '';
     this.errorMessage = '';
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.errorMessage = 'Please select a valid image file (JPEG, PNG, GIF, or WebP).';
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.errorMessage = 'Image file size must be less than 5MB.';
+        return;
+      }
+      
+      this.selectedImage = file;
+      this.errorMessage = '';
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(): void {
+    this.selectedImage = null;
+    this.imagePreview = null;
+    this.existingImageUrl = null;
   }
 
   editAnnouncement(announcement: Announcement): void {
@@ -93,6 +127,9 @@ export class AnnouncementsAdminComponent implements OnInit {
       ...announcement,
       date_published: announcement.date_published ? announcement.date_published.split('T')[0] : new Date().toISOString().split('T')[0]
     };
+    this.existingImageUrl = announcement.image_url || null;
+    this.imagePreview = announcement.image_url || null;
+    this.selectedImage = null;
     this.showForm = true;
   }
 
@@ -124,7 +161,7 @@ export class AnnouncementsAdminComponent implements OnInit {
 
     if (this.editingAnnouncement && this.editingAnnouncement.id) {
       // Update existing
-      this.announcementService.updateAnnouncement(this.editingAnnouncement.id, this.formData).subscribe({
+      this.announcementService.updateAnnouncement(this.editingAnnouncement.id, this.formData, this.selectedImage || undefined).subscribe({
         next: (response: any) => {
           this.loading = false;
           this.successMessage = 'Announcement updated successfully!';
@@ -140,7 +177,7 @@ export class AnnouncementsAdminComponent implements OnInit {
       });
     } else {
       // Create new
-      this.announcementService.createAnnouncement(this.formData).subscribe({
+      this.announcementService.createAnnouncement(this.formData, this.selectedImage || undefined).subscribe({
         next: (response: any) => {
           this.loading = false;
           this.successMessage = 'Announcement created successfully!';
