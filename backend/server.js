@@ -676,10 +676,17 @@ app.post('/api/login', async (req, res) => {
       // Remove hash before sending user object to client
       delete user.PasswordHash;
 
-      // 🔑 CRITICAL DEBUG LOG: Print the exact user object being sent
-      console.log(`✅ Login successful for ${user.Email}. User object sent:`, user);
+      // 🔑 CRITICAL FIX: Convert UserID to string to prevent JavaScript integer overflow
+      // JavaScript's MAX_SAFE_INTEGER is 9007199254740991, but our BIGINT IDs exceed this
+      const userResponse = {
+        ...user,
+        UserID: String(user.UserID)
+      };
 
-      return res.status(200).json({ message: 'Login successful', user: user });
+      // 🔑 CRITICAL DEBUG LOG: Print the exact user object being sent
+      console.log(`✅ Login successful for ${user.Email}. User object sent:`, userResponse);
+
+      return res.status(200).json({ message: 'Login successful', user: userResponse });
     } else {
       return res.status(401).json({ message: 'Invalid email or password' });
     }

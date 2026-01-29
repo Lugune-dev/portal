@@ -27,19 +27,19 @@ export class FormsService {
 
   constructor(private http: HttpClient) { }
 
-  getSubordinateForms(userId: number): Observable<{ success: boolean; data: FormSubmission[] }> {
+  getSubordinateForms(userId: string | number): Observable<{ success: boolean; data: FormSubmission[] }> {
     return this.http.get<{ success: boolean; data: FormSubmission[] }>(`${this.apiUrl}/forms/subordinate-forms/${userId}`);
   }
 
-  approveForm(formId: number, comments: string, approverId: number): Observable<any> {
+  approveForm(formId: number, comments: string, approverId: number | string): Observable<any> {
     return this.http.post(`${this.apiUrl}/forms/approve/${formId}`, { approverId, comments });
   }
 
-  rejectForm(formId: number, comments: string, rejectorId: number): Observable<any> {
+  rejectForm(formId: number, comments: string, rejectorId: number | string): Observable<any> {
     return this.http.post(`${this.apiUrl}/forms/reject/${formId}`, { rejectorId, comments });
   }
 
-  getUserForms(userId: number): Observable<{ success: boolean; data: FormSubmission[] }> {
+  getUserForms(userId: string | number): Observable<{ success: boolean; data: FormSubmission[] }> {
     return this.http.get<{ success: boolean; data: FormSubmission[] }>(`${this.apiUrl}/forms/user/${userId}`);
   }
 }

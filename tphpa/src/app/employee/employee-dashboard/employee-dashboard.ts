@@ -222,7 +222,7 @@ export class EmployeeDashboard implements OnInit {
     formData.append('title', formValue.title);
     formData.append('description', formValue.description);
     formData.append('type', formValue.type);
-    formData.append('userId', userId.toString());
+    formData.append('userId', userId); // UserID is now a string
 
     if (this.selectedFile) {
       formData.append('attachment', this.selectedFile, this.selectedFile.name);

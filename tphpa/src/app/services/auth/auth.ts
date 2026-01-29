@@ -155,12 +155,14 @@ export class AuthService {
     return role ? role.trim() : null;
   }
 
-  getUserId(): number | null {
+  getUserId(): string | null {
     if (!isPlatformBrowser(this.platformId)) {
       return null;
     }
+    // 🔑 CRITICAL FIX: Return UserID as string to prevent JavaScript integer overflow
+    // BIGINT values from MySQL exceed JavaScript's MAX_SAFE_INTEGER (9007199254740991)
     const id = localStorage.getItem('user_id');
-    return id ? parseInt(id, 10) : null;
+    return id ? id : null; // Return as string, never parse to number
   }
 
   getOrgUnitId(): number | null {

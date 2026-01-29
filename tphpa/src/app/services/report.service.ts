@@ -45,7 +45,7 @@ export class ReportService {
     return this.http.post(`${this.apiUrl}/reports/reject`, { reportId, comment });
   }
 
-  getUserReports(userId: number): Observable<Report[]> {
+  getUserReports(userId: string | number): Observable<Report[]> {
     return this.http.get<Report[]>(`${this.apiUrl}/reports/user/${userId}`);
   }
 
