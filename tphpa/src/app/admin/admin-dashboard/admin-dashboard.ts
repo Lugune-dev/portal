@@ -53,6 +53,7 @@ export class AdminDashboardComponent implements OnInit {
   sidebarItems: SidebarItem[] = [
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', active: true, route: '/admin/dashboard' },
     { icon: 'fas fa-bullhorn', label: 'Advertisements', active: false, route: '/admin/advertisements' },
+    { icon: 'fas fa-bullhorn', label: 'Announcements', active: false, route: '/admin/announcements' },
     { icon: 'fas fa-users', label: 'User List', active: false, route: '/admin/user-list' },
     { icon: 'fas fa-user-plus', label: 'Register User', active: false, route: '/admin/user-registration' },
     { icon: 'fas fa-chart-bar', label: 'Reports', active: false, route: '/admin/reports' },
