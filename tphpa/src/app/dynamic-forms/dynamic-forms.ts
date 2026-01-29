@@ -218,7 +218,7 @@ export class DynamicFormComponent implements OnInit {
         icon: 'warning',
         title: 'Validation Error',
         text: 'Please fill in all required fields before submitting.',
-        confirmButtonColor: '#ffc107',
+        confirmButtonColor: '#dc3545',
         confirmButtonText: 'OK'
       });
     }
