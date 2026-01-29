@@ -5,11 +5,11 @@ const mysql = require('mysql2/promise');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const crypto = require('crypto'); // 🔒 Used for password hashing
+const crypto = require('crypto'); 
 
 const app = express();
 
-// Configure CORS with explicit options and preflight handling
+
 const corsOptions = {
   origin: (origin, cb) => {
     // allow requests from any origin by default; you can restrict this in production
@@ -193,6 +193,8 @@ const db = mysql.createPool({
   database: process.env.DB_NAME,
   ssl: dbSsl,
   waitForConnections: true,
+  supportBigNumbers: true,
+  bigNumberStrings: true,
   connectionLimit: 10,
   queueLimit: 0
 });
