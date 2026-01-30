@@ -11,6 +11,13 @@ import { FormsService, FormSubmission } from '../services/forms.service';
 // Slick Carousel imports
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 
+// API Base URL constant - ensures consistent API domain usage across the app
+// This prevents NS_BINDING_ABORTED errors from mixed domains and rapid navigation
+export const API_BASE_URL = 'https://portal-api-z927.onrender.com';
+
+// Make API_BASE_URL available in template
+export { API_BASE_URL as publicAPI_BASE_URL };
+
 interface Advertisement {
   id: number;
   title: string;
@@ -43,6 +50,9 @@ interface Stats {
   styleUrls: ['./home.css', '../carousel-styles.css']
 })
 export class Home implements OnInit, AfterViewInit, OnDestroy {
+  // Make API_BASE_URL available in template
+  public readonly API_BASE_URL = API_BASE_URL;
+  
   // Carousel Configuration
   currentSlide = 0;
   slides = [0, 1, 2, 3, 4, 5];
@@ -199,7 +209,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     this.adsLoading = true;
     this.adsError = false;
 
-    this.http.get<{ success: boolean; data: Advertisement[] }>('https://portal-api-z927.onrender.com/api/advertisements')
+    this.http.get<{ success: boolean; data: Advertisement[] }>(`${API_BASE_URL}/api/advertisements`)
       .subscribe({
         next: (res) => {
           const today = new Date();

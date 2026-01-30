@@ -232,11 +232,13 @@
         <div class="md:flex">
           <!-- Image Section -->
           <div class="md:w-1/2 relative">
-            <div class="h-64 md:h-full min-h-[300px] overflow-hidden">
+<div class="h-64 md:h-full min-h-[300px] overflow-hidden">
               <img
-                [src]="featuredAd.imageUrl ? ('https://tphpa-api.onrender.com' + featuredAd.imageUrl) : ''"
+                [src]="featuredAd.imageUrl ? (API_BASE_URL + featuredAd.imageUrl) : ''"
                 [alt]="featuredAd.title"
                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                loading="lazy"
+                decoding="async"
                 onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'"
               />
             </div>
@@ -552,9 +554,9 @@
           <!-- Image Container -->
           <div class="relative h-32 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10"></div>
-              <img
-                [src]="ad.imageUrl ? ('https://portal-api-z927.onrender.com' + ad.imageUrl) : ''"
-                [alt]="ad.title"
+            <img
+              [src]="ad.imageUrl ? (API_BASE_URL + ad.imageUrl) : ''"
+              [alt]="ad.title"
               class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
               onerror="this.src='assets/images/air.webp'"
             />
