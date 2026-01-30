@@ -96,6 +96,8 @@ console.log('=== ANGULAR CONFIGURATION ===');
       res.setHeader('Content-Type', 'image/png');
     } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
       res.setHeader('Content-Type', 'image/jpeg');
+    } else if (path.endsWith('.webp')) {
+      res.setHeader('Content-Type', 'image/webp');
     } else if (path.endsWith('.ico')) {
       res.setHeader('Content-Type', 'image/x-icon');
     } else if (path.endsWith('.woff')) {
@@ -148,8 +150,6 @@ console.log('=== ANGULAR CONFIGURATION ===');
       setHeaders: setStaticHeaders
     }));
   });
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
